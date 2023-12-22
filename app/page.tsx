@@ -5,9 +5,11 @@ import ConnectSupabaseSteps from '@/components/ConnectSupabaseSteps'
 import SignUpUserSteps from '@/components/SignUpUserSteps'
 import Header from '@/components/Header'
 import { cookies } from 'next/headers'
+import ReviewButton from '@/components/ReviewButton'
 
 export default async function Index() {
   const cookieStore = cookies()
+  const supabase = createClient(cookieStore)
 
   const canInitSupabaseClient = () => {
     // This function is just for the interactive tutorial.
@@ -22,12 +24,17 @@ export default async function Index() {
 
   const isSupabaseConnected = canInitSupabaseClient()
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   return (
     <div className="flex-1 w-full flex flex-col gap-20 items-center">
       <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
         <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">
           <DeployButton />
           {isSupabaseConnected && <AuthButton />}
+          {isSupabaseConnected && <ReviewButton />}
         </div>
       </nav>
 
