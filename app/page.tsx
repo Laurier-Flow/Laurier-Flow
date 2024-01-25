@@ -6,6 +6,7 @@ import SignUpUserSteps from '@/components/SignUpUserSteps'
 import Header from '@/components/Header'
 import { cookies } from 'next/headers'
 import ReviewButton from '@/components/ReviewButton'
+import CourseButton from '@/components/CourseButton'
 
 export default async function Index() {
   const cookieStore = cookies()
@@ -35,6 +36,7 @@ export default async function Index() {
           <DeployButton />
           {isSupabaseConnected && <AuthButton />}
           {isSupabaseConnected && <ReviewButton />}
+          <CourseButton />
         </div>
       </nav>
 
