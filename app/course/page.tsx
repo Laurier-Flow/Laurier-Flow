@@ -6,18 +6,73 @@ import axios from 'axios';
 import { JSDOM } from 'jsdom';
 import CourseInfo from './CourseInfo';
 import dynamic from 'next/dynamic';
+import CourseReviews from './CourseReviews';
 const CourseSchedule = dynamic(() => import('./CourseSchedule'), { ssr: false });
+const AddReview = dynamic(() => import('./AddReview'), { ssr: false })
+const cookieStore = cookies();
+const supabase = createClient(cookieStore);
 
 async function getCourseData() {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-
   const { data, error } = await supabase
     .from('courses')
     .select()
     .eq('course_code', 'BU 283')
 
   return data || [];
+}
+
+async function getCourseReviews() {
+  try {
+    const { data, error } = await supabase
+      .from('course_reviews')
+      .select()
+      .eq('course_code_fk', 'BU 283')
+
+    let reviews = []
+
+    if (data !== null && data !== undefined) {
+      for (const s of data) {
+        const createdAt = s.created_at;
+        const easy = s.easy;
+        const useful = s.useful;
+        const liked = s.liked;
+        const instructor = s.instructor;
+        const body = s.body;
+
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select()
+            .eq('user_id', s.user_id_fk);
+
+          let userData = null;
+
+          if (data !== null && data !== undefined && data.length > 0) {
+            userData = data[0].program;
+          }
+
+          const review = {
+            createdAt: createdAt,
+            easy: easy,
+            useful: useful,
+            liked: liked,
+            instructor: instructor,
+            program: userData,
+            body: body
+          };
+
+          reviews.push(review);
+
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      return reviews || [];
+    }
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function getCourseDescription() {
@@ -155,15 +210,12 @@ function getPreviousTerm(pretty: boolean) {
 }
 
 async function getCourseSections(nextTerm: string, currentTerm: string, previousTerm: string) {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-
   const { data, error } = await supabase
     .from('sections')
     .select()
     .eq('course_code_fk', 'BU 283');
 
-    let sections: { 'next': any[], 'current': any[], 'previous': any[] } = { 'next': [], 'current': [], 'previous': [] };
+  let sections: { 'next': any[], 'current': any[], 'previous': any[] } = { 'next': [], 'current': [], 'previous': [] };
 
   if (data !== null && data !== undefined) {
     for (const s of data) {
@@ -255,11 +307,14 @@ async function CoursePage() {
   const previousTerm = getPreviousTerm(true);
   const currentTerm = getCurrentTerm(true);
   const courseSections = await getCourseSections(getNextTerm(false), getCurrentTerm(false), getPreviousTerm(false));
+  const courseReviews = await getCourseReviews();
 
   return (
     <div className="flex flex-col justify-evenly max-w-full min-w-full">
       <CourseInfo courseData={courseData} courseInfo={courseDescription} prerequisites={prerequisites} />
       <CourseSchedule nextTerm={nextTerm} currentTerm={currentTerm} previousTerm={previousTerm} courseSections={courseSections} />
+      <AddReview courseName='BU 283' />
+      <CourseReviews courseReviews={courseReviews} />
     </div>
   )
 }

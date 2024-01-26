@@ -52,21 +52,21 @@ function CourseInfo({
               <div className="mb-2 flex justify-between items-center">
                 <h3 className="text-sm font-semibold text-gray-800 dark:text-white">Easy</h3>
                 <span className="text-sm text-gray-800 dark:text-white">
-                  {courseData[0].total_reviews !== 0 ? (courseData[0].easy * 10) + '%' : '0%'}
+                  {courseData[0].total_reviews !== 0 ? (courseData[0].easy * 20) + '%' : '0%'}
                 </span>
               </div>
               <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700" role="progressbar" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
-                <div className="flex flex-col justify-center rounded-full overflow-hidden bg-blue-600 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-blue-500" style={{ width: `${courseData[0].easy * 10}%` }}></div>
+                <div className="flex flex-col justify-center rounded-full overflow-hidden bg-blue-600 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-blue-500" style={{ width: `${courseData[0].easy * 20}%` }}></div>
               </div>
             </div>
 
             <div>
               <div className="mb-2 flex justify-between items-center">
                 <h3 className="text-sm font-semibold text-gray-800 dark:text-white pt-6">Useful</h3>
-                <span className="text-sm text-gray-800 dark:text-white pt-6">{courseData[0].total_reviews !== 0 ? (courseData[0].useful * 10) + '%' : '0%'}</span>
+                <span className="text-sm text-gray-800 dark:text-white pt-6">{courseData[0].total_reviews !== 0 ? (courseData[0].useful * 20) + '%' : '0%'}</span>
               </div>
               <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700" role="progressbar" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
-                <div className="flex flex-col justify-center rounded-full overflow-hidden bg-blue-600 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-blue-500" style={{ width: `${courseData[0].useful * 10}%` }}></div>
+                <div className="flex flex-col justify-center rounded-full overflow-hidden bg-blue-600 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-blue-500" style={{ width: `${courseData[0].useful * 20}%` }}></div>
               </div>
             </div>
 
