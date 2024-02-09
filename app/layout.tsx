@@ -1,6 +1,7 @@
 import { GeistSans } from 'geist/font/sans'
 import './globals.css'
-import PrelineScript from '@/components/PrelineScript';
+import { ThemeProvider } from '@/components/ThemeProvider'
+import { ModeToggle } from '@/components/ModeToggle'
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -20,11 +21,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-background text-foreground">
+      <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
         <main className="min-h-screen flex flex-col items-center">
           {children}
         </main>
+      </ThemeProvider>
       </body>
-      <PrelineScript />
     </html>
   )
 }
