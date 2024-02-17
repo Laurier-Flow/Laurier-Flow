@@ -310,7 +310,7 @@ async function CoursePage() {
   const courseReviews = await getCourseReviews();
 
   return (
-    <div className="flex flex-col justify-evenly max-w-full min-w-full">
+    <div className="flex flex-col justify-evenly max-w-full lg:max-w-6xl">
       <CourseInfo courseData={courseData} courseInfo={courseDescription} prerequisites={prerequisites} />
       <CourseSchedule nextTerm={nextTerm} currentTerm={currentTerm} previousTerm={previousTerm} courseSections={courseSections} />
       <AddReview courseName='BU 283' />

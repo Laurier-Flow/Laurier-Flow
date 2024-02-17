@@ -2,6 +2,7 @@
 
 import { ReactElement, JSXElementConstructor, ReactFragment, ReactPortal, PromiseLikeOfReactNode, Key } from "react";
 import CourseSchedule from "./CourseSchedule";
+import React from "react";
 
 function CourseInfo({
   courseData,
@@ -30,9 +31,9 @@ function CourseInfo({
         <div className='flex flex-row'>
           <div className="relative h-40 w-40">
             <svg className="h-full w-full" width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-gray-200 dark:text-gray-700" stroke-width="2"></circle>
+              <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-gray-200 dark:text-gray-700" strokeWidth="2"></circle>
               <g className="origin-center -rotate-90 transform">
-                <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-blue-600 dark:text-blue-500" stroke-width="2" stroke-dasharray="100" stroke-dashoffset={`${courseData[0].total_reviews !== 0
+                <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-blue-600 dark:text-blue-500" strokeWidth="2" strokeDasharray="100" strokeDashoffset={`${courseData[0].total_reviews !== 0
                   ? 100 - (courseData[0].liked / courseData[0].total_reviews) * 100
                   : 100}`}></circle>
               </g>
@@ -82,15 +83,20 @@ function CourseInfo({
       <div className="flex flex-col p-4">
         <h1 className="text-xl">{courseData[0].course_code} Prerequisites</h1>
         <h2 className="pt-2">
-          {prerequisites.length > 0 ? (prerequisites.map((prerequisite: { andOr?: string; leftParentheses?: string; subject?: string; courseNumber?: string; grade?: string; rightParentheses?: string; }) =>
-            <>
-              {' ' + prerequisite?.andOr} {prerequisite?.leftParentheses}<b>{prerequisite?.subject} {prerequisite?.courseNumber}</b> (Min. Grade {prerequisite?.grade}) {prerequisite?.rightParentheses}
-            </>
-          )) : (
+          {prerequisites.length > 0 ? (
+            prerequisites.map((prerequisite: any, index: any) => (
+              <React.Fragment key={index}>
+                {' ' + prerequisite?.andOr} {prerequisite?.leftParentheses}
+                <b>
+                  {prerequisite?.subject} {prerequisite?.courseNumber}
+                </b>{' '}
+                (Min. Grade {prerequisite?.grade}) {prerequisite?.rightParentheses}
+              </React.Fragment>
+            ))
+          ) : (
             'No Prerequisite Information Available'
           )}
         </h2>
-
       </div>
     </>
   );
