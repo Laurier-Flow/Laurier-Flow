@@ -81,7 +81,7 @@ async function getCourseDescription() {
     const dom = new JSDOM(response.data);
     const sectionElement = dom.window.document.querySelector('section[aria-labelledby="courseDescription"]');
     const textContent = sectionElement ? sectionElement.textContent : '';
-    const courseInfo = textContent ? textContent.replace(/<br>/g, '').replace(/<font[^>]*>|<\/font>/g, '') : '';
+    const courseInfo = textContent ? textContent.replace(/<[^>]*>/g, '') : '';
     return courseInfo;
   } catch (error) {
     console.error(error);
