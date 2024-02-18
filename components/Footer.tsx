@@ -2,8 +2,8 @@ import React from 'react'
 
 export default function Footer() {
   return (
-    <footer>
-      <div className='flex flex-row w-screen border-t border-t-foreground/10 h-max'>
+    <footer className='border-t w-full border-b border-border/40'>
+      <div className='container flex h-14 max-w-screen-2xl items-center'>
         FOOTER PLACEHOLDER
       </div>
     </footer>

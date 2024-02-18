@@ -1,36 +1,33 @@
-import { GeistSans } from 'geist/font/sans'
-import './globals.css'
+import '@/app/globals.css'
+import React from 'react'
 import { ThemeProvider } from '@/components/ThemeProvider'
-import { ModeToggle } from '@/components/ModeToggle'
-
-const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : 'http://localhost:3000'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 
 export const metadata = {
-  metadataBase: new URL(defaultUrl),
-  title: 'Next.js and Supabase Starter Kit',
-  description: 'The fastest way to build apps with Next.js and Supabase',
+  title: 'Laurier Flow',
+  description: 'The best way to plan your Laurier schedule'
 }
 
 export default function RootLayout({
-  children,
+  children
 }: {
   children: React.ReactNode
-}) {
+}): React.ReactElement {
   return (
-    <html lang="en">
-      <body className="bg-background text-foreground">
-      <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-        <main className="min-h-screen flex flex-col items-center">
-          {children}
-        </main>
-      </ThemeProvider>
+    <html lang='en'>
+      <body className='bg-background text-foreground w-screen h-screen flex flex-col'>
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='system'
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Header />
+          <main className='flex w-screen flex-grow'>
+            {children}</main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   )

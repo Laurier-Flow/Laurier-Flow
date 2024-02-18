@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function SearchPage() {
   return (
-    <div>
+    <div className=" flex w-screen items-center justify-center">
       <SearchBar/>
     </div>
   );
