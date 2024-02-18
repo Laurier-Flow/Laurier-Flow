@@ -24,7 +24,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header />
-          <main className='flex w-screen flex-grow'>
+          <main className='justify-center flex w-screen flex-grow'>
             {children}</main>
           <Footer />
         </ThemeProvider>
