@@ -3,7 +3,10 @@
 import { JSXElementConstructor, PromiseLikeOfReactNode, ReactElement, ReactFragment, ReactPortal, SetStateAction, useEffect, useState } from "react";
 import DaysDisplay from "./DaysDisplay";
 
-function convertTo12HourFormat(timeString: string) {
+function convertTo12HourFormat(timeString: string | null | undefined) {
+    if (!timeString) {
+        return null;
+      }
     const hours = timeString.slice(0, 2);
     const minutes = timeString.slice(2, 4)
     const parsedHours = parseInt(hours, 10);
