@@ -16,7 +16,7 @@ export default function RootLayout({
 }): React.ReactElement {
   return (
     <html lang='en'>
-      <body className='bg-background text-foreground w-screen h-screen flex flex-col'>
+      <body className='bg-background text-foreground w-full h-full flex flex-col'>
         <ThemeProvider
           attribute='class'
           defaultTheme='system'
@@ -24,7 +24,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header />
-          <main className='justify-center flex w-screen flex-grow'>
+          <main className='justify-center flex w-full flex-grow'>
             {children}</main>
           <Footer />
         </ThemeProvider>
