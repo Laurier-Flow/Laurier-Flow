@@ -209,16 +209,17 @@ function getPreviousTerm(pretty: boolean) {
   return ''
 }
 
-async function getCourseSections(nextTerm: string, currentTerm: string, previousTerm: string) {
-  const { data, error } = await supabase
+async function getCourseSectionsByTerm(term: string) {
+  const { data: termData, error: nextTermError } = await supabase
     .from('sections')
     .select()
-    .eq('course_code_fk', 'BU 283');
+    .eq('course_code_fk', 'BU 283')
+    .eq('term', term);
 
-  let sections: { 'next': any[], 'current': any[], 'previous': any[] } = { 'next': [], 'current': [], 'previous': [] };
+  let sections: any[] = [];
 
-  if (data !== null && data !== undefined) {
-    for (const s of data) {
+  if (termData !== null && termData !== undefined) {
+    for (const s of termData) {
       let crn = null;
       let type = null;
       let section = null;
@@ -285,14 +286,10 @@ async function getCourseSections(nextTerm: string, currentTerm: string, previous
         days: days
       }
 
-      if (s.term === nextTerm) {
-        sections['next'].push(section);
-      } else if (s.term === currentTerm) {
-        sections['current'].push(section);
-      } else if (s.term === previousTerm) {
-        sections['previous'].push(section);
-      }
+      sections.push(section)
     }
+
+    return sections
   }
 
   return sections || [];
@@ -300,19 +297,21 @@ async function getCourseSections(nextTerm: string, currentTerm: string, previous
 
 
 async function CoursePage() {
-  const courseData = await getCourseData();
-  const courseDescription = await getCourseDescription();
-  const prerequisites = await getPrerequisites();
-  const nextTerm = getNextTerm(true);
-  const previousTerm = getPreviousTerm(true);
-  const currentTerm = getCurrentTerm(true);
-  const courseSections = await getCourseSections(getNextTerm(false), getCurrentTerm(false), getPreviousTerm(false));
+  const courseData = await getCourseData()
+  const courseDescription = await getCourseDescription()
+  const prerequisites = await getPrerequisites()
+  const nextTerm = getNextTerm(true)
+  const previousTerm = getPreviousTerm(true)
+  const currentTerm = getCurrentTerm(true)
+  const nextTermSections = await getCourseSectionsByTerm(getNextTerm(false))
+  const previousTermSections = await getCourseSectionsByTerm(getPreviousTerm(false))
+  const currentTermSections = await getCourseSectionsByTerm(getCurrentTerm(false))
   const courseReviews = await getCourseReviews();
 
   return (
     <div className="flex flex-col justify-evenly max-w-full lg:max-w-6xl">
       <CourseInfo courseData={courseData} courseInfo={courseDescription} prerequisites={prerequisites} />
-      <CourseSchedule nextTerm={nextTerm} currentTerm={currentTerm} previousTerm={previousTerm} courseSections={courseSections} />
+      <CourseSchedule nextTerm={nextTerm} previousTerm={previousTerm} currentTerm={currentTerm} currentTermSections={currentTermSections} previousTermSections={previousTermSections} nextTermSections={nextTermSections} />
       <AddReview courseName='BU 283' />
       <CourseReviews courseReviews={courseReviews} />
     </div>
