@@ -22,7 +22,7 @@ export default function Header(): React.ReactElement {
 						</span>
 					</Link>
 					<nav className='flex items-center gap-6 text-sm'>
-						<Link href='/courses'>Courses</Link>
+						<Link href='/course'>Courses</Link>
 						<Link href='/professors'>Professors</Link>
 						<Link href='/about'>About</Link>
 						<Link href='/privacy'>Privacy</Link>
@@ -40,8 +40,8 @@ export default function Header(): React.ReactElement {
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align='center'>
 							<DropdownMenuItem>My Account</DropdownMenuItem>
-							<DropdownMenuItem>Settings</DropdownMenuItem>
-							<DropdownMenuItem>Logout</DropdownMenuItem>
+							{/* <DropdownMenuItem>Settings</DropdownMenuItem> */}
+							<DropdownMenuItem className='bg-destructive text-destructive-foreground'>Logout</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
