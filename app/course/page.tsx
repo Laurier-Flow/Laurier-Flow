@@ -7,10 +7,9 @@ import { JSDOM } from 'jsdom';
 import CourseInfo from './CourseInfo';
 import dynamic from 'next/dynamic';
 import CourseReviews from './CourseReviews';
+import { SupabaseClient } from '@supabase/supabase-js';
 const CourseSchedule = dynamic(() => import('./CourseSchedule'), { ssr: false });
 const AddReview = dynamic(() => import('./AddReview'), { ssr: false })
-const cookieStore = cookies();
-const supabase = createClient(cookieStore);
 
 export interface days {
   monday: boolean,
@@ -34,7 +33,7 @@ export interface section {
   days: days | null
 }
 
-async function getCourseData() {
+async function getCourseData(supabase: SupabaseClient<any, "public", any>) {
   const { data, error } = await supabase
     .from('courses')
     .select()
@@ -43,7 +42,7 @@ async function getCourseData() {
   return data || [];
 }
 
-async function getCourseReviews() {
+async function getCourseReviews(supabase: SupabaseClient<any, "public", any>) {
   try {
     const { data, error } = await supabase
       .from('course_reviews')
@@ -226,7 +225,7 @@ function getPreviousTerm(pretty: boolean) {
   return ''
 }
 
-async function getCourseSectionsByTerm(term: string) {
+async function getCourseSectionsByTerm(term: string, supabase: SupabaseClient<any, "public", any>) {
   const { data: termData, error: termError } = await supabase
     .from('sections')
     .select()
@@ -312,16 +311,19 @@ async function getCourseSectionsByTerm(term: string) {
 
 
 async function CoursePage() {
-  const courseData = await getCourseData()
+  const cookieStore = cookies()
+  const supabase = createClient(cookieStore)
+  const courseData = await getCourseData(supabase)
   const courseDescription = await getCourseDescription()
   const prerequisites = await getPrerequisites()
   const nextTerm = getNextTerm(true)
   const previousTerm = getPreviousTerm(true)
   const currentTerm = getCurrentTerm(true)
-  const nextTermSections = await getCourseSectionsByTerm(getNextTerm(false))
-  const previousTermSections = await getCourseSectionsByTerm(getPreviousTerm(false))
-  const currentTermSections = await getCourseSectionsByTerm(getCurrentTerm(false))
-  const courseReviews = await getCourseReviews();
+  const nextTermSections = await getCourseSectionsByTerm(getNextTerm(false), supabase)
+  const previousTermSections = await getCourseSectionsByTerm(getPreviousTerm(false), supabase)
+  const currentTermSections = await getCourseSectionsByTerm(getCurrentTerm(false), supabase)
+  const courseReviews = await getCourseReviews(supabase);
+  
 
   return (
     <div className="flex flex-col justify-evenly max-w-full lg:max-w-6xl">
