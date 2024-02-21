@@ -12,6 +12,28 @@ const AddReview = dynamic(() => import('./AddReview'), { ssr: false })
 const cookieStore = cookies();
 const supabase = createClient(cookieStore);
 
+export interface days {
+  monday: boolean,
+  tuesday: boolean,
+  wednesday: boolean,
+  thursday: boolean,
+  friday: boolean,
+  saturday: boolean,
+  sunday: boolean
+}
+
+export interface section {
+  crn: string | undefined | null,
+  type: string | undefined | null,
+  section: string | undefined | null,
+  campus: string | undefined | null,
+  enrollment: string | undefined | null,
+  enrollmentMax: string | undefined | null,
+  beginTime: string | undefined | null,
+  endTime: string | undefined | null,
+  days: days | null
+}
+
 async function getCourseData() {
   const { data, error } = await supabase
     .from('courses')
@@ -126,11 +148,6 @@ async function getPrerequisites() {
   }
 }
 
-async function getRestrictions() {
-
-
-}
-
 function getNextTerm(pretty: boolean) {
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
@@ -210,13 +227,13 @@ function getPreviousTerm(pretty: boolean) {
 }
 
 async function getCourseSectionsByTerm(term: string) {
-  const { data: termData, error: nextTermError } = await supabase
+  const { data: termData, error: termError } = await supabase
     .from('sections')
     .select()
     .eq('course_code_fk', 'BU 283')
     .eq('term', term);
 
-  let sections: any[] = [];
+  let sections: section[] = [];
 
   if (termData !== null && termData !== undefined) {
     for (const s of termData) {
@@ -225,12 +242,10 @@ async function getCourseSectionsByTerm(term: string) {
       let section = null;
       let campus = null;
       let enrollment = null;
-      let enrollementMax = null;
-      let waitlist = null;
-      let waitlistMax = null;
+      let enrollmentMax = null;
       let beginTime = null;
       let endTime = null;
-      let days = null;
+      let days: days | null = null;
 
       try {
         const response = await axios.get('https://loris.wlu.ca/register/ssb/searchResults/getClassDetails?term=' + s.term + '&courseReferenceNumber=' + s.course_registration_number.toString());
@@ -251,7 +266,7 @@ async function getCourseSectionsByTerm(term: string) {
         const document = dom.window.document;
 
         enrollment = Array.from(document.querySelectorAll('span')).find(span => span.textContent?.includes('Enrolment Actual:'))?.nextElementSibling?.textContent?.trim();
-        enrollementMax = Array.from(document.querySelectorAll('span')).find(span => span.textContent?.includes('Enrolment Maximum:'))?.nextElementSibling?.textContent?.trim();
+        enrollmentMax = Array.from(document.querySelectorAll('span')).find(span => span.textContent?.includes('Enrolment Maximum:'))?.nextElementSibling?.textContent?.trim();
       } catch (error) {
         console.error(error);
       }
@@ -274,19 +289,19 @@ async function getCourseSectionsByTerm(term: string) {
         console.error(error);
       }
 
-      section = {
+      let c: section = {
         crn: crn,
         type: type,
         section: section,
         campus: campus,
         enrollment: enrollment,
-        enrollementMax: enrollementMax,
+        enrollmentMax: enrollmentMax,
         beginTime: beginTime,
         endTime: endTime,
         days: days
       }
 
-      sections.push(section)
+      sections.push(c)
     }
 
     return sections
