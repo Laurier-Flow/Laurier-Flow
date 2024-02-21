@@ -313,17 +313,28 @@ async function getCourseSectionsByTerm(term: string, supabase: SupabaseClient<an
 async function CoursePage() {
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)
-  const courseData = await getCourseData(supabase)
-  const courseDescription = await getCourseDescription()
-  const prerequisites = await getPrerequisites()
+
   const nextTerm = getNextTerm(true)
   const previousTerm = getPreviousTerm(true)
   const currentTerm = getCurrentTerm(true)
-  const nextTermSections = await getCourseSectionsByTerm(getNextTerm(false), supabase)
-  const previousTermSections = await getCourseSectionsByTerm(getPreviousTerm(false), supabase)
-  const currentTermSections = await getCourseSectionsByTerm(getCurrentTerm(false), supabase)
-  const courseReviews = await getCourseReviews(supabase);
-  
+
+  const [
+    courseData,
+    courseDescription,
+    prerequisites,
+    nextTermSections,
+    previousTermSections,
+    currentTermSections,
+    courseReviews
+  ] = await Promise.all([
+    getCourseData(supabase),
+    getCourseDescription(),
+    getPrerequisites(),
+    getCourseSectionsByTerm(getNextTerm(false), supabase),
+    getCourseSectionsByTerm(getPreviousTerm(false), supabase),
+    getCourseSectionsByTerm(getCurrentTerm(false), supabase),
+    getCourseReviews(supabase)
+  ]);
 
   return (
     <div className="flex flex-col justify-evenly max-w-full lg:max-w-6xl">
