@@ -3,7 +3,7 @@
 import { cookies, headers } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
 import axios from 'axios';
-import { JSDOM } from 'jsdom';
+import * as cheerio from 'cheerio';
 import CourseInfo from './CourseInfo';
 import dynamic from 'next/dynamic';
 import CourseReviews from './CourseReviews';
@@ -31,6 +31,19 @@ export interface section {
   beginTime: string | undefined | null,
   endTime: string | undefined | null,
   days: days | null
+}
+
+interface sections {
+  nextTerm: section[],
+  currentTerm: section[],
+  previousTerm: section[]
+}
+
+interface sectionResponseDB {
+  course_registration_number: number,
+  term: string,
+  instructor_name_fk: string,
+  course_code_fk: string
 }
 
 async function getCourseData(supabase: SupabaseClient<any, "public", any>) {
@@ -99,10 +112,10 @@ async function getCourseReviews(supabase: SupabaseClient<any, "public", any>) {
 async function getCourseDescription() {
   try {
     const response = await axios.get('https://loris.wlu.ca/register/ssb/courseSearchResults/getCourseDescription?term=202401&subjectCode=BU&courseNumber=283');
-    const dom = new JSDOM(response.data);
-    const sectionElement = dom.window.document.querySelector('section[aria-labelledby="courseDescription"]');
-    const textContent = sectionElement ? sectionElement.textContent : '';
-    const courseInfo = textContent ? textContent.replace(/<[^>]*>/g, '') : '';
+    const $ = cheerio.load(response.data);
+    const sectionElement = $('section[aria-labelledby="courseDescription"]');
+    const courseInfo = sectionElement ? sectionElement.text().trim().replace(/<[^>]*>/g, '') : '';
+
     return courseInfo;
   } catch (error) {
     console.error(error);
@@ -113,21 +126,20 @@ async function getCourseDescription() {
 async function getPrerequisites() {
   try {
     const response = await axios.get('https://loris.wlu.ca/register/ssb/courseSearchResults/getPrerequisites?term=202401&subjectCode=BU&courseNumber=283');
-    const dom = new JSDOM(response.data);
-    const { document } = dom.window;
+    const $ = cheerio.load(response.data);
 
     const prerequisites: { andOr: string; leftParentheses: string; rightParentheses: string; subject: string; courseNumber: string; level: string; grade: string; }[] = [];
 
-    document.querySelectorAll('section[aria-labelledby="preReqs"] tbody tr').forEach((element) => {
-      const columns = element.querySelectorAll('td');
+    $('section[aria-labelledby="preReqs"] tbody tr').each((index, element) => {
+      const columns = $(element).find('td');
 
-      const andOr: string = (columns[0].textContent || '').trim().toLowerCase();
-      const leftParentheses: string = (columns[1].textContent || '').trim();
-      const rightParentheses: string = (columns[8].textContent || '').trim();
-      const subject: string = (columns[4].textContent || '').trim();
-      const courseNumber: string = (columns[5].textContent || '').trim();
-      const level: string = (columns[6].textContent || '').trim();
-      const grade: string = (columns[7].textContent || '').trim();
+      const andOr = $(columns[0]).text().trim().toLowerCase();
+      const leftParentheses = $(columns[1]).text().trim();
+      const rightParentheses = $(columns[8]).text().trim();
+      const subject = $(columns[4]).text().trim();
+      const courseNumber = $(columns[5]).text().trim();
+      const level = $(columns[6]).text().trim();
+      const grade = $(columns[7]).text().trim();
 
       prerequisites.push({
         andOr,
@@ -225,71 +237,71 @@ function getPreviousTerm(pretty: boolean) {
   return ''
 }
 
-async function getCourseSectionsByTerm(term: string, supabase: SupabaseClient<any, "public", any>) {
-  const { data: termData, error: termError } = await supabase
+async function fetchSectionData(sectionData: sectionResponseDB) {
+  try {
+    const [classDetailsResponse, enrollmentInfoResponse, facultyMeetingTimesResponse] = await Promise.all([
+      axios.get('https://loris.wlu.ca/register/ssb/searchResults/getClassDetails?term=' + sectionData.term + '&courseReferenceNumber=' + sectionData.course_registration_number.toString()),
+      axios.get('https://loris.wlu.ca/register/ssb/searchResults/getEnrollmentInfo?term=' + sectionData.term + '&courseReferenceNumber=' + sectionData.course_registration_number.toString()),
+      axios.get('https://loris.wlu.ca/register/ssb/searchResults/getFacultyMeetingTimes?term=' + sectionData.term + '&courseReferenceNumber=' + sectionData.course_registration_number.toString())
+    ]);
+
+    return {
+      sectionData: sectionData,
+      classDetails: classDetailsResponse.data,
+      enrollmentInfo: enrollmentInfoResponse.data,
+      facultyMeetingTimes: facultyMeetingTimesResponse.data
+    };
+  } catch (error) {
+    return fetchSectionData(sectionData)
+  }
+}
+
+async function getCourseSections(nextTerm: string, currentTerm: string, previousTerm: string, supabase: SupabaseClient<any, "public", any>) {
+  const { data: sectionData, error: sectionError } = await supabase
     .from('sections')
     .select()
     .eq('course_code_fk', 'BU 283')
-    .eq('term', term);
 
-  let sections: section[] = [];
+  const courseSections: sections = {
+    nextTerm: [],
+    currentTerm: [],
+    previousTerm: []
+  }
 
-  if (termData !== null && termData !== undefined) {
-    for (const s of termData) {
-      let crn = null;
-      let type = null;
-      let section = null;
-      let campus = null;
-      let enrollment = null;
-      let enrollmentMax = null;
-      let beginTime = null;
-      let endTime = null;
-      let days: days | null = null;
+  const sectionDataRequests = sectionData?.map(fetchSectionData)
 
-      try {
-        const response = await axios.get('https://loris.wlu.ca/register/ssb/searchResults/getClassDetails?term=' + s.term + '&courseReferenceNumber=' + s.course_registration_number.toString());
-        const dom = new JSDOM(response.data);
-        const document = dom.window.document;
+  if (sectionDataRequests) {
+    const sectionDataResponses = await Promise.all(sectionDataRequests);
 
-        crn = document.getElementById('courseReferenceNumber')?.textContent;
-        section = document.getElementById('sectionNumber')?.textContent;
-        campus = Array.from(document.querySelectorAll('span')).find(span => span.textContent?.includes('Campus:'))?.nextSibling?.textContent?.trim();
-        type = Array.from(document.querySelectorAll('span')).find(span => span.textContent?.includes('Instructional Method:'))?.nextSibling?.textContent?.trim();
-      } catch (error) {
-        console.error(error);
-      }
+    sectionDataResponses.forEach(element => {
+      let $ = cheerio.load(element.classDetails)
+      const section = $('#sectionNumber').text();
+      // ts-ignore is used because of issues with types in the cheerio dependency
+      /** @ts-ignore */
+      const campus = $('span').filter((index, element) => $(element).text().includes('Campus:'))[0].next?.data?.trim()
+      /** @ts-ignore */
+      const type = $('span').filter((index, element) => $(element).text().includes('Instructional Method:'))[0].next?.data?.trim()
 
-      try {
-        const response = await axios.get('https://loris.wlu.ca/register/ssb/searchResults/getEnrollmentInfo?term=' + s.term + '&courseReferenceNumber=' + s.course_registration_number.toString());
-        const dom = new JSDOM(response.data);
-        const document = dom.window.document;
+      $ = cheerio.load(element.enrollmentInfo)
+      /** @ts-ignore */
+      const enrollment = $('span').filter((index, element) => $(element).text().includes('Enrolment Actual:'))[0].next?.next?.children[0].data.trim()
+      /** @ts-ignore */
+      const enrollmentMax = $('span').filter((index, element) => $(element).text().includes('Enrolment Maximum:'))[0].next?.next?.children[0].data.trim()
 
-        enrollment = Array.from(document.querySelectorAll('span')).find(span => span.textContent?.includes('Enrolment Actual:'))?.nextElementSibling?.textContent?.trim();
-        enrollmentMax = Array.from(document.querySelectorAll('span')).find(span => span.textContent?.includes('Enrolment Maximum:'))?.nextElementSibling?.textContent?.trim();
-      } catch (error) {
-        console.error(error);
-      }
-
-      try {
-        const response = await axios.get('https://loris.wlu.ca/register/ssb/searchResults/getFacultyMeetingTimes?term=' + s.term + '&courseReferenceNumber=' + s.course_registration_number.toString());
-
-        beginTime = response.data.fmt[0]?.meetingTime?.beginTime;
-        endTime = response.data.fmt[0]?.meetingTime?.endTime;
-        days = {
-          monday: response.data.fmt[0]?.meetingTime?.monday,
-          tuesday: response.data.fmt[0]?.meetingTime?.tuesday,
-          wednesday: response.data.fmt[0]?.meetingTime?.wednesday,
-          thursday: response.data.fmt[0]?.meetingTime?.thursday,
-          friday: response.data.fmt[0]?.meetingTime?.friday,
-          saturday: response.data.fmt[0]?.meetingTime?.saturday,
-          sunday: response.data.fmt[0]?.meetingTime?.sunday
-        }
-      } catch (error) {
-        console.error(error);
-      }
+      const beginTime = element.facultyMeetingTimes.fmt[0]?.meetingTime?.beginTime
+      const endTime = element.facultyMeetingTimes.fmt[0]?.meetingTime?.endTime
+      const days = {
+        monday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.monday,
+        tuesday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.tuesday,
+        wednesday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.wednesday,
+        thursday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.thursday,
+        friday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.friday,
+        saturday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.saturday,
+        sunday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.sunday
+      };
 
       let c: section = {
-        crn: crn,
+        crn: element.sectionData.course_registration_number.toString(),
         type: type,
         section: section,
         campus: campus,
@@ -300,13 +312,17 @@ async function getCourseSectionsByTerm(term: string, supabase: SupabaseClient<an
         days: days
       }
 
-      sections.push(c)
-    }
-
-    return sections
+      if (element.sectionData.term == nextTerm) {
+        courseSections['nextTerm']?.push(c)
+      } else if (element.sectionData.term == currentTerm) {
+        courseSections['currentTerm']?.push(c)
+      } else if (element.sectionData.term == previousTerm) {
+        courseSections['previousTerm']?.push(c)
+      }
+    });
   }
 
-  return sections || [];
+  return courseSections;
 }
 
 
@@ -322,24 +338,20 @@ async function CoursePage() {
     courseData,
     courseDescription,
     prerequisites,
-    nextTermSections,
-    previousTermSections,
-    currentTermSections,
-    courseReviews
+    courseReviews,
+    sections
   ] = await Promise.all([
     getCourseData(supabase),
     getCourseDescription(),
     getPrerequisites(),
-    getCourseSectionsByTerm(getNextTerm(false), supabase),
-    getCourseSectionsByTerm(getPreviousTerm(false), supabase),
-    getCourseSectionsByTerm(getCurrentTerm(false), supabase),
-    getCourseReviews(supabase)
+    getCourseReviews(supabase),
+    getCourseSections(getNextTerm(false), getCurrentTerm(false), getPreviousTerm(false), supabase)
   ]);
 
   return (
     <div className="flex flex-col justify-evenly max-w-full lg:max-w-6xl">
       <CourseInfo courseData={courseData} courseInfo={courseDescription} prerequisites={prerequisites} />
-      <CourseSchedule nextTerm={nextTerm} previousTerm={previousTerm} currentTerm={currentTerm} currentTermSections={currentTermSections} previousTermSections={previousTermSections} nextTermSections={nextTermSections} />
+      <CourseSchedule nextTerm={nextTerm} previousTerm={previousTerm} currentTerm={currentTerm} currentTermSections={sections['currentTerm']} previousTermSections={sections['previousTerm']} nextTermSections={sections['nextTerm']} />
       <AddReview courseName='BU 283' />
       <CourseReviews courseReviews={courseReviews} />
     </div>
