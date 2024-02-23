@@ -57,7 +57,7 @@ async function getCourseReviews(supabase: SupabaseClient<any, "public", any>) {
 export default async function CourseReviews({
     supabase
 }: {
-    supabase: SupabaseClient<any, "public", any> }
+    supabase: SupabaseClient<any, "public", any>
 }) {
     const courseReviews: any = await getCourseReviews(supabase);
 

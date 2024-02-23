@@ -132,7 +132,7 @@ async function getCourseSections(nextTerm: string, currentTerm: string, previous
 async function CourseSchedule({
     supabase
 }: {
-    supabase: SupabaseClient<any, "public", any> }
+    supabase: SupabaseClient<any, "public", any>
 }) {
     const nextTerm = getNextTerm(true)
     const previousTerm = getPreviousTerm(true)
