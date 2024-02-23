@@ -23,7 +23,7 @@ export default function Header(): React.ReactElement {
 					</Link>
 					<nav className='flex items-center gap-6 text-sm'>
 						<Link href='/course'>Courses</Link>
-						<Link href='/professors'>Professors</Link>
+						<Link href='/instructor'>Instructors</Link>
 						<Link href='/about'>About</Link>
 						<Link href='/privacy'>Privacy</Link>
 					</nav>
