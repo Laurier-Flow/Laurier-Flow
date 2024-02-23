@@ -58,7 +58,7 @@ async function CoursePage() {
   const supabase = createClient(cookieStore)
 
   return (
-    <div className="flex flex-col justify-evenly w-full lg:max-w-6xl">
+    <div className="flex flex-col justify-evenly w-full bg-slate-50 dark:bg-slate-950 lg:max-w-6xl lg:border-x-2 dark:lg:border-slate-900 lg:pl-6 lg:pr-6">
       <Suspense fallback={loading()}>
         <CourseInfo supabase={supabase} />
       </Suspense>
