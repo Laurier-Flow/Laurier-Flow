@@ -34,7 +34,7 @@ export interface section {
 
 function loading() {
   return (
-    <div className="flex animate-pulse">
+    <div className="flex animate-pulse w-full">
       <div className="flex-shrink-0">
         <span className="size-12 block bg-gray-200 rounded-full dark:bg-gray-700"></span>
       </div>
@@ -58,7 +58,7 @@ async function CoursePage() {
   const supabase = createClient(cookieStore)
 
   return (
-    <div className="flex flex-col justify-evenly max-w-full lg:max-w-6xl">
+    <div className="flex flex-col justify-evenly w-full lg:max-w-6xl">
       <Suspense fallback={loading()}>
         <CourseInfo supabase={supabase} />
       </Suspense>
