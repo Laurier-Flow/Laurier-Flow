@@ -62,8 +62,12 @@ async function CoursePage() {
       <Suspense fallback={loading()}>
         <CourseInfo supabase={supabase} />
       </Suspense>
-      <CourseSchedule supabase={supabase} />
-      <AddReview courseName='BU 283' />
+      <Suspense fallback={loading()}>
+        <CourseSchedule supabase={supabase} />
+      </Suspense>
+      <Suspense fallback={loading()}>
+        <AddReview courseName='BU 283' />
+      </Suspense>
       <Suspense fallback={loading()}>
         <CourseReviews supabase={supabase} />
       </Suspense>
