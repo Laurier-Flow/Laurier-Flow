@@ -82,13 +82,6 @@ async function CourseInfo({
         <h2 className='text-xl'>{courseData[0].course_title}</h2>
       </div>
 
-
-
-
-
-
-
-
       <div className='flex flex-col p-4'>
         <div className='flex flex-row'>
           <div className="relative h-40 w-40">
@@ -138,9 +131,6 @@ async function CourseInfo({
         </div>
         <h3 className='pt-4'>{courseDescription}</h3>
       </div>
-
-
-
 
       <div className="flex flex-col p-4">
         <h1 className="text-xl">{courseData[0].course_code} Prerequisites</h1>
