@@ -1,5 +1,15 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
+interface courseReview {
+    createdAt: string,
+    easy: number,
+    useful: number,
+    liked: number,
+    instructor: string,
+    program: string,
+    body: string
+}
+
 async function getCourseReviews(supabase: SupabaseClient<any, "public", any>) {
     try {
         const { data, error } = await supabase
@@ -51,6 +61,7 @@ async function getCourseReviews(supabase: SupabaseClient<any, "public", any>) {
         }
     } catch (error) {
         console.error(error);
+        return []
     }
 }
 
@@ -59,12 +70,12 @@ export default async function CourseReviews({
 }: {
     supabase: SupabaseClient<any, "public", any>
 }) {
-    const courseReviews: any = await getCourseReviews(supabase);
+    const courseReviews: courseReview[] | undefined = await getCourseReviews(supabase);
 
     return (
         <div className="p-4">
             <h1 className="text-xl">Course Reviews</h1>
-            {courseReviews.map((review: { createdAt: string, easy: number, useful: number, liked: number, instructor: string, program: string, body: string }, index: any) => (
+            {courseReviews?.map((review: courseReview, index: any) => (
                 <div key={index} className="mt-4 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7]">
                     <div className="p-4 md:p-5 flex flex-row">
                         <p className="mt-2 text-gray-500 dark:text-gray-400 flex flex-1">
