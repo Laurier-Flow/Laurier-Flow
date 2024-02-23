@@ -89,9 +89,9 @@ async function CourseInfo({ supabase }: { supabase: any }) {
         <div className='flex flex-row'>
           <div className="relative h-40 w-40">
             <svg className="h-full w-full" width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-gray-200 dark:text-gray-700" strokeWidth="2"></circle>
+              <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-gray-200 dark:text-gray-800" strokeWidth="2"></circle>
               <g className="origin-center -rotate-90 transform">
-                <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-blue-600 dark:text-blue-500" strokeWidth="2" strokeDasharray="100" strokeDashoffset={`${courseData[0].total_reviews !== 0
+                <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-primary dark:text-primary" strokeWidth="2" strokeDasharray="100" strokeDashoffset={`${courseData[0].total_reviews !== 0
                   ? 100 - (courseData[0].liked / courseData[0].total_reviews) * 100
                   : 100}`}></circle>
               </g>
@@ -114,8 +114,8 @@ async function CourseInfo({ supabase }: { supabase: any }) {
                   {courseData[0].total_reviews !== 0 ? (courseData[0].easy * 20) + '%' : '0%'}
                 </span>
               </div>
-              <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700" role="progressbar" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
-                <div className="flex flex-col justify-center rounded-full overflow-hidden bg-blue-600 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-blue-500" style={{ width: `${courseData[0].easy * 20}%` }}></div>
+              <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-800" role="progressbar" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
+                <div className="flex flex-col justify-center rounded-full overflow-hidden bg-primary text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-primary" style={{ width: `${courseData[0].easy * 20}%` }}></div>
               </div>
             </div>
 
@@ -124,8 +124,8 @@ async function CourseInfo({ supabase }: { supabase: any }) {
                 <h3 className="text-sm font-semibold text-gray-800 dark:text-white pt-6">Useful</h3>
                 <span className="text-sm text-gray-800 dark:text-white pt-6">{courseData[0].total_reviews !== 0 ? (courseData[0].useful * 20) + '%' : '0%'}</span>
               </div>
-              <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700" role="progressbar" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
-                <div className="flex flex-col justify-center rounded-full overflow-hidden bg-blue-600 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-blue-500" style={{ width: `${courseData[0].useful * 20}%` }}></div>
+              <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-800" role="progressbar" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
+                <div className="flex flex-col justify-center rounded-full overflow-hidden bg-primary text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-primary" style={{ width: `${courseData[0].useful * 20}%` }}></div>
               </div>
             </div>
 
