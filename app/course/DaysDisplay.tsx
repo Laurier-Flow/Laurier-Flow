@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { setDefaultHighWaterMark } from "stream";
 import { days } from "./CourseSchedule";
 
 function DaysDisplay({

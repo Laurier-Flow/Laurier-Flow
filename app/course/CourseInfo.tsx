@@ -1,7 +1,24 @@
 'use server'
 
-import { ReactElement, JSXElementConstructor, ReactFragment, ReactPortal, PromiseLikeOfReactNode, Key } from "react";
-import CourseSchedule from "./CourseSchedule";
+interface courseInfoDBResponse {
+  course_code: string,
+  total_reviews: number,
+  easy: number,
+  useful: number,
+  liked: number,
+  course_title: string
+}
+
+interface prerequisite {
+  andOr: string,
+  leftParentheses: string,
+  rightParentheses: string,
+  subject: string,
+  courseNumber: string,
+  level: string,
+  grade: string
+}
+
 import React from "react";
 import axios from "axios";
 import * as cheerio from 'cheerio';
@@ -12,7 +29,7 @@ async function getPrerequisites() {
     const response = await axios.get('https://loris.wlu.ca/register/ssb/courseSearchResults/getPrerequisites?term=202401&subjectCode=BU&courseNumber=283');
     const $ = cheerio.load(response.data);
 
-    const prerequisites: { andOr: string; leftParentheses: string; rightParentheses: string; subject: string; courseNumber: string; level: string; grade: string; }[] = [];
+    const prerequisites: prerequisite[] = [];
 
     $('section[aria-labelledby="preReqs"] tbody tr').each((index, element) => {
       const columns = $(element).find('td');
@@ -39,7 +56,7 @@ async function getPrerequisites() {
     return prerequisites;
   } catch (error) {
     console.error(error);
-    return '';
+    return [];
   }
 }
 
@@ -71,9 +88,9 @@ async function CourseInfo({
 }: {
   supabase: SupabaseClient<any, "public", any>
 }) {
-  const prerequisites: any = await getPrerequisites();
-  const courseDescription: any = await getCourseDescription();
-  const courseData: any = await getCourseData(supabase);
+  const prerequisites: prerequisite[] = await getPrerequisites();
+  const courseDescription = await getCourseDescription();
+  const courseData: courseInfoDBResponse[] = await getCourseData(supabase);
 
   return (
     <>
@@ -136,7 +153,7 @@ async function CourseInfo({
         <h1 className="text-xl">{courseData[0].course_code} Prerequisites</h1>
         <h2 className="pt-2">
           {prerequisites.length > 0 ? (
-            prerequisites.map((prerequisite: any, index: any) => (
+            prerequisites.map((prerequisite: prerequisite, index) => (
               <React.Fragment key={index}>
                 {' ' + prerequisite?.andOr} {prerequisite?.leftParentheses}
                 <b>
