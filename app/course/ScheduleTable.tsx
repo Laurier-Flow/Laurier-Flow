@@ -3,9 +3,8 @@
 import { useState } from "react";
 import { section } from "./CourseSchedule";
 import DaysDisplay from "./DaysDisplay";
-import React from "react";
 
-function ScheduleTab({
+async function ScheduleTab({
     activeTab,
     tabNumber,
     termSections
