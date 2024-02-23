@@ -3,16 +3,74 @@
 import { ReactElement, JSXElementConstructor, ReactFragment, ReactPortal, PromiseLikeOfReactNode, Key } from "react";
 import CourseSchedule from "./CourseSchedule";
 import React from "react";
+import axios from "axios";
+import * as cheerio from 'cheerio';
+import { SupabaseClient } from '@supabase/supabase-js';
 
-function CourseInfo({
-  courseData,
-  courseInfo,
-  prerequisites,
-}: {
-  courseData: any;
-  courseInfo: any;
-  prerequisites: any;
-}) {
+async function getPrerequisites() {
+  try {
+    const response = await axios.get('https://loris.wlu.ca/register/ssb/courseSearchResults/getPrerequisites?term=202401&subjectCode=BU&courseNumber=283');
+    const $ = cheerio.load(response.data);
+
+    const prerequisites: { andOr: string; leftParentheses: string; rightParentheses: string; subject: string; courseNumber: string; level: string; grade: string; }[] = [];
+
+    $('section[aria-labelledby="preReqs"] tbody tr').each((index, element) => {
+      const columns = $(element).find('td');
+
+      const andOr = $(columns[0]).text().trim().toLowerCase();
+      const leftParentheses = $(columns[1]).text().trim();
+      const rightParentheses = $(columns[8]).text().trim();
+      const subject = $(columns[4]).text().trim();
+      const courseNumber = $(columns[5]).text().trim();
+      const level = $(columns[6]).text().trim();
+      const grade = $(columns[7]).text().trim();
+
+      prerequisites.push({
+        andOr,
+        leftParentheses,
+        rightParentheses,
+        subject,
+        courseNumber,
+        level,
+        grade,
+      });
+    });
+
+    return prerequisites;
+  } catch (error) {
+    console.error(error);
+    return '';
+  }
+}
+
+async function getCourseData(supabase: SupabaseClient<any, "public", any>) {
+  const { data, error } = await supabase
+    .from('courses')
+    .select()
+    .eq('course_code', 'BU 283')
+
+  return data || [];
+}
+
+async function getCourseDescription() {
+  try {
+    const response = await axios.get('https://loris.wlu.ca/register/ssb/courseSearchResults/getCourseDescription?term=202401&subjectCode=BU&courseNumber=283');
+    const $ = cheerio.load(response.data);
+    const sectionElement = $('section[aria-labelledby="courseDescription"]');
+    const courseInfo = sectionElement ? sectionElement.text().trim().replace(/<[^>]*>/g, '') : '';
+
+    return courseInfo;
+  } catch (error) {
+    console.error(error);
+    return '';
+  }
+}
+
+async function CourseInfo({ supabase }: {supabase: any}) {
+  const prerequisites: any = await getPrerequisites();
+  const courseDescription: any = await getCourseDescription();
+  const courseData: any = await getCourseData(supabase);
+
   return (
     <>
       <div className='flex flex-col p-4'>
@@ -74,7 +132,7 @@ function CourseInfo({
             <p className='pt-4'>{courseData[0].total_reviews} ratings</p>
           </div>
         </div>
-        <h3 className='pt-4'>{courseInfo}</h3>
+        <h3 className='pt-4'>{courseDescription}</h3>
       </div>
 
 
