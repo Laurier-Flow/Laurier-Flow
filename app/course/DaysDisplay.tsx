@@ -5,7 +5,7 @@ import { days } from "./CourseSchedule";
 function DaysDisplay({
     days
 }: {
-    days: days
+    days: days | null
 }) {
     const [monday, setMonday] = useState(500);
     const [tuesday, setTuesday] = useState(500);
@@ -16,31 +16,31 @@ function DaysDisplay({
     const [sunday, setSunday] = useState(500);
 
     useEffect(() => {
-        if (days.monday) {
+        if (days?.monday) {
             setMonday(100)
         }
 
-        if (days.tuesday) {
+        if (days?.tuesday) {
             setTuesday(100)
         }
 
-        if (days.wednesday) {
+        if (days?.wednesday) {
             setWednesday(100)
         }
 
-        if (days.thursday) {
+        if (days?.thursday) {
             setThursday(100)
         }
 
-        if (days.friday) {
+        if (days?.friday) {
             setFriday(100)
         }
 
-        if (days.saturday) {
+        if (days?.saturday) {
             setSaturday(100)
         }
 
-        if (days.sunday) {
+        if (days?.sunday) {
             setSunday(100)
         }
     }, []);
