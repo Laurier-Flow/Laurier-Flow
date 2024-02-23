@@ -66,7 +66,11 @@ async function getCourseDescription() {
   }
 }
 
-async function CourseInfo({ supabase }: { supabase: any }) {
+async function CourseInfo({
+  supabase
+}: {
+  supabase: SupabaseClient<any, "public", any>
+}) {
   const prerequisites: any = await getPrerequisites();
   const courseDescription: any = await getCourseDescription();
   const courseData: any = await getCourseData(supabase);
@@ -77,13 +81,6 @@ async function CourseInfo({ supabase }: { supabase: any }) {
         <h1 className='text-2xl font-bold'>{courseData[0].course_code}</h1>
         <h2 className='text-xl'>{courseData[0].course_title}</h2>
       </div>
-
-
-
-
-
-
-
 
       <div className='flex flex-col p-4'>
         <div className='flex flex-row'>
@@ -134,9 +131,6 @@ async function CourseInfo({ supabase }: { supabase: any }) {
         </div>
         <h3 className='pt-4'>{courseDescription}</h3>
       </div>
-
-
-
 
       <div className="flex flex-col p-4">
         <h1 className="text-xl">{courseData[0].course_code} Prerequisites</h1>
