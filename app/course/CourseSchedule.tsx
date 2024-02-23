@@ -1,11 +1,10 @@
 'use server'
 
-import { useState } from "react";
-import DaysDisplay from "./DaysDisplay";
 import axios from 'axios';
 import { SupabaseClient } from '@supabase/supabase-js';
 import * as cheerio from 'cheerio';
-import ScheduleTable from "./ScheduleTab";
+import dynamic from 'next/dynamic';
+const ScheduleTable = dynamic(() => import('./ScheduleTab'), { ssr: false });
 
 export interface days {
     monday: boolean,
