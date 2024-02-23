@@ -66,7 +66,11 @@ async function getCourseDescription() {
   }
 }
 
-async function CourseInfo({ supabase }: { supabase: any }) {
+async function CourseInfo({
+  supabase
+}: {
+  supabase: SupabaseClient<any, "public", any>
+}) {
   const prerequisites: any = await getPrerequisites();
   const courseDescription: any = await getCourseDescription();
   const courseData: any = await getCourseData(supabase);
