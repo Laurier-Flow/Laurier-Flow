@@ -5,9 +5,9 @@ import { createClient } from '@/utils/supabase/server';
 import CourseInfo from './CourseInfo';
 import dynamic from 'next/dynamic';
 import CourseReviews from './CourseReviews';
-import { SupabaseClient } from '@supabase/supabase-js';
 import { Suspense } from 'react';
 import CourseSchedule from './CourseSchedule';
+import Loading from '@/components/Loading';
 const AddReview = dynamic(() => import('./AddReview'), { ssr: false })
 
 export interface days {
@@ -32,43 +32,22 @@ export interface section {
   days: days | null
 }
 
-function loading() {
-  return (
-    <div className="flex animate-pulse w-full">
-      <div className="flex-shrink-0">
-        <span className="size-12 block bg-gray-200 rounded-full dark:bg-gray-700"></span>
-      </div>
-
-      <div className="ms-4 mt-2 w-full">
-        <h3 className="h-4 bg-gray-200 rounded-full dark:bg-gray-700"></h3>
-
-        <ul className="mt-5 space-y-3">
-          <li className="w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700"></li>
-          <li className="w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700"></li>
-          <li className="w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700"></li>
-          <li className="w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700"></li>
-        </ul>
-      </div>
-    </div>
-  )
-}
-
 async function CoursePage() {
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)
 
   return (
     <div className="flex flex-col justify-evenly w-full bg-slate-50 dark:bg-slate-950 lg:max-w-6xl lg:border-x-2 dark:lg:border-slate-900 lg:pl-6 lg:pr-6">
-      <Suspense fallback={loading()}>
+      <Suspense fallback={<Loading />}>
         <CourseInfo supabase={supabase} />
       </Suspense>
-      <Suspense fallback={loading()}>
+      <Suspense fallback={<Loading />}>
         <CourseSchedule supabase={supabase} />
       </Suspense>
-      <Suspense fallback={loading()}>
+      <Suspense fallback={<Loading />}>
         <AddReview courseName='BU 283' />
       </Suspense>
-      <Suspense fallback={loading()}>
+      <Suspense fallback={<Loading />}>
         <CourseReviews supabase={supabase} />
       </Suspense>
     </div>

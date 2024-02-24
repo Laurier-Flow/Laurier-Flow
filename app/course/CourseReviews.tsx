@@ -138,7 +138,7 @@ export default async function CourseReviews({
                     </div>
                     <div className="bg-gray-100 border-t rounded-b-xl py-3 px-4 md:py-4 md:px-5 dark:bg-slate-900 dark:border-gray-700">
                         <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
-                            — {review.program} student {review.instructor ? `, taught by ${review.instructor}` : ''}
+                            — {review.program} student{review.instructor ? `, taught by ${review.instructor}` : ''}
                         </p>
                     </div>
                 </div>
