@@ -53,6 +53,12 @@ export default function About() {
           imageUrl="https://media.licdn.com/dms/image/D5603AQGm58eD6354Mg/profile-displayphoto-shrink_200_200/0/1680819421625?e=1714003200&v=beta&t=odnVt9GuGnqWjzsGd5N8bEk7QbL8sTOtTVXI9HFuWrY"
           linkedinUrl="https://www.linkedin.com/in/sohamnagi/"
         />
+        <TeamMember
+          name="Shahrukh Qureshi"
+          role="Software"
+          imageUrl="https://media.licdn.com/dms/image/D5603AQG3D_-qrcORWQ/profile-displayphoto-shrink_200_200/0/1679183158797?e=1714003200&v=beta&t=LW9hoEV5KC24p5hR4-SV04vaG3f7ZU5ny7dywg6VN8c"
+          linkedinUrl="https://www.linkedin.com/in/qureshishahrukh/"
+        />
       </div>
     </div>
   );
