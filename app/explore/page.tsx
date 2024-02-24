@@ -11,7 +11,7 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 interface Intructor {
   name: string;
@@ -29,6 +29,7 @@ interface Course {
 }
 
 export default function Explore() {
+  const [filterValue, setFilterValue] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [showCoursesList, setShowCoursesList] = useState(true);
   const [showProfList, setShowProfList] = useState(false);
