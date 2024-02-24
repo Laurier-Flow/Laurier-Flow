@@ -2,7 +2,11 @@
 import React from "react";
 import { CirclesWithBar } from "react-loader-spinner";
 
-export default function LoadingSpinner(): React.ReactElement {
+type LoadingSpinnerProps = {
+  loading: boolean;
+};
+
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ loading }) => {
   return (
     <CirclesWithBar
       height="150"
@@ -14,7 +18,9 @@ export default function LoadingSpinner(): React.ReactElement {
       ariaLabel="circles-with-bar-loading"
       wrapperStyle={{}}
       wrapperClass="component-absolute-center"
-      visible={true}
+      visible={loading}
     />
   );
-}
+};
+
+export default LoadingSpinner;

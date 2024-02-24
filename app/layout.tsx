@@ -28,7 +28,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-background text-foreground w-full h-full flex flex-col">
         {loading ? (
-          <LoadingSpinner />
+          <LoadingSpinner loading={loading} />
         ) : (
           <ThemeProvider
             attribute="class"
