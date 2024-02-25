@@ -136,8 +136,8 @@ async function CourseSchedule({
 }) {
     const nextTerm = getNextTerm(true)
     const previousTerm = getPreviousTerm(true)
-    const currentTerm = getCurrentTerm(true)
-    const termSections: sections = await getCourseSections(getNextTerm(false), getCurrentTerm(false), getPreviousTerm(false), supabase)
+    const currentTerm = await getCurrentTerm(true)
+    const termSections: sections = await getCourseSections(getNextTerm(false), await getCurrentTerm(false), getPreviousTerm(false), supabase)
     const currentTermSections: section[] = termSections['currentTerm']
     const previousTermSections: section[] = termSections['previousTerm']
     const nextTermSections: section[] = termSections['nextTerm']
@@ -176,7 +176,7 @@ function getNextTerm(pretty: boolean) {
     return ''
   }
   
-  function getCurrentTerm(pretty: boolean) {
+  export async function getCurrentTerm(pretty: boolean) {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();

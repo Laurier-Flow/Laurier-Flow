@@ -83,7 +83,6 @@ export default async function InstructorReviews({
 
             {Object.entries(instructorReviews).map(([course, reviews]) => (
                 <div key={course}>
-                    <h2 className="underline decoration-2 mt-4 font-semibold text-lg">{course}</h2>
                     {reviews?.map((review: instructorReview, index: any) => (
                         <div key={index} className="mt-4 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7]">
                             <div className="p-4 md:p-5 flex flex-col lg:flex-row">
