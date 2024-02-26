@@ -2,10 +2,9 @@ import TeamMember from "@/components/TeamMember";
 
 export default function About() {
   return (
-    <div className="w-8/12 bg-center">
-      <h1 className="text-3xl py-5 text-center font-bold underline">
-        About WLU Flow
-      </h1>
+    <div className="flex flex-col justify-evenly w-full bg-slate-50 dark:bg-slate-950 lg:max-w-6xl lg:border-x-2 dark:lg:border-slate-900 lg:pl-6 lg:pr-6">
+      <h1 className="text-3xl py-3 text-center font-bold">About WLU Flow</h1>
+      <hr className="border-gray-300 dark:border-gray-800"></hr>
       <h2 className="text-xl py-2 font-semibold">Welcome to WLU Flow!</h2>
       <p className="pb-2">
         Flow is a course planning website for University of Waterloo students.

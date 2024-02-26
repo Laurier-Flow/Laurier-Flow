@@ -1,10 +1,8 @@
 export default function Privacy() {
   return (
-    <div className="w-8/12 bg-center *:py-2">
-      <h1 className="text-3xl py-5 text-center font-bold underline">
-        Privacy Policy
-      </h1>
-
+    <div className="flex flex-col justify-evenly w-full bg-slate-50 dark:bg-slate-950 *:py-2 lg:max-w-6xl lg:border-x-2 dark:lg:border-slate-900 lg:pl-6 lg:pr-6">
+      <h1 className="text-3xl py-3 text-center font-bold">Privacy Policy</h1>
+      <hr className=" border-gray-300 dark:border-gray-800"></hr>
       <h2 className="text-xl py-2 font-semibold">Log Files</h2>
       <p>
         WLU Flow follows a standard procedure of using log files. These files
@@ -66,7 +64,7 @@ export default function Privacy() {
         best efforts to promptly remove such information from our records.
       </p>
       <h2 className="text-xl py-2 font-semibold">Consent</h2>
-      <p>
+      <p className="pb-5">
         By using our website, you hereby consent to our Privacy Policy and agree
         to its Terms and Conditions.
       </p>
