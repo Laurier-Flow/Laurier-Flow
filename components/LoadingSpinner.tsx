@@ -13,8 +13,8 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ loading }) => {
       width="150"
       color="#ffffff"
       outerCircleColor="#6511d4"
-      innerCircleColor="#0ce0f7"
-      barColor="#0ce0f7"
+      innerCircleColor="#FFD700"
+      barColor="#FFD700"
       ariaLabel="circles-with-bar-loading"
       wrapperStyle={{}}
       wrapperClass="component-absolute-center"
