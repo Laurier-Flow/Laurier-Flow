@@ -4,6 +4,7 @@ import InstructorInfo from "./InstructorInfo";
 import { cookies } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
 import InstructorReviews from "./InstructorReviews";
+import InstructorSchedule from "./InstructorSchedule";
 
 function InstructorPage() {
     const cookieStore = cookies()
@@ -13,6 +14,9 @@ function InstructorPage() {
         <div className="flex flex-col justify-evenly w-full bg-slate-50 dark:bg-slate-950 lg:max-w-6xl lg:border-x-2 dark:lg:border-slate-900 lg:pl-6 lg:pr-6">
             <Suspense fallback={<Loading />}>
                 <InstructorInfo supabase={supabase} />
+            </Suspense>
+            <Suspense fallback={<Loading />}>
+                <InstructorSchedule supabase={supabase} />
             </Suspense>
             <Suspense fallback={<Loading />}>
                 <InstructorReviews supabase={supabase} />
