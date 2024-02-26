@@ -40,12 +40,15 @@ async function CoursePage() {
     <div className="flex flex-col justify-evenly w-full bg-slate-50 dark:bg-slate-950 lg:max-w-6xl lg:border-x-2 dark:lg:border-slate-900 lg:pl-6 lg:pr-6">
       <Suspense fallback={<Loading />}>
         <CourseInfo supabase={supabase} />
+        <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
       </Suspense>
       <Suspense fallback={<Loading />}>
         <CourseSchedule supabase={supabase} />
+        <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
       </Suspense>
       <Suspense fallback={<Loading />}>
         <AddReview courseName='BU 283' />
+        <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
       </Suspense>
       <Suspense fallback={<Loading />}>
         <CourseReviews supabase={supabase} />
