@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
 import InstructorReviews from "./InstructorReviews";
 import InstructorSchedule from "./InstructorSchedule";
+import AddReview from "../course/AddReview";
 
 function InstructorPage() {
     const cookieStore = cookies()
@@ -17,6 +18,9 @@ function InstructorPage() {
             </Suspense>
             <Suspense fallback={<Loading />}>
                 <InstructorSchedule supabase={supabase} />
+            </Suspense>
+            <Suspense fallback={<Loading />}>
+                <AddReview courseName='Kenneth Jackson' />
             </Suspense>
             <Suspense fallback={<Loading />}>
                 <InstructorReviews supabase={supabase} />
