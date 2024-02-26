@@ -27,6 +27,7 @@ function InstructorPage() {
             </Suspense>
             <Suspense fallback={<Loading />}>
                 <InstructorReviews supabase={supabase} />
+                <hr className="mt-8 mb-8 border-0"></hr>
             </Suspense>
         </div>
     )
