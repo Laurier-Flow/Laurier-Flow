@@ -1,186 +1,231 @@
-'use client'
+'use server'
 
-import { JSXElementConstructor, PromiseLikeOfReactNode, ReactElement, ReactFragment, ReactPortal, SetStateAction, useEffect, useState } from "react";
-import DaysDisplay from "./DaysDisplay";
+import axios from 'axios';
+import { SupabaseClient } from '@supabase/supabase-js';
+import * as cheerio from 'cheerio';
+import dynamic from 'next/dynamic';
+const ScheduleTable = dynamic(() => import('./ScheduleTab'), { ssr: false });
 
-function convertTo12HourFormat(timeString: string) {
-    const hours = timeString.slice(0, 2);
-    const minutes = timeString.slice(2, 4)
-    const parsedHours = parseInt(hours, 10);
-
-    if (parsedHours >= 0 && parsedHours < 12) {
-        return `${parsedHours === 0 ? 12 : parsedHours}:${minutes} AM`;
-    } else if (parsedHours === 12) {
-        return `12:${minutes} PM`;
-    } else {
-        return `${parsedHours - 12}:${minutes} PM`;
-    }
+export interface days {
+  monday: boolean,
+  tuesday: boolean,
+  wednesday: boolean,
+  thursday: boolean,
+  friday: boolean,
+  saturday: boolean,
+  sunday: boolean
 }
 
-function CourseSchedule({
-    nextTerm,
-    currentTerm,
-    previousTerm,
-    courseSections
+export interface section {
+  crn: string | undefined | null,
+  type: string | undefined | null,
+  section: string | undefined | null,
+  campus: string | undefined | null,
+  enrollment: string | undefined | null,
+  enrollmentMax: string | undefined | null,
+  beginTime: string | undefined | null,
+  endTime: string | undefined | null,
+  days: days | null
+}
+
+export interface sections {
+  nextTerm: section[],
+  currentTerm: section[],
+  previousTerm: section[]
+}
+
+interface sectionResponseDB {
+  course_registration_number: number,
+  term: string,
+  instructor_name_fk: string,
+  course_code_fk: string
+}
+
+async function fetchSectionData(sectionData: sectionResponseDB) {
+  try {
+    const [classDetailsResponse, enrollmentInfoResponse, facultyMeetingTimesResponse] = await Promise.all([
+      axios.get('https://loris.wlu.ca/register/ssb/searchResults/getClassDetails?term=' + sectionData.term + '&courseReferenceNumber=' + sectionData.course_registration_number.toString()),
+      axios.get('https://loris.wlu.ca/register/ssb/searchResults/getEnrollmentInfo?term=' + sectionData.term + '&courseReferenceNumber=' + sectionData.course_registration_number.toString()),
+      axios.get('https://loris.wlu.ca/register/ssb/searchResults/getFacultyMeetingTimes?term=' + sectionData.term + '&courseReferenceNumber=' + sectionData.course_registration_number.toString())
+    ]);
+
+    return {
+      sectionData: sectionData,
+      classDetails: classDetailsResponse.data,
+      enrollmentInfo: enrollmentInfoResponse.data,
+      facultyMeetingTimes: facultyMeetingTimesResponse.data
+    };
+  } catch (error) {
+    return fetchSectionData(sectionData)
+  }
+}
+
+export async function getCourseSections(nextTerm: string, currentTerm: string, previousTerm: string, filterCol: string, colValue: string, supabase: SupabaseClient<any, "public", any>) {
+  const { data: sectionData, error: sectionError } = await supabase
+    .from('sections')
+    .select()
+    .eq(filterCol, colValue)
+
+  const courseSections: sections = {
+    nextTerm: [],
+    currentTerm: [],
+    previousTerm: []
+  }
+
+  const sectionDataRequests = sectionData?.map(fetchSectionData)
+
+  if (sectionDataRequests) {
+    const sectionDataResponses = await Promise.all(sectionDataRequests);
+
+    sectionDataResponses.forEach(element => {
+      let $ = cheerio.load(element.classDetails)
+      const section = $('#sectionNumber').text();
+      // ts-ignore is used because of issues with types in the cheerio dependency
+      /** @ts-ignore */
+      const campus = $('span').filter((index, element) => $(element).text().includes('Campus:'))[0].next?.data?.trim()
+      /** @ts-ignore */
+      const type = $('span').filter((index, element) => $(element).text().includes('Instructional Method:'))[0].next?.data?.trim()
+
+      $ = cheerio.load(element.enrollmentInfo)
+      /** @ts-ignore */
+      const enrollment = $('span').filter((index, element) => $(element).text().includes('Enrolment Actual:'))[0].next?.next?.children[0].data.trim()
+      /** @ts-ignore */
+      const enrollmentMax = $('span').filter((index, element) => $(element).text().includes('Enrolment Maximum:'))[0].next?.next?.children[0].data.trim()
+
+      const beginTime = element.facultyMeetingTimes.fmt[0]?.meetingTime?.beginTime
+      const endTime = element.facultyMeetingTimes.fmt[0]?.meetingTime?.endTime
+      const days = {
+        monday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.monday,
+        tuesday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.tuesday,
+        wednesday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.wednesday,
+        thursday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.thursday,
+        friday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.friday,
+        saturday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.saturday,
+        sunday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.sunday
+      };
+
+      let c: section = {
+        crn: element.sectionData.course_registration_number.toString(),
+        type: type,
+        section: section,
+        campus: campus,
+        enrollment: enrollment,
+        enrollmentMax: enrollmentMax,
+        beginTime: beginTime,
+        endTime: endTime,
+        days: days
+      }
+
+      if (element.sectionData.term == nextTerm) {
+        courseSections['nextTerm']?.push(c)
+      } else if (element.sectionData.term == currentTerm) {
+        courseSections['currentTerm']?.push(c)
+      } else if (element.sectionData.term == previousTerm) {
+        courseSections['previousTerm']?.push(c)
+      }
+    });
+  }
+
+  return courseSections;
+}
+
+async function CourseSchedule({
+  supabase
 }: {
-    nextTerm: any;
-    currentTerm: any;
-    previousTerm: any;
-    courseSections: any;
+  supabase: SupabaseClient<any, "public", any>
 }) {
-    const [activeTab, setActiveTab] = useState(1);
+  const nextTerm = await getNextTerm(true)
+  const previousTerm = await getPreviousTerm(true)
+  const currentTerm = await getCurrentTerm(true)
+  const termSections: sections = await getCourseSections(await getNextTerm(false), await getCurrentTerm(false), await getPreviousTerm(false), 'course_code_fk', 'BU 283',supabase)
+  const currentTermSections: section[] = termSections['currentTerm']
+  const previousTermSections: section[] = termSections['previousTerm']
+  const nextTermSections: section[] = termSections['nextTerm']
 
-    const handleTabClick = (tabNumber: number) => {
-        setActiveTab(tabNumber);
+  return (
+    <div className="flex flex-col p-4">
+      <h1 className="text-xl">Course Schedule</h1>
+      <ScheduleTable nextTerm={nextTerm} previousTerm={previousTerm} currentTerm={currentTerm} currentTermSections={currentTermSections} previousTermSections={previousTermSections} nextTermSections={nextTermSections} />
+    </div>
+  );
+}
+
+export async function getNextTerm(pretty: boolean) {
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+
+  if (pretty) {
+    if (0 <= currentMonth && currentMonth <= 3) {
+      return `Spring ${currentYear}`
+    } else if (4 <= currentMonth && currentMonth <= 7) {
+      return `Fall ${currentYear}`
+    } else if (8 <= currentMonth && currentMonth <= 11) {
+      return `Winter ${currentYear + 1}`
     }
+  } else {
+    if (0 <= currentMonth && currentMonth <= 3) {
+      return `${currentYear}05`
+    } else if (4 <= currentMonth && currentMonth <= 7) {
+      return `${currentYear}09`
+    } else if (8 <= currentMonth && currentMonth <= 11) {
+      return `${currentYear + 1}01`
+    }
+  }
 
-    return (
-        <div className="flex flex-col p-4">
-            <h1 className="text-xl">Course Schedule</h1>
+  return ''
+}
 
-            <nav suppressHydrationWarning className="flex space-x-2 pt-4" aria-label="Tabs" role="tablist">
-                <button suppressHydrationWarning onClick={() => handleTabClick(1)} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center text-gray-500 hover:text-blue-600 rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 1 ? 'active' : ''}`} id="equal-width-elements-item-1" data-hs-tab="#equal-width-elements-1" aria-controls="equal-width-elements-1" role="tab">
-                    {nextTerm}
-                </button>
-                <button suppressHydrationWarning onClick={() => handleTabClick(2)} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center text-gray-500 hover:text-blue-600 rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 2 ? 'active' : ''}`} data-hs-tab="#equal-width-elements-2" aria-controls="equal-width-elements-2" role="tab">
-                    {currentTerm}
-                </button>
-                <button suppressHydrationWarning onClick={() => handleTabClick(3)} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center text-gray-500 hover:text-blue-600 rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 3 ? 'active' : ''}`} data-hs-tab="#equal-width-elements-3" aria-controls="equal-width-elements-3" role="tab">
-                    {previousTerm}
-                </button>
-            </nav>
+export async function getCurrentTerm(pretty: boolean) {
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
 
-            <div className="mt-3 pl-4 pr-4">
-                <div id="equal-width-elements-1" className={activeTab === 1 ? '' : 'hidden'} role="tabpanel" aria-labelledby="equal-width-elements-item-1">
-                    <div className="flex flex-col">
-                        <div className="-m-1.5 overflow-x-auto">
-                            <div className="p-1.5 min-w-full inline-block align-middle">
-                                <div className="overflow-hidden">
-                                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">CRN</th>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Type</th>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Section</th>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Campus</th>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Enrolled</th>
-                                                <th scope="col" className="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Time</th>
-                                                <th scope="col" className="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Date</th>
-                                                <th scope="col" className="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Location</th>
-                                                <th scope="col" className="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Instructor</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                                            {courseSections['next'].map((item: { crn: string; type: string; section: string; campus: string; enrollment: string; enrollementMax: string; beginTime: string; endTime: string; days: any }) => (
-                                                <tr>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.crn}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.type}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.section}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.campus}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.enrollment + '/' + item.enrollementMax}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{convertTo12HourFormat(item.beginTime) + ' - ' + convertTo12HourFormat(item.endTime)}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200"><DaysDisplay days={item.days} /></td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200"></td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200"></td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  if (pretty) {
+    if (0 <= currentMonth && currentMonth <= 3) {
+      return `Winter ${currentYear}`
+    } else if (4 <= currentMonth && currentMonth <= 7) {
+      return `Spring ${currentYear}`
+    } else if (8 <= currentMonth && currentMonth <= 11) {
+      return `Fall ${currentYear}`
+    }
+  } else {
+    if (0 <= currentMonth && currentMonth <= 3) {
+      return `${currentYear}01`
+    } else if (4 <= currentMonth && currentMonth <= 7) {
+      return `${currentYear}05`
+    } else if (8 <= currentMonth && currentMonth <= 11) {
+      return `${currentYear}09`
+    }
+  }
 
+  return ''
+}
 
+export async function getPreviousTerm(pretty: boolean) {
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
 
-                <div id="equal-width-elements-2" className={activeTab === 2 ? '' : 'hidden'} role="tabpanel" aria-labelledby="equal-width-elements-item-2">
-                    <div className="flex flex-col">
-                        <div className="-m-1.5 overflow-x-auto">
-                            <div className="p-1.5 min-w-full inline-block align-middle">
-                                <div className="overflow-hidden">
-                                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">CRN</th>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Type</th>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Section</th>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Campus</th>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Enrolled</th>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Time</th>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Date</th>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Location</th>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Instructor</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                                            {courseSections['current'].map((item: { crn: string; type: string; section: string; campus: string; enrollment: string; enrollementMax: string; beginTime: string; endTime: string; days: any }) => (
-                                                <tr>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.crn}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.type}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.section}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.campus}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.enrollment + '/' + item.enrollementMax}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{convertTo12HourFormat(item.beginTime) + ' - ' + convertTo12HourFormat(item.endTime)}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200"><DaysDisplay days={item.days} /></td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200"></td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200"></td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  if (pretty) {
+    if (0 <= currentMonth && currentMonth <= 3) {
+      return `Fall ${currentYear - 1}`
+    } else if (4 <= currentMonth && currentMonth <= 7) {
+      return `Winter ${currentYear}`
+    } else if (8 <= currentMonth && currentMonth <= 11) {
+      return `Spring ${currentYear}`
+    }
+  } else {
+    if (0 <= currentMonth && currentMonth <= 3) {
+      return `${currentYear - 1}09`
+    } else if (4 <= currentMonth && currentMonth <= 7) {
+      return `${currentYear}01`
+    } else if (8 <= currentMonth && currentMonth <= 11) {
+      return `${currentYear}09`
+    }
+  }
 
-
-
-
-                <div id="equal-width-elements-3" className={activeTab === 3 ? '' : 'hidden'} role="tabpanel" aria-labelledby="equal-width-elements-item-3">
-                    <div className="flex flex-col">
-                        <div className="-m-1.5 overflow-x-auto">
-                            <div className="p-1.5 min-w-full inline-block align-middle">
-                                <div className="overflow-hidden">
-                                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">CRN</th>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Type</th>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Section</th>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Campus</th>
-                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Enrolled</th>
-                                                <th scope="col" className="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Time</th>
-                                                <th scope="col" className="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Date</th>
-                                                <th scope="col" className="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Location</th>
-                                                <th scope="col" className="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Instructor</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                                            {courseSections['previous'].map((item: { crn: string; type: string; section: string; campus: string; enrollment: string; enrollementMax: string; beginTime: string; endTime: string; days: any }) => (
-                                                <tr>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.crn}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.type}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.section}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.campus}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.enrollment + '/' + item.enrollementMax}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{convertTo12HourFormat(item.beginTime) + ' - ' + convertTo12HourFormat(item.endTime)}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200"><DaysDisplay days={item.days} /></td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200"></td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200"></td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+  return ''
 }
 
 export default CourseSchedule;
