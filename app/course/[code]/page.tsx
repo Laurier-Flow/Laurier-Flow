@@ -2,13 +2,13 @@
 
 import { cookies, headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
-import CourseInfo from "./CourseInfo";
+import CourseInfo from "../CourseInfo";
 import dynamic from "next/dynamic";
-import CourseReviews from "./CourseReviews";
+import CourseReviews from "../CourseReviews";
 import { Suspense } from "react";
-import CourseSchedule from "./CourseSchedule";
+import CourseSchedule from "../CourseSchedule";
 import Loading from "@/components/Loading";
-const AddReview = dynamic(() => import("./AddReview"), { ssr: false });
+const AddReview = dynamic(() => import("../AddReview"), { ssr: false });
 
 export interface days {
     monday: boolean;
