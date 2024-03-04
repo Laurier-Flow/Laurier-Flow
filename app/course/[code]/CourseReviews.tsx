@@ -10,12 +10,12 @@ interface courseReview {
     body: string
 }
 
-async function getCourseReviews(supabase: SupabaseClient<any, "public", any>) {
+async function getCourseReviews(supabase: SupabaseClient<any, "public", any>, courseName: string) {
     try {
         const { data, error } = await supabase
             .from('course_reviews')
             .select()
-            .eq('course_code_fk', 'BU 283')
+            .eq('course_code_fk', courseName)
 
         let reviews = []
 
@@ -66,11 +66,13 @@ async function getCourseReviews(supabase: SupabaseClient<any, "public", any>) {
 }
 
 export default async function CourseReviews({
-    supabase
+    supabase,
+    courseName
 }: {
-    supabase: SupabaseClient<any, "public", any>
+    supabase: SupabaseClient<any, "public", any>,
+    courseName: string
 }) {
-    const courseReviews: courseReview[] | undefined = await getCourseReviews(supabase);
+    const courseReviews: courseReview[] | undefined = await getCourseReviews(supabase, courseName);
 
     return (
         <div className="p-4">

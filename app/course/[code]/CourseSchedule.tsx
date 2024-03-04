@@ -130,14 +130,16 @@ export async function getCourseSections(nextTerm: string, currentTerm: string, p
 }
 
 async function CourseSchedule({
-  supabase
+  supabase,
+  courseName
 }: {
-  supabase: SupabaseClient<any, "public", any>
+  supabase: SupabaseClient<any, "public", any>,
+  courseName: string
 }) {
   const nextTerm = await getNextTerm(true)
   const previousTerm = await getPreviousTerm(true)
   const currentTerm = await getCurrentTerm(true)
-  const termSections: sections = await getCourseSections(await getNextTerm(false), await getCurrentTerm(false), await getPreviousTerm(false), 'course_code_fk', 'BU 283',supabase)
+  const termSections: sections = await getCourseSections(await getNextTerm(false), await getCurrentTerm(false), await getPreviousTerm(false), 'course_code_fk', courseName, supabase)
   const currentTermSections: section[] = termSections['currentTerm']
   const previousTermSections: section[] = termSections['previousTerm']
   const nextTermSections: section[] = termSections['nextTerm']
