@@ -82,15 +82,15 @@ export async function getCourseSections(nextTerm: string, currentTerm: string, p
       const section = $('#sectionNumber').text();
       // ts-ignore is used because of issues with types in the cheerio dependency
       /** @ts-ignore */
-      const campus = $('span').filter((index, element) => $(element).text().includes('Campus:'))[0].next?.data?.trim()
+      const campus = $('span').filter((index, element) => $(element).text().includes('Campus:'))[0]?.next?.data?.trim()
       /** @ts-ignore */
-      const type = $('span').filter((index, element) => $(element).text().includes('Instructional Method:'))[0].next?.data?.trim()
+      const type = $('span').filter((index, element) => $(element).text().includes('Instructional Method:'))[0]?.next?.data?.trim()
 
       $ = cheerio.load(element.enrollmentInfo)
       /** @ts-ignore */
-      const enrollment = $('span').filter((index, element) => $(element).text().includes('Enrolment Actual:'))[0].next?.next?.children[0].data.trim()
+      const enrollment = $('span').filter((index, element) => $(element).text().includes('Enrolment Actual:'))[0]?.next?.next?.children[0].data.trim()
       /** @ts-ignore */
-      const enrollmentMax = $('span').filter((index, element) => $(element).text().includes('Enrolment Maximum:'))[0].next?.next?.children[0].data.trim()
+      const enrollmentMax = $('span').filter((index, element) => $(element).text().includes('Enrolment Maximum:'))[0]?.next?.next?.children[0].data.trim()
 
       const beginTime = element.facultyMeetingTimes.fmt[0]?.meetingTime?.beginTime
       const endTime = element.facultyMeetingTimes.fmt[0]?.meetingTime?.endTime
