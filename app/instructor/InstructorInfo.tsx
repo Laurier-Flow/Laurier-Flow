@@ -11,20 +11,20 @@ interface instructorInfoDBResponse {
   instructor_email: string
 }
 
-async function getInstructorData(supabase: SupabaseClient<any, "public", any>) {
+async function getInstructorData(supabase: SupabaseClient<any, "public", any>, instructorName: string) {
   const { data, error } = await supabase
     .from('instructors')
     .select()
-    .eq('instructor_email', 'kjackson@wlu.ca')
+    .eq('instructor_name', instructorName)
 
   return data || [];
 }
 
-async function getCurrentCourses(supabase: SupabaseClient<any, "public", any>) {
+async function getCurrentCourses(supabase: SupabaseClient<any, "public", any>, instructorName: string) {
   const { data, error } = await supabase
     .from('sections')
     .select()
-    .eq('instructor_name_fk', 'Kenneth Jackson')
+    .eq('instructor_name_fk', instructorName)
 
   const courses = new Set<string>();
   const currentTerm = await getCurrentTerm(false);
@@ -39,12 +39,14 @@ async function getCurrentCourses(supabase: SupabaseClient<any, "public", any>) {
 }
 
 async function InstructorInfo({
-  supabase
+  supabase,
+  instructorName
 }: {
-  supabase: SupabaseClient<any, "public", any>
+  supabase: SupabaseClient<any, "public", any>,
+  instructorName: string
 }) {
-  const instructorData: instructorInfoDBResponse[] = await getInstructorData(supabase);
-  const currentCourses = await getCurrentCourses(supabase)
+  const instructorData: instructorInfoDBResponse[] = await getInstructorData(supabase, instructorName);
+  const currentCourses = await getCurrentCourses(supabase, instructorName)
 
 
   return (

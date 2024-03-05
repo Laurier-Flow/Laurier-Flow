@@ -11,12 +11,12 @@ export interface instructorReview {
     body: string
 }
 
-async function getInstructorReviews(supabase: SupabaseClient<any, "public", any>) {
+async function getInstructorReviews(supabase: SupabaseClient<any, "public", any>, instructorName: string) {
     try {
         const { data, error } = await supabase
             .from('instructor_reviews')
             .select()
-            .eq('instructor_fk', 'Kenneth Jackson')
+            .eq('instructor_fk', instructorName)
 
         let reviews: Record<string, instructorReview[]> = {}
 
@@ -72,11 +72,13 @@ async function getInstructorReviews(supabase: SupabaseClient<any, "public", any>
 }
 
 export default async function InstructorReviews({
-    supabase
+    supabase,
+    instructorName
 }: {
-    supabase: SupabaseClient<any, "public", any>
+    supabase: SupabaseClient<any, "public", any>,
+    instructorName: string
 }) {
-    const instructorReviews: Record<string, instructorReview[]> = await getInstructorReviews(supabase);
+    const instructorReviews: Record<string, instructorReview[]> = await getInstructorReviews(supabase, instructorName);
 
     return (
         <ReviewSection instructorReviews={instructorReviews} />
