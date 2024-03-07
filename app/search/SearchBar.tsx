@@ -39,7 +39,7 @@ const CourseResultListItem = ({ params }:{ params : CourseResult}) => {
 const ProfResultListItem = ({ params }:{ params : ProfResult}) => {
   return (
     <li key={params.instructor_name}>
-      <Link href={`/course/${params.instructor_name.replaceAll(/\s/g, '%20')}`}>
+      <Link href={`/instructor/${params.instructor_name.replace(/\s/g, '%20')}`}>
           {params.instructor_name}
       </Link>
     </li>
