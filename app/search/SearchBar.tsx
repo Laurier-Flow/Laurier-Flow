@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useState, useEffect } from 'react'
 import { isTypeQueryNode } from 'typescript'
+import Link from 'next/link'
 
 type CourseResult = {
   course_code: string
@@ -24,6 +25,27 @@ type ProfResult = {
   liked: number | null
   total_reviews: number | null
 }
+
+const CourseResultListItem = ({ params }:{ params : CourseResult}) => {
+  return (
+    <li key={params.course_code}>
+      <Link href={`/course/${params.course_code.replaceAll(/\s/g, '')}`}>
+          {params.course_code} - {params.course_title}
+      </Link>
+    </li>
+  )
+}
+
+const ProfResultListItem = ({ params }:{ params : ProfResult}) => {
+  return (
+    <li key={params.instructor_name}>
+      <Link href={`/course/${params.instructor_name.replaceAll(/\s/g, '%20')}`}>
+          {params.instructor_name}
+      </Link>
+    </li>
+  )
+}
+
 
 export default function SearchBar() {
   const [searchQuery, setSearchQuery] = useState<string>("")
@@ -112,20 +134,10 @@ export default function SearchBar() {
       <div className='bg-background text-foreground'>
         <ul className='bg-background text-foreground divide-y divide-{input}'>
           {courseResults.map((course) => (
-            <li
-              key={course.course_code}
-              className='bg-background text-foreground'
-            >
-              {course.course_code}-{course.course_title}
-            </li>
+            <CourseResultListItem params={course}/>
           ))}
           {profResults.map((prof) => (
-            <li
-              key={prof.instructor_name}
-              className='bg-background text-foreground'
-            >
-              {prof.instructor_name}
-            </li>
+            <ProfResultListItem params={prof}/>
           ))}
         </ul>
       </div>
