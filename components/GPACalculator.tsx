@@ -1,3 +1,5 @@
+"use client";
+
 import React, { JSXElementConstructor, ReactElement, useEffect } from "react";
 import WinBox from "react-winbox";
 import "winbox/dist/css/winbox.min.css"; // required
