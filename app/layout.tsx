@@ -26,7 +26,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className="bg-background text-foreground w-full h-full flex flex-col">
+      <body className="bg-background wrapper text-foreground w-full h-full flex flex-col">
         {loading ? (
           <LoadingSpinner loading={loading} />
         ) : (
@@ -39,10 +39,10 @@ export default function RootLayout({
             <main className="justify-center flex w-full flex-grow">
               {children}
             </main>
-            <Footer />
           </ThemeProvider>
         )}
       </body>
+      <Footer />
     </html>
   );
 }
