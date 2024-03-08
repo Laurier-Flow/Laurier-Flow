@@ -1,6 +1,5 @@
 "use client";
 
-import GPACalculator from "@/components/GPACalculator";
 import {
   Table,
   TableHeader,
@@ -12,7 +11,11 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
+import dynamic from "next/dynamic";
 import { useState, useMemo, useEffect } from "react";
+const GPACalculator = dynamic(() => import("../../components/GPACalculator"), {
+  ssr: false,
+});
 
 interface Intructor {
   name: string;
