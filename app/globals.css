@@ -53,4 +53,8 @@
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
   }
+  .wrapper {
+    min-height: 100vh;
+    padding-bottom: 100px;
+  }
 }
