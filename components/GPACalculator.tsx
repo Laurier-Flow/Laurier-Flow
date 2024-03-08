@@ -129,7 +129,7 @@ const GPACalculator: React.FC<GPACalculatorProps> = ({ title }) => {
             <label>Grade</label>
           </div>
         </div>
-        {courseObject ? courseObject : null}
+        <>{courseObject}</>
       </WinBox>
     </div>
   );
