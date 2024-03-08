@@ -145,7 +145,7 @@ async function CourseSchedule({
   const nextTermSections: section[] = termSections['nextTerm']
 
   return (
-    <div className="flex flex-col p-4">
+    <div className="flex flex-col p-4 lg:mt-8">
       <h1 className="text-xl">Course Schedule</h1>
       <ScheduleTable nextTerm={nextTerm} previousTerm={previousTerm} currentTerm={currentTerm} currentTermSections={currentTermSections} previousTermSections={previousTermSections} nextTermSections={nextTermSections} />
     </div>

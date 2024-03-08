@@ -12,16 +12,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-background text-foreground h-screen flex flex-col">
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange>
-            <Header />
-            <main className="flex grow justify-center">
-              {children}
-            </main>
-          </ThemeProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange>
+          <Header />
+          <main className="flex grow justify-start items-center flex-col">
+            {children}
+          </main>
+        </ThemeProvider>
         <Footer />
       </body>
     </html>
