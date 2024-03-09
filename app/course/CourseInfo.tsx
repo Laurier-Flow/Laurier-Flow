@@ -52,27 +52,27 @@ async function CourseInfo({
   const courseData: courseInfoDBResponse[] = await getCourseData(supabase, courseName);
 
   return (
-    <div className="lg:bg-slate-50 lg:dark:bg-slate-950">
-      <div className="flex flex-col p-4 lg:dark:bg-[url('/banner.jpg')] lg:bg-[url('/banner-light.jpg')] lg:flex-row lg:justify-center">
-        <div className="flex flex-1 lg:pt-20 flex-row justify-between max-w-6xl">
+    <div className="md:bg-slate-50 md:dark:bg-slate-950">
+      <div className="flex flex-col p-4 dark:bg-[url('/banner-sm.jpg')] bg-[url('/banner-sm-light.jpg')] md:dark:bg-[url('/banner-md.jpg')] md:bg-[url('/banner-md-light.jpg')] lg:dark:bg-[url('/banner.jpg')] lg:bg-[url('/banner-light.jpg')] md:flex-row md:justify-center">
+        <div className="flex flex-1 pt-20 flex-row justify-between max-w-6xl">
           <div className="flex flex-1 flex-col justify-end pl-4">
-            <h1 className='text-2xl font-bold lg:text-5xl'>{courseData[0].course_code}</h1>
-            <h2 className='text-xl lg:text-3xl pt-2'>{courseData[0].course_title}</h2>
+            <h1 className='text-2xl font-bold md:text-5xl'>{courseData[0].course_code}</h1>
+            <h2 className='text-xl md:text-3xl pt-2'>{courseData[0].course_title}</h2>
           </div>
-          <div className="hidden lg:inline w-1/2 translate-y-28">
+          <div className="hidden md:inline w-1/2 translate-y-28">
             <CourseStats courseData={courseData} courseDescription={courseDescription} />
           </div>
         </div>
       </div>
 
-      <div className="hidden lg:flex max-w-6xl mx-auto pt-8 pr-10 pl-4">
+      <div className="hidden md:flex max-w-6xl mx-auto pt-8 pr-10 pl-4">
         <h3 className="w-1/2">{courseDescription}</h3>
       </div>
 
-      <div className="lg:hidden">
+      <div className="md:hidden">
         <CourseStats courseData={courseData} courseDescription={courseDescription} />
       </div>
-      <hr className="mb-8 lg:mb-0 mt-8 border-gray-300 dark:border-gray-800"></hr>
+      <hr className="mb-8 md:mb-0 mt-8 border-gray-300 dark:border-gray-800"></hr>
     </div>
   );
 };
