@@ -13,7 +13,6 @@ function CourseStats(
         ? (100 - (courseData[0].liked / courseData[0].total_reviews) * 100)
         : (100);
 
-        console.log(likedPercentage)
     return (
         <div className='flex flex-col p-4 md:dark:bg-slate-950 md:bg-slate-50 md:rounded-tl-full rounded-bl-full md:shadow md:dark:shadow-slate-600'>
             <div className='flex flex-row'>
