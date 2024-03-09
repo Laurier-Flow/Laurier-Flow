@@ -8,11 +8,13 @@ import React from "react";
 function ScheduleTab({
     activeTab,
     tabNumber,
-    termSections
+    termSections,
+    professor
 }: {
     activeTab: number,
     tabNumber: number,
-    termSections: section[]
+    termSections: section[],
+    professor: boolean
 }) {
     return (
         <div id="equal-width-elements-1" className={activeTab === tabNumber ? '' : 'hidden'} role="tabpanel" aria-labelledby="equal-width-elements-item-1">
@@ -31,7 +33,11 @@ function ScheduleTab({
                                         <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Time</th>
                                         <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Date</th>
                                         <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Location</th>
-                                        <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Instructor</th>
+                                        {professor ? (
+                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course</th>
+                                        ) : (
+                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Instructor</th>
+                                        )}
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -81,7 +87,7 @@ function convertTo12HourFormat(timeString: string | null | undefined) {
     }
 }
 
-export default function ScheduleTable({nextTerm, currentTerm, previousTerm, nextTermSections, currentTermSections, previousTermSections}: {nextTerm: string, currentTerm: string, previousTerm: string, nextTermSections: section[], currentTermSections: section[], previousTermSections: section[]}) {
+export default function ScheduleTable({ nextTerm, currentTerm, previousTerm, nextTermSections, currentTermSections, previousTermSections, professor }: { nextTerm: string, currentTerm: string, previousTerm: string, nextTermSections: section[], currentTermSections: section[], previousTermSections: section[], professor: boolean }) {
     const [activeTab, setActiveTab] = useState(1);
     const handleTabClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
@@ -101,9 +107,9 @@ export default function ScheduleTable({nextTerm, currentTerm, previousTerm, next
                 </button>
             </nav>
 
-            <ScheduleTab termSections={nextTermSections} activeTab={activeTab} tabNumber={1} />
-            <ScheduleTab termSections={currentTermSections} activeTab={activeTab} tabNumber={2} />
-            <ScheduleTab termSections={previousTermSections} activeTab={activeTab} tabNumber={3} />
+            <ScheduleTab termSections={nextTermSections} activeTab={activeTab} tabNumber={1} professor={professor} />
+            <ScheduleTab termSections={currentTermSections} activeTab={activeTab} tabNumber={2} professor={professor} />
+            <ScheduleTab termSections={previousTermSections} activeTab={activeTab} tabNumber={3} professor={professor} />
         </>
     )
 }
