@@ -1,0 +1,26 @@
+@keyframes growStroke {
+    from {
+        stroke-dashoffset: 100;
+    }
+    to {
+        /* This will be dynamically adjusted in the inline style */
+    }
+}
+
+.circle-animation {
+    animation: growStroke 1s ease-out forwards;
+}
+
+@keyframes growWidth {
+    from {
+      width: 0%;
+    }
+    to {
+      width: /* This will be dynamically set in the inline style */;
+    }
+  }
+  
+  .progress-animation {
+    animation: growWidth 1s ease-out forwards;
+  }
+  
