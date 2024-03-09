@@ -41,7 +41,7 @@ async function CoursePage({ params }: { params: { code: string } }) {
 
     return (
         <>
-            <div className="hidden lg:inline">
+            <div className="hidden lg:inline min-w-full">
                 <Suspense fallback={<Loading />}>
                     <CourseInfo supabase={supabase} courseName={courseCode} />
                 </Suspense>
