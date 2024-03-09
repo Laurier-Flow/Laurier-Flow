@@ -3,6 +3,8 @@ import { courseInfoDBResponse, getCourseData } from "./CourseInfo";
 import { SupabaseClient } from "@supabase/supabase-js";
 import axios from "axios";
 import * as cheerio from 'cheerio';
+import { disciplineCodes } from "./disciplineCodes";
+import { Link } from "@nextui-org/react";
 
 export interface prerequisite {
     andOr: string,
@@ -85,7 +87,11 @@ async function CourseRequisites({ supabase, courseName }: { supabase: SupabaseCl
                             <React.Fragment key={index}>
                                 {' ' + prerequisite?.andOr} {prerequisite?.leftParentheses}
                                 <b>
-                                    {prerequisite?.subject} {prerequisite?.courseNumber}
+                                    {(prerequisite?.subject in disciplineCodes) ? (
+                                        <Link className="underline text-black underline-offset-2" href={`/course/${disciplineCodes[prerequisite?.subject] + prerequisite?.courseNumber}`}>
+                                            {disciplineCodes[prerequisite?.subject]} {prerequisite?.courseNumber}
+                                        </Link>
+                                    ) : (<>{prerequisite?.subject} {prerequisite?.courseNumber}</>)}
                                 </b>{' '}
                                 (Min. Grade {prerequisite?.grade}) {prerequisite?.rightParentheses}
                             </React.Fragment>
