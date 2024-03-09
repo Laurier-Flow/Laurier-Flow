@@ -19,7 +19,7 @@ function InstructorStats({ instructorData, currentCourses }: { instructorData: i
                     </svg>
                     <div className="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
                         <div className='flex flex-col items-center'>
-                            <span className="text-center text-2xl font-bold text-gray-800 dark:text-white">{Math.round((instructorData[0].liked / instructorData[0].total_reviews) * 100)}%</span>
+                            <span className="text-center text-2xl font-bold text-gray-800 dark:text-white">{instructorData[0].total_reviews !== 0 ? Math.round((instructorData[0].liked / instructorData[0].total_reviews) * 100) : 0}%</span>
                             <span className="text-sm font-semibold text-gray-800 dark:text-white">Liked</span>
                         </div>
                     </div>
