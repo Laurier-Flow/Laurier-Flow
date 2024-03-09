@@ -3,7 +3,7 @@ import React from "react";
 
 function InstructorStats({ instructorData, currentCourses }: { instructorData: instructorInfoDBResponse[], currentCourses: Set<string> }) {
     return (
-        <div className='flex flex-col p-4 lg:dark:bg-slate-950 lg:bg-slate-50 lg:rounded-tl-full rounded-bl-full lg:shadow lg:dark:shadow-slate-600'>
+        <div className='flex flex-col p-4 md:dark:bg-slate-950 md:bg-slate-50 md:rounded-tl-full rounded-bl-full md:shadow md:dark:shadow-slate-600'>
             <div className='flex flex-row'>
                 <div className="relative h-40 w-40">
                     <svg className="h-full w-full" width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
@@ -51,7 +51,7 @@ function InstructorStats({ instructorData, currentCourses }: { instructorData: i
                 </div>
             </div>
             {currentCourses.size > 0 ? (
-                <h3 className='pt-4 lg:hidden text-lg font-medium'>Currently teaches {
+                <h3 className='pt-4 md:hidden text-lg font-medium'>Currently teaches {
                     Array.from(currentCourses).map((course, index) => (
                         <React.Fragment key={index}>
                             {index === currentCourses.size - 1 ? (
