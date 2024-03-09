@@ -10,8 +10,10 @@ function CourseStats(
     }) {
 
     const likedPercentage = courseData[0].total_reviews !== 0
-        ? 100 - (courseData[0].liked / courseData[0].total_reviews) * 100
-        : 100;
+        ? (100 - (courseData[0].liked / courseData[0].total_reviews) * 100)
+        : (100);
+
+        console.log(likedPercentage)
     return (
         <div className='flex flex-col p-4 md:dark:bg-slate-950 md:bg-slate-50 md:rounded-tl-full rounded-bl-full md:shadow md:dark:shadow-slate-600'>
             <div className='flex flex-row'>
@@ -24,7 +26,7 @@ function CourseStats(
                     </svg>
                     <div className="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
                         <div className='flex flex-col items-center'>
-                            <span className="text-center text-2xl font-bold text-gray-800 dark:text-white">{Math.round((courseData[0].liked / courseData[0].total_reviews) * 100)}%</span>
+                            <span className="text-center text-2xl font-bold text-gray-800 dark:text-white">{courseData[0].total_reviews !== 0 ? Math.round((courseData[0].liked / courseData[0].total_reviews) * 100) : 0}%</span>
                             <span className="text-sm font-semibold text-gray-800 dark:text-white">Liked</span>
                         </div>
                     </div>
