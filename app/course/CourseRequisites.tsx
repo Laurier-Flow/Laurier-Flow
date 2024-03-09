@@ -88,7 +88,7 @@ async function CourseRequisites({ supabase, courseName }: { supabase: SupabaseCl
                                 {' ' + prerequisite?.andOr} {prerequisite?.leftParentheses}
                                 <b>
                                     {(prerequisite?.subject in disciplineCodes) ? (
-                                        <Link className="underline text-black underline-offset-2" href={`/course/${disciplineCodes[prerequisite?.subject] + prerequisite?.courseNumber}`}>
+                                        <Link className="underline text-black dark:text-white underline-offset-2" href={`/course/${disciplineCodes[prerequisite?.subject] + prerequisite?.courseNumber}`}>
                                             {disciplineCodes[prerequisite?.subject]} {prerequisite?.courseNumber}
                                         </Link>
                                     ) : (<>{prerequisite?.subject} {prerequisite?.courseNumber}</>)}
