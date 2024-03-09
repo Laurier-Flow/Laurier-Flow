@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import CourseSchedule from "../CourseSchedule";
 import Loading from "@/components/Loading";
 import CourseRequisites from "../CourseRequisites";
+import LoadingSpinner from "@/components/LoadingSpinner";
 const AddReview = dynamic(() => import("../AddReview"), { ssr: false });
 
 export interface days {
