@@ -7,9 +7,8 @@ import dynamic from "next/dynamic";
 import CourseReviews from "../CourseReviews";
 import { Suspense } from "react";
 import CourseSchedule from "../CourseSchedule";
-import Loading from "@/components/Loading";
 import CourseRequisites from "../CourseRequisites";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import Spinner from "@/components/Spinner";
 const AddReview = dynamic(() => import("../AddReview"), { ssr: false });
 
 export interface days {
@@ -41,40 +40,28 @@ async function CoursePage({ params }: { params: { code: string } }) {
     courseCode = courseCode.slice(0, 2) + " " + courseCode.slice(2);
 
     return (
-        <>
+        <Suspense fallback={<div className="w-full h-full"><Spinner /></div>}>
             <div className="hidden lg:inline min-w-full">
-                <Suspense fallback={<Loading />}>
-                    <CourseInfo supabase={supabase} courseName={courseCode} />
-                </Suspense>
+                <CourseInfo supabase={supabase} courseName={courseCode} />
             </div>
             <div className="card">
                 <div className="lg:hidden">
-                    <Suspense fallback={<Loading />}>
-                        <CourseInfo supabase={supabase} courseName={courseCode} />
-                    </Suspense>
+                    <CourseInfo supabase={supabase} courseName={courseCode} />
                 </div>
-                <Suspense fallback={<Loading />}>
-                    <CourseSchedule supabase={supabase} courseName={courseCode} />
-                    <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
-                </Suspense>
+                <CourseSchedule supabase={supabase} courseName={courseCode} />
+                <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
                 <div className="lg:flex lg:flex-row-reverse lg:justify-around">
-                    <Suspense fallback={<Loading />}>
-                        <CourseRequisites supabase={supabase} courseName={courseCode} />
-                        <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
-                    </Suspense>
+                    <CourseRequisites supabase={supabase} courseName={courseCode} />
+                    <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
                     <div className="lg:flex lg:flex-col lg:flex-1 lg:pr-4">
-                        <Suspense fallback={<Loading />}>
-                            <AddReview courseName={courseCode} />
-                            <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
-                        </Suspense>
-                        <Suspense fallback={<Loading />}>
-                            <CourseReviews supabase={supabase} courseName={courseCode} />
-                            <hr className="mt-8 mb-8 border-0"></hr>
-                        </Suspense>
+                        <AddReview courseName={courseCode} />
+                        <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
+                        <CourseReviews supabase={supabase} courseName={courseCode} />
+                        <hr className="mt-8 mb-8 border-0"></hr>
                     </div>
                 </div>
             </div>
-        </>
+        </Suspense>
     );
 }
 
