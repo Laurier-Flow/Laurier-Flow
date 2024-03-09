@@ -20,7 +20,7 @@ async function InstructorSchedule({
     return (
         <div className="flex flex-col p-4 lg:mt-8">
             <h1 className="text-xl">Instructor Schedule</h1>
-            <ScheduleTable nextTerm={nextTerm} previousTerm={previousTerm} currentTerm={currentTerm} currentTermSections={currentTermSections} previousTermSections={previousTermSections} nextTermSections={nextTermSections} />
+            <ScheduleTable nextTerm={nextTerm} previousTerm={previousTerm} currentTerm={currentTerm} currentTermSections={currentTermSections} previousTermSections={previousTermSections} nextTermSections={nextTermSections} professor={true} />
         </div>
     )
 
