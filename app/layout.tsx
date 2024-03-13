@@ -1,28 +1,18 @@
-"use client";
-
 import "@/app/globals.css";
-import React, { useEffect, useState } from "react";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { CirclesWithBar } from "react-loader-spinner";
+
 import { User } from '@supabase/supabase-js';
-import LoadingSpinner from "@/components/LoadingSpinner";
 import LoginPopup from "@/components/LoginPopup";
 import SignUpPopup from "@/components/SignUpPopup";
 import { fetchUser, signOut } from '@/utils/supabase/authActions';
-
-// export const metadata = {
-//   title: "Laurier Flow",
-//   description: "The best way to plan your Laurier schedule",
-// };
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }): React.ReactElement {
-  const [loading, setLoading] = useState(true);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [showSignUpPopup, setShowSignUpPopup] = useState(false);
   const [currentUser, setcurrentUser] = useState<User | null>(null);
@@ -38,10 +28,6 @@ export default function RootLayout({
     };
 
     getUser();
-  }, []);
-
-  useEffect(() => {
-    setLoading(false);
   }, []);
 
   const toggleLoginPopup = () => {
@@ -63,12 +49,9 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`bg-background text-foreground w-full h-full flex flex-col ${
+      <body className={`"bg-background text-foreground h-screen flex flex-col ${
         showLoginPopup ? 'overflow-hidden' : ''
       }`}>
-        {loading ? (
-          <LoadingSpinner loading={loading} />
-        ) : (
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -76,7 +59,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Header toggleLoginPopup={toggleLoginPopup} currentUser={currentUser} handleSignOut={handleSignOut} />
-            <main className="justify-center flex w-full flex-grow">
+            <main className="flex grow justify-start items-center flex-col">
               {children}
             </main>
             <Footer />
@@ -101,8 +84,6 @@ export default function RootLayout({
               </div>
             )}
           </ThemeProvider>
-        )}
-      </body>
     </html>
   );
 }

@@ -1,4 +1,3 @@
-import Loading from "@/components/Loading";
 import { Suspense } from "react";
 import InstructorInfo from "../InstructorInfo";
 import { cookies } from "next/headers";
@@ -6,6 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 import InstructorReviews from "../InstructorReviews";
 import InstructorSchedule from "../InstructorSchedule";
 import AddReview from "@/app/course/AddReview";
+import Spinner from "@/components/Spinner";
 
 function InstructorPage({params} : {params: {name: string}}) {
   const cookieStore = cookies();
@@ -13,24 +13,24 @@ function InstructorPage({params} : {params: {name: string}}) {
   const decodedName = decodeURIComponent(params.name)
 
   return (
-    <div className="card">
-      <Suspense fallback={<Loading />}>
-        <InstructorInfo supabase={supabase} instructorName={decodedName} />
-        <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
-      </Suspense>
-      <Suspense fallback={<Loading />}>
-        <InstructorSchedule supabase={supabase} instructorName={decodedName} />
-        <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
-      </Suspense>
-      <Suspense fallback={<Loading />}>
-        <AddReview courseName={decodedName} />
-        <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
-      </Suspense>
-      <Suspense fallback={<Loading />}>
-        <InstructorReviews supabase={supabase} instructorName={decodedName} />
-        <hr className="mt-8 mb-8 border-0"></hr>
-      </Suspense>
-    </div>
+    <Suspense fallback={<div className="w-full h-full"><Spinner /></div>}>
+            <div className="hidden lg:inline min-w-full">
+                    <InstructorInfo supabase={supabase} instructorName={decodedName} />
+            </div>
+            <div className="card">
+                <div className="lg:hidden">
+                        <InstructorInfo supabase={supabase} instructorName={decodedName} />
+                </div>
+                    <InstructorSchedule supabase={supabase} instructorName={decodedName} />
+                    <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
+                    <div className="lg:flex lg:flex-col lg:flex-1 lg:pr-4">
+                            <AddReview courseName={decodedName} />
+                            <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
+                            <InstructorReviews supabase={supabase} instructorName={decodedName} />
+                            <hr className="mt-8 mb-8 border-0"></hr>
+                    </div>
+            </div>
+        </Suspense>
   );
 }
 

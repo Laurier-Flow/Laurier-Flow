@@ -8,11 +8,13 @@ import React from "react";
 function ScheduleTab({
     activeTab,
     tabNumber,
-    termSections
+    termSections,
+    professor
 }: {
     activeTab: number,
     tabNumber: number,
-    termSections: section[]
+    termSections: section[],
+    professor: boolean
 }) {
     return (
         <div id="equal-width-elements-1" className={activeTab === tabNumber ? '' : 'hidden'} role="tabpanel" aria-labelledby="equal-width-elements-item-1">
@@ -31,7 +33,11 @@ function ScheduleTab({
                                         <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Time</th>
                                         <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Date</th>
                                         <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Location</th>
-                                        <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Instructor</th>
+                                        {professor ? (
+                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course</th>
+                                        ) : (
+                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Instructor</th>
+                                        )}
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -81,7 +87,7 @@ function convertTo12HourFormat(timeString: string | null | undefined) {
     }
 }
 
-export default function ScheduleTable({nextTerm, currentTerm, previousTerm, nextTermSections, currentTermSections, previousTermSections}: {nextTerm: string, currentTerm: string, previousTerm: string, nextTermSections: section[], currentTermSections: section[], previousTermSections: section[]}) {
+export default function ScheduleTable({ nextTerm, currentTerm, previousTerm, nextTermSections, currentTermSections, previousTermSections, professor }: { nextTerm: string, currentTerm: string, previousTerm: string, nextTermSections: section[], currentTermSections: section[], previousTermSections: section[], professor: boolean }) {
     const [activeTab, setActiveTab] = useState(1);
     const handleTabClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
@@ -90,20 +96,20 @@ export default function ScheduleTable({nextTerm, currentTerm, previousTerm, next
     return (
         <>
             <nav suppressHydrationWarning className="flex space-x-2 pt-4" aria-label="Tabs" role="tablist">
-                <button suppressHydrationWarning onClick={() => handleTabClick(1)} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 1 ? 'text-primary' : 'text-gray-500'} hover:text-primary rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 1 ? 'dark:text-white' : 'text-gray-400'} dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 1 ? 'active' : ''}`} id="equal-width-elements-item-1" data-hs-tab="#equal-width-elements-1" aria-controls="equal-width-elements-1" role="tab">
+                <button suppressHydrationWarning onClick={() => handleTabClick(1)} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 1 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 1 ? 'dark:text-white' : 'text-gray-400'} dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 1 ? 'active' : ''}`} id="equal-width-elements-item-1" data-hs-tab="#equal-width-elements-1" aria-controls="equal-width-elements-1" role="tab">
                     {nextTerm}
                 </button>
-                <button suppressHydrationWarning onClick={() => handleTabClick(2)} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 2 ? 'text-primary' : 'text-gray-500'} hover:text-primary rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 2 ? 'dark:text-white' : 'text-gray-400'} dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 2 ? 'active' : ''}`} data-hs-tab="#equal-width-elements-2" aria-controls="equal-width-elements-2" role="tab">
+                <button suppressHydrationWarning onClick={() => handleTabClick(2)} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 2 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 2 ? 'dark:text-white' : 'text-gray-400'} dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 2 ? 'active' : ''}`} data-hs-tab="#equal-width-elements-2" aria-controls="equal-width-elements-2" role="tab">
                     {currentTerm}
                 </button>
-                <button suppressHydrationWarning onClick={() => handleTabClick(3)} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 3 ? 'text-primary' : 'text-gray-500'} hover:text-primary rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 3 ? 'dark:text-white' : 'text-gray-400'} dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 3 ? 'active' : ''}`} data-hs-tab="#equal-width-elements-3" aria-controls="equal-width-elements-3" role="tab">
+                <button suppressHydrationWarning onClick={() => handleTabClick(3)} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 3 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 3 ? 'dark:text-white' : 'text-gray-400'} dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 3 ? 'active' : ''}`} data-hs-tab="#equal-width-elements-3" aria-controls="equal-width-elements-3" role="tab">
                     {previousTerm}
                 </button>
             </nav>
 
-            <ScheduleTab termSections={nextTermSections} activeTab={activeTab} tabNumber={1} />
-            <ScheduleTab termSections={currentTermSections} activeTab={activeTab} tabNumber={2} />
-            <ScheduleTab termSections={previousTermSections} activeTab={activeTab} tabNumber={3} />
+            <ScheduleTab termSections={nextTermSections} activeTab={activeTab} tabNumber={1} professor={professor} />
+            <ScheduleTab termSections={currentTermSections} activeTab={activeTab} tabNumber={2} professor={professor} />
+            <ScheduleTab termSections={previousTermSections} activeTab={activeTab} tabNumber={3} professor={professor} />
         </>
     )
 }
