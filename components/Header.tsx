@@ -4,14 +4,26 @@ import { ThemeToggleButton } from "./ThemeToggleButton";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { User } from '@supabase/supabase-js';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useEffect, useState } from "react";
+import { fetchUser, signOut } from '@/utils/supabase/authActions';
 
-export default function Header(): React.ReactElement {
+export default function Header({
+  toggleLoginPopup,
+  currentUser,
+  handleSignOut,
+}: {
+  toggleLoginPopup: () => void;
+  currentUser: User | null;
+  handleSignOut: () => void;
+}): React.ReactElement {
+
   return (
     <header className="self-center sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:max-w-6xl">
       <div className="container flex h-14 max-w-screen-2xl items-center">
@@ -27,6 +39,14 @@ export default function Header(): React.ReactElement {
             <Link href="/instructor/Kenneth%20Jackson">Instructor</Link>
             <Link href="/about">About</Link>
             <Link href="/privacy">Privacy</Link>
+            {!currentUser && (
+              <button
+                onClick={toggleLoginPopup}
+                className="text-sm text-foreground hover:underline cursor-pointer"
+              >
+                Login
+              </button>
+            )}
           </nav>
         </div>
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
@@ -42,7 +62,7 @@ export default function Header(): React.ReactElement {
             <DropdownMenuContent align="center">
               <DropdownMenuItem>My Account</DropdownMenuItem>
               {/* <DropdownMenuItem>Settings</DropdownMenuItem> */}
-              <DropdownMenuItem className="bg-destructive text-destructive-foreground">
+              <DropdownMenuItem onClick={handleSignOut} className="bg-destructive text-destructive-foreground">
                 Logout
               </DropdownMenuItem>
             </DropdownMenuContent>
