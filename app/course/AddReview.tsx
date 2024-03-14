@@ -27,14 +27,15 @@ export async function getCourseData(supabase: SupabaseClient<any, "public", any>
 
 const userReviewed = async (supabase: SupabaseClient<any, "public", any>, courseName: string, instructor: boolean) => {
     const user = await fetchUser();
-    const table = (instructor ? ('instructor_reviews') : ('course_reviews'))
+    const tableName = (instructor ? ('instructor_reviews') : ('course_reviews'))
+    const fkName = (instructor ? ('instructor_fk') : ('course_code_fk'))
 
     if (user) {
         const { data, error } = await supabase
-            .from(table)
+            .from(tableName)
             .select()
             .eq('user_id_fk', user.id)
-            .eq('course_code_fk', courseName)
+            .eq(fkName, courseName)
 
         if (data?.length === 0) {
             return false
