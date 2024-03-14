@@ -3,6 +3,7 @@ import LoginPopup from "@/components/LoginPopup";
 import SignUpPopup from "@/components/SignUpPopup";
 import { fetchUser } from '@/utils/supabase/authActions';
 import { SupabaseClient } from '@supabase/supabase-js';
+import ReviewButton from '@/components/ReviewButton';
 
 const getUser = async () => {
     const user = await fetchUser();
@@ -25,8 +26,7 @@ export async function getCourseData(supabase: SupabaseClient<any, "public", any>
   */
 
 
-const userReviewed = async (supabase: SupabaseClient<any, "public", any>, courseName: string, instructor: boolean) => {
-    const user = await fetchUser();
+const userReviewed = async (supabase: SupabaseClient<any, "public", any>, courseName: string, instructor: boolean, user: User | null) => {
     const tableName = (instructor ? ('instructor_reviews') : ('course_reviews'))
     const fkName = (instructor ? ('instructor_fk') : ('course_code_fk'))
 
@@ -56,16 +56,15 @@ async function AddReview({
     courseName: string,
     instructor: boolean
 }) {
-    const reviewed = await userReviewed(supabase, courseName, instructor);
+    const user = await fetchUser();
+    const reviewed = await userReviewed(supabase, courseName, instructor, user);
 
     return (
         reviewed ? null : (
             <>
                 <div className="flex flex-col p-4">
                     <h1 className="pb-4 text-xl">What do you think of {courseName}?</h1>
-                    <button type="button" className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent dark:bg-primary bg-amber-400 dark:text-white hover:bg-amber-700 hover:dark:bg-indigo-400 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
-                        Add your review
-                    </button>
+                    <ReviewButton user={user} />
                 </div>
                 <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
             </>
