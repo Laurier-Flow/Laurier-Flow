@@ -14,18 +14,6 @@ const getUser = async () => {
     }
 }
 
-/*
-export async function getCourseData(supabase: SupabaseClient<any, "public", any>, courseName: string) {
-    const { data, error } = await supabase
-      .from('courses')
-      .select()
-      .eq('course_code', courseName)
-  
-    return data || [];
-  }
-  */
-
-
 const userReviewed = async (supabase: SupabaseClient<any, "public", any>, courseName: string, instructor: boolean, user: User | null) => {
     const tableName = (instructor ? ('instructor_reviews') : ('course_reviews'))
     const fkName = (instructor ? ('instructor_fk') : ('course_code_fk'))
