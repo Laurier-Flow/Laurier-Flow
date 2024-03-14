@@ -52,7 +52,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`bg-background text-foreground h-screen flex flex-col ${showLoginPopup ? 'overflow-hidden' : ''
+      <body className={`bg-background text-foreground h-screen flex flex-col ${showLoginPopup || showSignUpPopup ? 'overflow-hidden' : ''
         }`}>
         <ThemeProvider
           attribute="class"

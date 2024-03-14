@@ -54,8 +54,7 @@ async function CoursePage({ params }: { params: { code: string } }) {
                     <CourseRequisites supabase={supabase} courseName={courseCode} />
                     <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
                     <div className="lg:flex lg:flex-col lg:flex-1 lg:pr-4">
-                        <AddReview courseName={courseCode} />
-                        <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
+                        <AddReview courseName={courseCode} supabase={supabase} instructor={false} />
                         <CourseReviews supabase={supabase} courseName={courseCode} />
                         <hr className="mt-8 mb-8 border-0"></hr>
                     </div>
