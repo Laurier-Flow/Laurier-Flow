@@ -24,7 +24,7 @@ function InstructorPage({params} : {params: {name: string}}) {
                     <InstructorSchedule supabase={supabase} instructorName={decodedName} />
                     <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
                     <div className="lg:flex lg:flex-col lg:flex-1 lg:pr-4">
-                            <AddReview courseName={decodedName} />
+                            <AddReview courseName={decodedName} supabase={supabase} instructor={true} />
                             <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
                             <InstructorReviews supabase={supabase} instructorName={decodedName} />
                             <hr className="mt-8 mb-8 border-0"></hr>

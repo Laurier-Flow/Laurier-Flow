@@ -25,12 +25,13 @@ export async function getCourseData(supabase: SupabaseClient<any, "public", any>
   */
 
 
-const userReviewed = async (supabase: SupabaseClient<any, "public", any>, courseName: string) => {
+const userReviewed = async (supabase: SupabaseClient<any, "public", any>, courseName: string, instructor: boolean) => {
     const user = await fetchUser();
+    const table = (instructor ? ('instructor_reviews') : ('course_reviews'))
 
     if (user) {
         const { data, error } = await supabase
-            .from('course_reviews')
+            .from(table)
             .select()
             .eq('user_id_fk', user.id)
             .eq('course_code_fk', courseName)
@@ -47,12 +48,14 @@ const userReviewed = async (supabase: SupabaseClient<any, "public", any>, course
 
 async function AddReview({
     supabase,
-    courseName
+    courseName,
+    instructor
 }: {
     supabase: SupabaseClient<any, "public", any>,
-    courseName: string
+    courseName: string,
+    instructor: boolean
 }) {
-    const reviewed = await userReviewed(supabase, courseName);
+    const reviewed = await userReviewed(supabase, courseName, instructor);
 
     return (
         reviewed ? null : (
