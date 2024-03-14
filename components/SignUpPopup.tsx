@@ -25,6 +25,7 @@ export default function SignUpPopup({
   const handleClickOutside = (event: MouseEvent) => {
     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
       onClose();
+      document.body.classList.remove('overflow-hidden')
     }
   };
 
@@ -146,7 +147,7 @@ export default function SignUpPopup({
             onClick={handleLogInClick}
             className="mb-5 flex justify-center text-blue-500 cursor-pointer"
             >
-            Already a Laurier Flow user? Log in
+            Already a Laurier Flow user? Log In.
         </div>
         {searchParams?.message && (
           <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">

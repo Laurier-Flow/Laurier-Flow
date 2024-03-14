@@ -1,8 +1,8 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { ThemeToggleButton } from "./ThemeToggleButton";
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { User } from '@supabase/supabase-js';
 import {
@@ -19,6 +19,24 @@ export default function Header(): React.ReactElement {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [showSignUpPopup, setShowSignUpPopup] = useState(false);
   const [currentUser, setcurrentUser] = useState<User | null>(null);
+
+  const manageBodyScroll = () => {
+    if (showLoginPopup || showSignUpPopup) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+  };
+
+  useEffect(() => {
+    manageBodyScroll();
+  }, [showLoginPopup, showSignUpPopup]);
+
+  useEffect(() => {
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, []);
 
   const handleSignOut = async () => {
     const result = await signOut();
