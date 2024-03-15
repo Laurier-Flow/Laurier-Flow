@@ -11,7 +11,11 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
-import { useState, useMemo } from "react";
+import dynamic from "next/dynamic";
+import { useState, useMemo, useEffect } from "react";
+const GPACalculator = dynamic(() => import("../../components/GPACalculator"), {
+  ssr: false,
+});
 
 interface Intructor {
   name: string;
@@ -100,6 +104,7 @@ export default function Explore() {
         View all courses and professors
       </h1>
       <div className="mt-5">
+        <GPACalculator title="GPA Calculator" />
         <button
           type="button"
           className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium  text-lg px-10 py-2.5 text-center me-2 mb-2"
@@ -119,7 +124,6 @@ export default function Explore() {
           Instructors
         </button>
       </div>
-
       <Table
         sortDescriptor={
           showCoursesList

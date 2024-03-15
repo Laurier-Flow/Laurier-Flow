@@ -1,7 +1,4 @@
-"use client";
-
 import "@/app/globals.css";
-import React, { useEffect, useState } from "react";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
