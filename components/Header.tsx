@@ -15,37 +15,23 @@ import LoginPopup from "./LoginPopup";
 import SignUpPopup from "./SignUpPopup";
 import { fetchUser, signOut } from '@/utils/supabase/authActions';
 
-export default function Header(): React.ReactElement {
+export const useManageBodyScroll = (condition: boolean) => {
+  useEffect(() => {
+    if (condition) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [condition]);
+};
+
+export const usePopupManager = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [showSignUpPopup, setShowSignUpPopup] = useState(false);
-  const [currentUser, setcurrentUser] = useState<User | null>(null);
-
-  const manageBodyScroll = () => {
-    if (showLoginPopup || showSignUpPopup) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-  };
-
-  useEffect(() => {
-    manageBodyScroll();
-  }, [showLoginPopup, showSignUpPopup]);
-
-  useEffect(() => {
-    return () => {
-      document.body.classList.remove("overflow-hidden");
-    };
-  }, []);
-
-  const handleSignOut = async () => {
-    const result = await signOut();
-    if (result.success) {
-      setcurrentUser(null);
-    } else {
-      console.error(result.message);
-    }
-  };
 
   const toggleLoginPopup = () => {
     setShowLoginPopup(!showLoginPopup);
@@ -55,18 +41,29 @@ export default function Header(): React.ReactElement {
     setShowSignUpPopup(!showSignUpPopup);
   };
 
-  useEffect(() => {
-    const getUser = async () => {
-      const user = await fetchUser();
-      if (user) {
-        setcurrentUser(user);
-      }
-      else {
-      }
-    };
+  return {
+    showLoginPopup,
+    setShowLoginPopup,
+    toggleLoginPopup,
+    showSignUpPopup,
+    setShowSignUpPopup,
+    toggleSignUpPopup,
+  };
+};
 
-    getUser();
-  }, []);
+export default function Header({user}: {user: User}): React.ReactElement {
+  const {
+    showLoginPopup,
+    toggleLoginPopup,
+    showSignUpPopup,
+    toggleSignUpPopup,
+  } = usePopupManager();
+
+  useManageBodyScroll(showLoginPopup || showSignUpPopup);
+
+  const handleSignOut = async () => {
+    const result = await signOut();
+  };
 
   return (
     <>
@@ -84,7 +81,7 @@ export default function Header(): React.ReactElement {
               <Link href="/instructor/Kenneth%20Jackson">Instructor</Link>
               <Link href="/about">About</Link>
               <Link href="/privacy">Privacy</Link>
-              {!currentUser && (
+              {!user && (
                 <button
                   onClick={toggleLoginPopup}
                   className="text-sm text-foreground hover:underline cursor-pointer"
@@ -121,8 +118,6 @@ export default function Header(): React.ReactElement {
             searchParams={{ message: '' }}
             onClose={toggleLoginPopup}
             toggleSignUp={toggleSignUpPopup}
-            currentUser={currentUser}
-            setCurrentUser={setcurrentUser}
           />
         </div>
       )}

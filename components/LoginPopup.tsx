@@ -11,14 +11,11 @@ import { User } from '@supabase/supabase-js';
 export default function LoginPopup({
   searchParams,
   onClose,
-  toggleSignUp,
-  setCurrentUser
+  toggleSignUp
 }: {
   searchParams: { message: string };
   onClose: () => void;
   toggleSignUp: () => void;
-  currentUser: User | null;
-  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
 }): React.ReactElement {
   const [loginError, setLoginError] = useState<string>('');
 
@@ -56,10 +53,6 @@ export default function LoginPopup({
     const result = await signIn(formData);
 
     if (result.success) {
-      const user = await fetchUser();
-      if (user) {
-        setCurrentUser(user);
-      }
       onClose();
     } else {
       setLoginError(result.message);

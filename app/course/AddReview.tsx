@@ -1,6 +1,4 @@
 import { User } from '@supabase/supabase-js';
-import LoginPopup from "@/components/LoginPopup";
-import SignUpPopup from "@/components/SignUpPopup";
 import { fetchUser } from '@/utils/supabase/authActions';
 import { SupabaseClient } from '@supabase/supabase-js';
 import ReviewButton from '@/components/ReviewButton';
