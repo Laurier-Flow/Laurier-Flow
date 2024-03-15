@@ -5,6 +5,8 @@ import { useState } from "react";
 import LoginPopup from "./LoginPopup";
 import SignUpPopup from "./SignUpPopup";
 import { useManageBodyScroll, usePopupManager } from "./Header";
+import AddReview from "@/app/course/AddReview";
+import AddReviewPopup from "./AddReviewPopup";
 
 export default function ReviewButton({
     user
@@ -33,7 +35,9 @@ export default function ReviewButton({
                     Add your review
                 </button>
                 {showAddReviewPopup ? (
-                    <>HELLO</>
+                    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <AddReviewPopup onClose={toggleAddReviewPopup} />
+                    </div>
                 ) : (
                     null
                 )}
