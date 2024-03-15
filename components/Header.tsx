@@ -27,6 +27,7 @@ export default function Header(): React.ReactElement {
             <Link href="/instructor/Kenneth%20Jackson">Instructor</Link>
             <Link href="/about">About</Link>
             <Link href="/privacy">Privacy</Link>
+            <Link href="/feedback">Feedback</Link>
           </nav>
         </div>
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
