@@ -51,7 +51,7 @@ export const usePopupManager = () => {
   };
 };
 
-export default function Header({user}: {user: User}): React.ReactElement {
+export default function Header({user}: {user: User | null}): React.ReactElement {
   const {
     showLoginPopup,
     toggleLoginPopup,

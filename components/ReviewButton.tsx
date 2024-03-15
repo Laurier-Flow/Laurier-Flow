@@ -49,8 +49,6 @@ export default function ReviewButton({
                         searchParams={{ message: '' }}
                         onClose={toggleLoginPopup}
                         toggleSignUp={toggleSignUpPopup}
-                        currentUser={currentUser}
-                        setCurrentUser={setcurrentUser}
                     />
                 </div>
             )}
