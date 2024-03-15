@@ -29,9 +29,11 @@ type ProfResult = {
 const CourseResultListItem = ({ params }:{ params : CourseResult}) => {
   return (
     <li key={params.course_code}>
-      <Link href={`/course/${params.course_code.replaceAll(/\s/g, '')}`}>
+      <div>
+        <Link href={`/course/${params.course_code.replaceAll(/\s/g, '')}`}>
           {params.course_code} - {params.course_title}
-      </Link>
+        </Link>
+      </div>
     </li>
   )
 }
