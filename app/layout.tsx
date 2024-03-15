@@ -14,35 +14,35 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 // };
 
 export default function RootLayout({
-  children,
+    children,
 }: {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }): React.ReactElement {
-  const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setLoading(false);
-  }, []);
+    useEffect(() => {
+        setLoading(false);
+    }, []);
 
-  return (
-    <html lang="en">
-      <body className="bg-background text-foreground w-full h-full flex flex-col">
-        {loading ? (
-          <LoadingSpinner loading={loading} />
-        ) : (
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange>
-            <Header />
-            <main className="justify-center flex w-full flex-grow">
-              {children}
-            </main>
-            <Footer />
-          </ThemeProvider>
-        )}
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en">
+            <body className="bg-background text-foreground w-full h-full flex flex-col">
+                {loading ? (
+                    <LoadingSpinner loading={loading} />
+                ) : (
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange>
+                        <Header />
+                        <main className="justify-center w-full min-h-[100dvh]">
+                            {children}
+                        </main>
+                        <Footer />
+                    </ThemeProvider>
+                )}
+            </body>
+        </html>
+    );
 }
