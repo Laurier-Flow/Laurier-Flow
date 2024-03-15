@@ -6,10 +6,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { User } from '@supabase/supabase-js';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import LoginPopup from "./LoginPopup";
 import SignUpPopup from "./SignUpPopup";
