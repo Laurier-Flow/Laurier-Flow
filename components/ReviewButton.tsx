@@ -22,7 +22,7 @@ export default function ReviewButton({
         toggleSignUpPopup,
     } = usePopupManager();
 
-    useManageBodyScroll(showLoginPopup || showSignUpPopup);
+    useManageBodyScroll(showLoginPopup || showSignUpPopup || showAddReviewPopup);
 
     const toggleAddReviewPopup = () => {
         setShowAddReviewPopup(!showAddReviewPopup);
