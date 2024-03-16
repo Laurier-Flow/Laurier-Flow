@@ -35,7 +35,7 @@ export default function ReviewButton({
                     Add your review
                 </button>
                 {showAddReviewPopup ? (
-                    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 flex items-center justify-center z-50">
                         <AddReviewPopup onClose={toggleAddReviewPopup} />
                     </div>
                 ) : (
@@ -66,7 +66,7 @@ export default function ReviewButton({
                 Add your review
             </button>
             {showLoginPopup && !showSignUpPopup && (
-                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 flex items-center justify-center z-50">
                     <LoginPopup
                         searchParams={{ message: '' }}
                         onClose={toggleLoginPopup}
@@ -75,7 +75,7 @@ export default function ReviewButton({
                 </div>
             )}
             {showSignUpPopup && !showLoginPopup && (
-                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 flex items-center justify-center z-50">
                     <SignUpPopup
                         searchParams={{ message: '' }}
                         onClose={toggleSignUpPopup}

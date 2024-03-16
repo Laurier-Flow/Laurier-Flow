@@ -49,7 +49,7 @@ export default function AddReviewPopup({
     }
 
     return (
-        <div ref={popupRef} className="border-2 border-slate-800 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background/80 backdrop-blur rounded-md max-w-xl w-11/12">
+        <div ref={popupRef} className="overflow-y-auto max-h-[90vh] border-2 border-slate-800 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background/80 backdrop-blur rounded-md max-w-xl w-11/12">
             <form
                 className="animate-in flex-1 flex flex-col w-full justify-center text-white"
             >
