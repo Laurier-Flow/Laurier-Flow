@@ -7,6 +7,14 @@ function InstructorStats({ instructorData, currentCourses }: { instructorData: i
         ? 100 - (instructorData[0].liked / instructorData[0].total_reviews) * 100
         : 100;
 
+    const clearPercentage = instructorData[0].total_reviews !== 0
+        ? ((instructorData[0].clear / instructorData[0].total_reviews) * 20)
+        : (0);
+
+    const engagingPercentage = instructorData[0].total_reviews !== 0
+        ? ((instructorData[0].engaging / instructorData[0].total_reviews) * 20)
+        : (0);
+
     return (
         <div className='flex flex-col p-4 md:dark:bg-slate-950 md:bg-slate-50 md:rounded-tl-full rounded-bl-full md:shadow md:dark:shadow-slate-600'>
             <div className='flex flex-row'>
@@ -28,25 +36,25 @@ function InstructorStats({ instructorData, currentCourses }: { instructorData: i
                 <div className="flex flex-col flex-1 justify-evenly p-4">
                     <div>
                         <div className="mb-2 flex justify-between items-center">
-                            <h3 className="text-sm font-semibold text-gray-800 dark:text-white">Easy</h3>
+                            <h3 className="text-sm font-semibold text-gray-800 dark:text-white">Clear</h3>
                             <span className="text-sm text-gray-800 dark:text-white">
-                                {instructorData[0].total_reviews !== 0 ? (instructorData[0].clear * 20) + '%' : '0%'}
+                                {instructorData[0].total_reviews !== 0 ? ((instructorData[0].clear / instructorData[0].total_reviews) * 20) + '%' : '0%'}
                             </span>
                         </div>
                         <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-800" role="progressbar" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
-                            <div className="flex flex-col justify-center rounded-full overflow-hidden bg-amber-400 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-primary progress-animation" style={{ width: `${instructorData[0].clear * 20}%` }}></div>
+                            <div className="flex flex-col justify-center rounded-full overflow-hidden bg-amber-400 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-primary progress-animation" style={{ width: `${clearPercentage}%` }}></div>
                         </div>
                     </div>
 
                     <div>
                         <div className="mb-2 flex justify-between items-center">
-                            <h3 className="text-sm font-semibold text-gray-800 dark:text-white pt-6">Useful</h3>
+                            <h3 className="text-sm font-semibold text-gray-800 dark:text-white pt-6">Engaging</h3>
                             <span className="text-sm text-gray-800 dark:text-white pt-6">
-                                {instructorData[0].total_reviews !== 0 ? (instructorData[0].engaging * 20) + '%' : '0%'}
+                                {instructorData[0].total_reviews !== 0 ? ((instructorData[0].engaging / instructorData[0].total_reviews) * 20) + '%' : '0%'}
                             </span>
                         </div>
                         <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-800" role="progressbar" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
-                            <div className="flex flex-col justify-center rounded-full overflow-hidden bg-amber-400 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-primary progress-animation" style={{ width: `${instructorData[0].engaging * 20}%` }}></div>
+                            <div className="flex flex-col justify-center rounded-full overflow-hidden bg-amber-400 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-primary progress-animation" style={{ width: `${engagingPercentage}%` }}></div>
                         </div>
                     </div>
 

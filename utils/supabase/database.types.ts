@@ -96,7 +96,7 @@ export interface Database {
           created_at: string | null
           engaging: number | null
           id: string
-          instructor_fk: string | null
+          instructor_name_fk: string | null
           user_id_fk: string | null
         }
         Insert: {
@@ -107,7 +107,7 @@ export interface Database {
           created_at?: string | null
           engaging?: number | null
           id: string
-          instructor_fk?: string | null
+          instructor_name_fk?: string | null
           user_id_fk?: string | null
         }
         Update: {
@@ -118,7 +118,7 @@ export interface Database {
           created_at?: string | null
           engaging?: number | null
           id?: string
-          instructor_fk?: string | null
+          instructor_name_fk?: string | null
           user_id_fk?: string | null
         }
         Relationships: [
@@ -130,8 +130,8 @@ export interface Database {
             referencedColumns: ["course_code"]
           },
           {
-            foreignKeyName: "instructor_reviews_instructor_fk_fkey"
-            columns: ["instructor_fk"]
+            foreignKeyName: "instructor_reviews_instructor_name_fk_fkey"
+            columns: ["instructor_name_fk"]
             isOneToOne: false
             referencedRelation: "instructors"
             referencedColumns: ["instructor_name"]

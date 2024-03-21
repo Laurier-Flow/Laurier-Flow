@@ -13,6 +13,14 @@ function CourseStats(
         ? (100 - (courseData[0].liked / courseData[0].total_reviews) * 100)
         : (100);
 
+    const easyPercentage = courseData[0].total_reviews !== 0
+        ? ((courseData[0].easy / courseData[0].total_reviews) * 20)
+        : (0);
+
+    const usefulPercentage = courseData[0].total_reviews !== 0
+        ? ((courseData[0].useful / courseData[0].total_reviews) * 20)
+        : (0);
+
     return (
         <div className='flex flex-col p-4 md:dark:bg-slate-950 md:bg-slate-50 md:rounded-tl-full rounded-bl-full md:shadow md:dark:shadow-slate-600'>
             <div className='flex flex-row'>
@@ -36,11 +44,11 @@ function CourseStats(
                         <div className="mb-2 flex justify-between items-center">
                             <h3 className="text-sm font-semibold text-gray-800 dark:text-white">Easy</h3>
                             <span className="text-sm text-gray-800 dark:text-white">
-                                {courseData[0].total_reviews !== 0 ? (courseData[0].easy * 20) + '%' : '0%'}
+                                {courseData[0].total_reviews !== 0 ? ((courseData[0].easy / courseData[0].total_reviews) * 20) + '%' : '0%'}
                             </span>
                         </div>
                         <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-800" role="progressbar" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
-                            <div className="flex flex-col justify-center rounded-full overflow-hidden bg-amber-400 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-primary progress-animation" style={{ width: `${courseData[0].easy * 20}%` }}></div>
+                            <div className="flex flex-col justify-center rounded-full overflow-hidden bg-amber-400 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-primary progress-animation" style={{ width: `${easyPercentage}%` }}></div>
                         </div>
                     </div>
 
@@ -48,11 +56,11 @@ function CourseStats(
                         <div className="mb-2 flex justify-between items-center">
                             <h3 className="text-sm font-semibold text-gray-800 dark:text-white pt-6">Useful</h3>
                             <span className="text-sm text-gray-800 dark:text-white pt-6">
-                                {courseData[0].total_reviews !== 0 ? (courseData[0].useful * 20) + '%' : '0%'}
+                                {courseData[0].total_reviews !== 0 ? ((courseData[0].useful / courseData[0].total_reviews) * 20) + '%' : '0%'}
                             </span>
                         </div>
                         <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-800" role="progressbar" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
-                            <div className="flex flex-col justify-center rounded-full overflow-hidden bg-amber-400 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-primary progress-animation" style={{ width: `${courseData[0].useful * 20}%` }}></div>
+                            <div className="flex flex-col justify-center rounded-full overflow-hidden bg-amber-400 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-primary progress-animation" style={{ width: `${usefulPercentage}%` }}></div>
                         </div>
                     </div>
 

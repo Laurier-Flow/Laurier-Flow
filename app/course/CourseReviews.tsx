@@ -26,7 +26,7 @@ async function getCourseReviews(supabase: SupabaseClient<any, "public", any>, co
                 const easy = s.easy
                 const useful = s.useful
                 const liked = s.liked
-                const instructor = s.instructor_fk
+                const instructor = s.instructor_name_fk
                 const body = s.body
 
                 try {
@@ -80,7 +80,14 @@ export default async function CourseReviews({
             <h1 className="text-xl">Course Reviews</h1>
             {courseReviews?.length != 0 ? (
                 courseReviews?.map((review: courseReview, index: any) => (
-                    <Review review={review} index={index} />
+                    (((review.body) && (review.body != '')) ? (index === 0 ? (
+                        <Review review={review} index={index} />
+                    ) : (
+                        <div className="pt-4">
+                            <Review review={review} index={index} />
+                        </div>
+                    )
+                    ) : null)
                 ))) : (<p className="mt-4 whitespace-nowrap text-md text-gray-800 dark:text-gray-200">No Reviews Yet</p>)}
         </div>
     );

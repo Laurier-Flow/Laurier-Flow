@@ -67,7 +67,7 @@ function Review({review, index}: {review: instructorReview, index: any}) {
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
                         </div>
-                        <p className="pl-4">Easy</p>
+                        <p className="pl-4">Clear</p>
                     </div>
                     <div className="flex flex-row pt-2">
                         <div className="flex items-center">
@@ -87,7 +87,7 @@ function Review({review, index}: {review: instructorReview, index: any}) {
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
                         </div>
-                        <p className="pl-4">Useful</p>
+                        <p className="pl-4">Engaging</p>
                     </div>
                     <div className="flex flex-row pt-3">
                         <button type="button" className={`py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 ${review.liked === 0 ? 'bg-gray-200' : 'bg-white'} text-gray-800 shadow-sm disabled:opacity-50 disabled:pointer-events-none ${review.liked === 1 ? 'dark:bg-slate-600' : 'dark:bg-slate-900'} dark:border-gray-700 dark:text-white dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600`}>
