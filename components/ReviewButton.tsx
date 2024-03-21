@@ -1,17 +1,22 @@
 'use client'
 
-import { User } from "@supabase/supabase-js"
+import { SupabaseClient, User } from "@supabase/supabase-js"
 import { useState } from "react";
 import LoginPopup from "./LoginPopup";
 import SignUpPopup from "./SignUpPopup";
 import { useManageBodyScroll, usePopupManager } from "./Header";
-import AddReview from "@/app/course/AddReview";
 import AddReviewPopup from "./AddReviewPopup";
 
 export default function ReviewButton({
-    user
+    user,
+    instructors,
+    courseName,
+    instructor
 }: {
-    user: User | null
+    user: User | null,
+    instructors: Set<string>,
+    courseName: string,
+    instructor: boolean
 }) {
     const [showAddReviewPopup, setShowAddReviewPopup] = useState<boolean>(false);
 
@@ -36,7 +41,7 @@ export default function ReviewButton({
                 </button>
                 {showAddReviewPopup ? (
                     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 flex items-center justify-center z-50">
-                        <AddReviewPopup onClose={toggleAddReviewPopup} />
+                        <AddReviewPopup isInstructor={instructor} user={user} instructors={instructors} onClose={toggleAddReviewPopup} courseName={courseName} />
                     </div>
                 ) : (
                     null
