@@ -7,19 +7,17 @@ async function getInstructors(supabase: SupabaseClient<any, "public", any>, cour
     const fkName = (instructor ? ('instructor_name_fk') : ('course_code_fk'))
     const instructors = new Set<string>()
 
-    if (user) {
-        const { data, error } = await supabase
-            .from('sections')
-            .select('*')
-            .eq(fkName, courseName)
+    const { data, error } = await supabase
+        .from('sections')
+        .select('*')
+        .eq(fkName, courseName)
 
-        if (data) {
-            for (const section of data) {
-                if (instructor) {
-                    instructors.add(section.course_code_fk)
-                } else {
-                    instructors.add(section.instructor_name_fk)
-                }
+    if (data) {
+        for (const section of data) {
+            if (instructor) {
+                instructors.add(section.course_code_fk)
+            } else {
+                instructors.add(section.instructor_name_fk)
             }
         }
     }
@@ -60,7 +58,6 @@ async function AddReview({
     const user = await fetchUser();
     const reviewed = await userReviewed(supabase, courseName, instructor, user);
     const instructors = await getInstructors(supabase, courseName, instructor, user);
-    console.log(instructors)
 
     return (
         reviewed ? null : (
