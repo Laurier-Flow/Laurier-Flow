@@ -4,7 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 import { User } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
-export const handleCourseReviewSubmit = async (easy: number, useful: number, liked: number, instructor: string, text: string, courseName: string, user: User | null) => {
+export const handleCourseReviewSubmit = async (easy: number, useful: number, liked: number, instructor: string | null, text: string, courseName: string, user: User | null) => {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
@@ -15,7 +15,7 @@ export const handleCourseReviewSubmit = async (easy: number, useful: number, lik
     console.log(error)
 }
 
-export const handleInstructorReviewSubmit = async (clear: number, engaging: number, liked: number, course: string, text: string, instructorName: string, user: User | null) => {
+export const handleInstructorReviewSubmit = async (clear: number, engaging: number, liked: number, course: string | null, text: string, instructorName: string, user: User | null) => {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 

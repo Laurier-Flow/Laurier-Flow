@@ -74,7 +74,7 @@ function InstructorStats({ instructorData, currentCourses }: { instructorData: i
                     ))}
                 </h3>
             ) : (
-                <h3 className="pt-4 text-lg font-medium">Not currently teaching anything</h3>
+                <h3 className="pt-4 text-lg font-medium md:hidden">Not currently teaching anything</h3>
             )}
         </div>
     )
