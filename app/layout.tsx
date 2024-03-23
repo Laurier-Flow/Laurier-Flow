@@ -13,7 +13,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="bg-background text-foreground h-screen flex flex-col">
+      <body className="bg-slate-50 dark:bg-background text-foreground h-screen flex flex-col">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

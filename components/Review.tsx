@@ -9,7 +9,7 @@ export default function Review({
 
 }) {
     return (
-        <div key={index} className="mt-4 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7]">
+        <div key={index} className="mt-4 flex flex-col bg-slate-50 border shadow-sm rounded-xl dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7]">
                         <div className="p-4 md:p-5 flex flex-col lg:flex-row">
                             <p className="mt-2 text-gray-500 dark:text-gray-400 flex flex-1 lg:mr-4">
                                 {review.body}
