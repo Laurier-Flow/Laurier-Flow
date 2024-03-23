@@ -50,7 +50,7 @@ async function InstructorInfo({
   const currentCourses = await getCurrentCourses(supabase, instructorName)
 
   return (
-    <div className="md:bg-slate-50 md:dark:bg-slate-950">
+    <div className="md:bg-white md:dark:bg-slate-950">
       <div className="flex flex-col p-4 dark:bg-[url('/banner-sm.jpg')] bg-[url('/banner-sm-light.jpg')] md:dark:bg-[url('/banner-md.jpg')] md:bg-[url('/banner-md-light.jpg')] lg:dark:bg-[url('/banner.jpg')] lg:bg-[url('/banner-light.jpg')] md:flex-row md:justify-center">
         <div className="flex flex-1 pt-20 flex-row justify-between max-w-6xl">
           <div className="flex flex-1 flex-col justify-end pl-4">

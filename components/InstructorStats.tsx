@@ -16,7 +16,7 @@ function InstructorStats({ instructorData, currentCourses }: { instructorData: i
         : (0);
 
     return (
-        <div className='flex flex-col p-4 md:dark:bg-slate-950 md:bg-slate-50 md:rounded-tl-full rounded-bl-full md:shadow md:dark:shadow-slate-600'>
+        <div className='flex flex-col p-4 md:dark:bg-slate-950 md:bg-white md:rounded-tl-full rounded-bl-full md:shadow md:dark:shadow-slate-600'>
             <div className='flex flex-row'>
                 <div className="relative h-40 w-40">
                     <svg className="h-full w-full" width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
