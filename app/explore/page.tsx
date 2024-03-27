@@ -11,7 +11,7 @@ async function getCourses(supabase: SupabaseClient) {
     const { data } = await supabase
         .from('courses')
         .select('*')
-        .limit(50)
+        .limit(100)
 
     return data || []
 }

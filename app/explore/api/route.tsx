@@ -11,7 +11,7 @@ export async function GET(req: Request) {
         const { data, error } = await supabase
             .from('courses')
             .select('*')
-            .range(page * 50, (page + 1) * 50 - 1)
+            .range(page * 100, (page + 1) * 100 - 1)
 
         if (error) return Response.error()
         return Response.json({ 'data': data })
