@@ -3,7 +3,7 @@
 import Spinner from "@/components/Spinner";
 import { SupabaseClient, createClient } from "@supabase/supabase-js";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { SetStateAction, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { courseInfoDBResponse } from "../course/CourseInfo";
 import { cookies } from "next/headers";
 import Link from "next/link";
@@ -14,6 +14,19 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
     const [courses, setCourses] = useState(initialCourses)
     const [page, setPage] = useState(0)
     const loaderRef = useRef(null)
+
+    //Filters
+    const [firstYear, setFirstYear] = useState(false)
+    const [secondYear, setSecondYear] = useState(true)
+    const [thirdYear, setThirdYear] = useState(true)
+    const [fourthYear, setFourthYear] = useState(true)
+    const [seniorYear, setSeniorYear] = useState(true)
+
+    const [slider, setSlider] = useState(0)
+    const [minRatings, setMinRatings] = useState(0)
+
+    const [thisTerm, setThisTerm] = useState(false)
+    const [afterTerm, setAfterTerm] = useState(false)
 
     const fetchMoreCourses = useCallback(async () => {
         const response = await fetch(`/explore/api?page=${page + 1}`);
@@ -33,14 +46,64 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
                 fetchMoreCourses();
             }
         }, { threshold: 0.1, rootMargin: "200px" });
-    
+
         const currentLoader = loaderRef.current;
         if (currentLoader) {
             observer.observe(currentLoader);
         }
-    
+
         return () => observer.disconnect();
     }, [page, fetchMoreCourses]);
+
+    const handleSliderChange = (e: { target: { value: SetStateAction<string>; }; }) => {
+        const val = e.target.value
+        setSlider(Number(val))
+
+        switch (val) {
+            case '0':
+                setMinRatings(0)
+                break;
+            case '1':
+                setMinRatings(1)
+                break;
+            case '2':
+                setMinRatings(5)
+                break;
+            case '3':
+                setMinRatings(10)
+                break;
+            case '4':
+                setMinRatings(20)
+                break;
+            case '5':
+                setMinRatings(50)
+                break;
+            case '6':
+                setMinRatings(75)
+                break;
+            case '7':
+                setMinRatings(100)
+                break;
+            case '8':
+                setMinRatings(200)
+                break;
+            case '9':
+                setMinRatings(500)
+                break;
+        }
+    }
+
+    const resetFilter = () => {
+        setFirstYear(true)
+        setSecondYear(true)
+        setThirdYear(true)
+        setFourthYear(true)
+        setSeniorYear(true)
+        setMinRatings(0)
+        setSlider(0)
+        setAfterTerm(false)
+        setThisTerm(false)
+    }
 
     return (
         <>
@@ -57,15 +120,15 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
                     <h1 className="text-2xl font-semibold">Filter your results</h1>
                     <h1 className="pt-8">Course Code</h1>
                     <div className="pt-2 flex flex-row">
-                        <span className="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium bg-blue-600 text-white dark:bg-primary">1XX</span>
-                        <span className="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium bg-blue-600 text-white dark:bg-primary ml-4">2XX</span>
-                        <span className="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium bg-blue-600 text-white dark:bg-primary ml-4">3XX</span>
-                        <span className="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium bg-blue-600 text-white dark:bg-primary ml-4">4XX</span>
-                        <span className="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium bg-blue-600 text-white dark:bg-primary ml-4">5XX+</span>
+                        <button onClick={() => setFirstYear(!firstYear)} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${firstYear ? ('dark:bg-primary') : (null)}`}>1XX</button>
+                        <button onClick={() => setSecondYear(!secondYear)} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${secondYear ? ('dark:bg-primary') : (null)} ml-4`}>2XX</button>
+                        <button onClick={() => setThirdYear(!thirdYear)} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${thirdYear ? ('dark:bg-primary') : (null)} ml-4`}>3XX</button>
+                        <button onClick={() => setFourthYear(!fourthYear)} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${fourthYear ? ('dark:bg-primary') : (null)} ml-4`}>4XX</button>
+                        <button onClick={() => setSeniorYear(!seniorYear)} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${seniorYear ? ('dark:bg-primary') : (null)} ml-4`}>5XX+</button>
                     </div>
                     <div className="pt-8 flex flex-row justify-between">
                         <h1>Min # of ratings</h1>
-                        <h1>≥ x ratings</h1>
+                        <h1>≥ {minRatings} ratings</h1>
                     </div>
                     <input type="range" className="pt-4 w-full bg-transparent cursor-pointer appearance-none disabled:opacity-50 disabled:pointer-events-none focus:outline-none
 [&::-webkit-slider-thumb]:w-2.5
@@ -85,7 +148,7 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
 [&::-moz-range-thumb]:appearance-none
 [&::-moz-range-thumb]:bg-white
 [&::-moz-range-thumb]:border-4
-[&::-moz-range-thumb]:border-blue-600
+[&::-moz-range-thumb]:border-primary
 [&::-moz-range-thumb]:rounded-full
 [&::-moz-range-thumb]:transition-all
 [&::-moz-range-thumb]:duration-150
@@ -100,23 +163,28 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
 [&::-moz-range-track]:w-full
 [&::-moz-range-track]:h-2
 [&::-moz-range-track]:bg-gray-100
-[&::-moz-range-track]:rounded-full" id="steps-range-slider-usage" min="0" max="9" step="1" value="0"></input>
+[&::-moz-range-track]:rounded-full" id="steps-range-slider-usage" min="0" max="9" step="1" value={slider} onChange={handleSliderChange}></input>
 
                     <h1 className="pt-8">Offered in</h1>
                     <div className="pt-4 ml-1 flex flex-row">
                         <div className="flex flex-row items-center">
-                            <input type="checkbox" className="scale-150 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" />
+                            <input type="checkbox" className="scale-150 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" checked={(!thisTerm && !afterTerm)} />
+                            <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">All terms</h1>
+                        </div>
+
+                        <div className="flex flex-row items-center">
+                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onClick={() => setThisTerm(!thisTerm)} checked={thisTerm} />
                             <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">This term ({currentTerm})</h1>
                         </div>
 
                         <div className="flex flex-row items-center">
-                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" />
+                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onClick={() => setAfterTerm(!afterTerm)} checked={afterTerm} />
                             <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">Next term ({nextTerm})</h1>
                         </div>
                     </div>
 
-                    <button type="button" className="mt-12 py-3 px-4 gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
-                        {courses.length}
+                    <button onClick={resetFilter} type="button" className="mt-12 py-3 px-4 gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                        Reset Filter
                     </button>
                 </div>
                 <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
