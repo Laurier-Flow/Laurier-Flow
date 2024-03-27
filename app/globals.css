@@ -65,4 +65,7 @@
   .card {
     @apply flex flex-col justify-evenly w-full bg-white dark:bg-slate-950 lg:max-w-6xl lg:border-x-2 dark:lg:border-slate-900 lg:pl-4 lg:pr-4;
   }
+  .exploreCard {
+    @apply flex flex-col justify-evenly w-full bg-white dark:bg-slate-950 lg:max-w-6xl lg:border-x-2 dark:lg:border-slate-900;
+  }
 }
