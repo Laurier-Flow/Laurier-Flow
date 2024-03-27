@@ -16,14 +16,24 @@ async function getCourses(supabase: SupabaseClient) {
     return data || []
 }
 
+async function getCourseTotalCount(supabase: SupabaseClient) {
+    const { count, error } = await supabase
+        .from('courses')
+        .select('*', { count: 'exact', head: true })
+    
+    return count
+}
+
 export default async function ExplorePage() {
     const currentTerm = await getCurrentTerm(true)
     const nextTerm = await getNextTerm(true)
     const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createClient(cookieStore)
     const courses = await getCourses(supabase)
+    const courseTotalCount = await getCourseTotalCount(supabase)
+    console.log(courseTotalCount)
 
     return (
-        <Body currentTerm={currentTerm} nextTerm={nextTerm} initialCourses={courses} />
+        <Body currentTerm={currentTerm} nextTerm={nextTerm} initialCourses={courses} courseTotalCount={courseTotalCount} />
     );
 }
