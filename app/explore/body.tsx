@@ -3,51 +3,47 @@
 import Spinner from "@/components/Spinner";
 import { SupabaseClient, createClient } from "@supabase/supabase-js";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { courseInfoDBResponse } from "../course/CourseInfo";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
-export default function Body({ currentTerm, nextTerm, initialCourses }: { currentTerm: string, nextTerm: string, initialCourses: courseInfoDBResponse[] }) {
+export default function Body({ currentTerm, nextTerm, initialCourses, courseTotalCount }: { currentTerm: string, nextTerm: string, initialCourses: courseInfoDBResponse[], courseTotalCount: any }) {
     const searchParams = useSearchParams()
     const subject = searchParams.get('subject') || 'all'
     const [courses, setCourses] = useState(initialCourses)
     const [page, setPage] = useState(0)
     const loaderRef = useRef(null)
 
-    const fetchMoreCourses = async () => {
-        const response = await fetch(`/explore/api?page=${page + 1}`)
+    const fetchMoreCourses = useCallback(async () => {
+        const response = await fetch(`/explore/api?page=${page + 1}`);
         if (response.ok) {
-            const newCourses = await response.json()
-            setCourses([...courses, ...newCourses.data])
-            setPage(page + 1)
+            const newCourses = await response.json();
+            setCourses(c => [...c, ...newCourses.data]);
+            setPage(p => p + 1);
         } else {
-            console.error('Failed to fetch more courses')
+            console.error('Failed to fetch more courses');
         }
-    }
+    }, [page]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(entries => {
-            const firstEntry = entries[0]
+            const firstEntry = entries[0];
             if (firstEntry.isIntersecting) {
-                fetchMoreCourses()
+                fetchMoreCourses();
             }
-        }, { threshold: 1.0 })
-
-        const currentLoader = loaderRef.current
+        }, { threshold: 0.1, rootMargin: "200px" });
+    
+        const currentLoader = loaderRef.current;
         if (currentLoader) {
-            observer.observe(currentLoader)
+            observer.observe(currentLoader);
         }
-
-        return () => {
-            if (currentLoader) {
-                observer.unobserve(currentLoader)
-            }
-        }
-    }, [fetchMoreCourses, page])
+    
+        return () => observer.disconnect();
+    }, [page, fetchMoreCourses]);
 
     return (
-        <Suspense fallback={<div className="w-full h-full"><Spinner /></div>}>
+        <>
             <div className="min-w-full flex flex-col p-4 dark:bg-[url('/banner-sm.jpg')] bg-[url('/banner-sm-light.jpg')] md:dark:bg-[url('/banner-md.jpg')] md:bg-[url('/banner-md-light.jpg')] lg:dark:bg-[url('/banner.jpg')] lg:bg-[url('/banner-light.jpg')] md:flex-row md:justify-center">
                 <div className="flex flex-1 pt-20 flex-row justify-between w-f max-w-6xl">
                     <div className="flex flex-1 flex-col justify-end pl-4">
@@ -160,9 +156,9 @@ export default function Body({ currentTerm, nextTerm, initialCourses }: { curren
                             </div>
                         </div>
                     </div>
-                    <div ref={loaderRef} style={{ height: '20px', margin: '10px 0' }}>Loading more courses...</div>
+                    <div ref={loaderRef} className={`flex flex-row items-center ${(courseTotalCount === courses.length) ? ('hidden') : (null)}`} style={{ height: '100px', margin: '10px 0' }}><Spinner /></div>
                 </div>
             </div>
-        </Suspense>
+        </>
     );
 }
