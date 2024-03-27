@@ -3,7 +3,7 @@
 import Spinner from "@/components/Spinner";
 import { SupabaseClient, createClient } from "@supabase/supabase-js";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { courseInfoDBResponse } from "../course/CourseInfo";
 import { cookies } from "next/headers";
 import Link from "next/link";
@@ -13,6 +13,7 @@ export default function Body({ currentTerm, nextTerm, initialCourses }: { curren
     const subject = searchParams.get('subject') || 'all'
     const [courses, setCourses] = useState(initialCourses)
     const [page, setPage] = useState(0)
+    const loaderRef = useRef(null)
 
     const fetchMoreCourses = async () => {
         const response = await fetch(`/explore/api?page=${page + 1}`)
@@ -24,6 +25,26 @@ export default function Body({ currentTerm, nextTerm, initialCourses }: { curren
             console.error('Failed to fetch more courses')
         }
     }
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(entries => {
+            const firstEntry = entries[0]
+            if (firstEntry.isIntersecting) {
+                fetchMoreCourses()
+            }
+        }, { threshold: 1.0 })
+
+        const currentLoader = loaderRef.current
+        if (currentLoader) {
+            observer.observe(currentLoader)
+        }
+
+        return () => {
+            if (currentLoader) {
+                observer.unobserve(currentLoader)
+            }
+        }
+    }, [fetchMoreCourses, page])
 
     return (
         <Suspense fallback={<div className="w-full h-full"><Spinner /></div>}>
@@ -98,8 +119,8 @@ export default function Body({ currentTerm, nextTerm, initialCourses }: { curren
                         </div>
                     </div>
 
-                    <button onClick={fetchMoreCourses} type="button" className="mt-12 py-3 px-4 gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
-                        TEST
+                    <button type="button" className="mt-12 py-3 px-4 gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                        {courses.length}
                     </button>
                 </div>
                 <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
@@ -139,6 +160,7 @@ export default function Body({ currentTerm, nextTerm, initialCourses }: { curren
                             </div>
                         </div>
                     </div>
+                    <div ref={loaderRef} style={{ height: '20px', margin: '10px 0' }}>Loading more courses...</div>
                 </div>
             </div>
         </Suspense>
