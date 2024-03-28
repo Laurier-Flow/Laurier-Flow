@@ -46,31 +46,20 @@ export async function GET(req: Request) {
         termPattern.push('%')
     }
 
-    console.log(termPattern)
-
     if (page || page === 0) {
-
-
-
-
-        const { data, error } = await supabase
+        const { data, error, count } = await supabase
             .from('courses')
             .select(`
                 *, sections!inner(*)
-            `)
+            `, { count: 'exact' })
             .ilikeAnyOf('sections.term', termPattern)
             .ilikeAnyOf('course_code', levelPatterns)
             .ilike('course_code', `${(subject === 'all') ? ('%') : (`${subject}%`)}`)
             .gte('total_reviews', minRatings)
             .range(page * 50, (page + 1) * 50 - 1);
 
-
-
-
-
-
         if (error) return Response.error()
-        return Response.json({ 'data': data })
+        return Response.json({ 'data': data, 'totalCount': count })
     } else {
         return Response.error()
     }

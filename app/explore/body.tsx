@@ -12,6 +12,7 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
     const [courses, setCourses] = useState(initialCourses)
     const [page, setPage] = useState(0)
     const loaderRef = useRef(null)
+    const [courseTotal, setCourseTotal] = useState(courseTotalCount)
 
     //Filters
     const [filters, setFilters] = useState({
@@ -31,6 +32,7 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
     useEffect(() => {
         setCourses([])
         setPage(-1)
+        setCourseTotal(courseTotalCount)
         setIgnoreNextFetch(true)
     }, [filters])
 
@@ -46,6 +48,7 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
             if (response.ok) {
                 const newCourses = await response.json();
                 setCourses(c => [...c, ...newCourses.data]);
+                setCourseTotal(newCourses.totalCount)
                 setPage(p => p + 1);
             } else {
                 console.error('Failed to fetch more courses');
@@ -230,10 +233,10 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
                     <div className="pt-4 ml-1 flex flex-row">
                         <div className="flex flex-row items-center">
                             <input type="checkbox" className="scale-150 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onClick={() => setFilters(prevFilters => ({
-                            ...prevFilters,
-                            thisTerm: false,
-                            afterTerm: false
-                        }))} checked={(!filters.thisTerm && !filters.afterTerm)} />
+                                ...prevFilters,
+                                thisTerm: false,
+                                afterTerm: false
+                            }))} checked={(!filters.thisTerm && !filters.afterTerm)} />
                             <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">All terms</h1>
                         </div>
 
@@ -285,9 +288,9 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.course_title}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.total_reviews}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.useful ? (course.useful) : ('N/A')}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.easy ? (course.easy) : ('N/A')}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.liked ? (course.liked) : ('N/A')}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.useful || course.useful === 0 ? (course.useful) : ('N/A')}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.easy || course.easy === 0 ? (course.easy) : ('N/A')}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.liked || course.liked === 0 ? (course.liked) : ('N/A')}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -295,8 +298,9 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
                             </div>
                         </div>
                     </div>
-                    <div ref={loaderRef} className={`flex flex-row items-center ${(courseTotalCount === courses.length) ? ('hidden') : (null)}`} style={{ height: '100px', margin: '10px 0' }}><Spinner /></div>
+                    <div ref={loaderRef} className={`flex flex-row items-center ${(courseTotal === courses.length) ? ('hidden') : (null)}`} style={{ height: '100px', margin: '10px 0' }}><Spinner /></div>
                 </div>
+                <h1 className={`p-6 flex-1 ${courseTotal !== 0 ? ('hidden') : (null)}`}>No courses found matching your criteria. Try adjusting your filters to broaden your search. Consider using less specific terms.</h1>
             </div>
         </>
     );
