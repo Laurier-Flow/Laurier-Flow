@@ -11,7 +11,7 @@ async function getCourses(supabase: SupabaseClient) {
     const { data } = await supabase
         .from('courses')
         .select('*')
-        .limit(100)
+        .limit(50)
 
     return data || []
 }
@@ -27,13 +27,14 @@ async function getCourseTotalCount(supabase: SupabaseClient) {
 export default async function ExplorePage() {
     const currentTerm = await getCurrentTerm(true)
     const nextTerm = await getNextTerm(true)
+    const currentTermServer = await getCurrentTerm(false)
+    const nextTermServer = await getNextTerm(false)
     const cookieStore = cookies();
     const supabase = createClient(cookieStore)
     const courses = await getCourses(supabase)
     const courseTotalCount = await getCourseTotalCount(supabase)
-    console.log(courseTotalCount)
 
     return (
-        <Body currentTerm={currentTerm} nextTerm={nextTerm} initialCourses={courses} courseTotalCount={courseTotalCount} />
+        <Body currentTerm={currentTerm} nextTerm={nextTerm} initialCourses={courses} courseTotalCount={courseTotalCount} currentTermServer={currentTermServer} nextTermServer={nextTermServer} />
     );
 }

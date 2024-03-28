@@ -1,30 +1,61 @@
 'use client'
 
 import Spinner from "@/components/Spinner";
-import { SupabaseClient, createClient } from "@supabase/supabase-js";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { SetStateAction, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { courseInfoDBResponse } from "../course/CourseInfo";
-import { cookies } from "next/headers";
 import Link from "next/link";
 
-export default function Body({ currentTerm, nextTerm, initialCourses, courseTotalCount }: { currentTerm: string, nextTerm: string, initialCourses: courseInfoDBResponse[], courseTotalCount: any }) {
+export default function Body({ currentTerm, nextTerm, initialCourses, courseTotalCount, currentTermServer, nextTermServer }: { currentTerm: string, nextTerm: string, initialCourses: courseInfoDBResponse[], courseTotalCount: any, currentTermServer: string, nextTermServer: string }) {
     const searchParams = useSearchParams()
     const subject = searchParams.get('subject') || 'all'
     const [courses, setCourses] = useState(initialCourses)
     const [page, setPage] = useState(0)
     const loaderRef = useRef(null)
+    const [courseTotal, setCourseTotal] = useState(courseTotalCount)
+
+    //Filters
+    const [filters, setFilters] = useState({
+        firstYear: true,
+        secondYear: true,
+        thirdYear: true,
+        fourthYear: true,
+        seniorYear: true,
+        minRatings: 0,
+        thisTerm: false,
+        afterTerm: false
+    });
+
+    const [slider, setSlider] = useState(0)
+    const [ignoreNextFetch, setIgnoreNextFetch] = useState(false)
+
+    useEffect(() => {
+        setCourses([])
+        setPage(-1)
+        setCourseTotal(courseTotalCount)
+        setIgnoreNextFetch(true)
+    }, [filters])
 
     const fetchMoreCourses = useCallback(async () => {
-        const response = await fetch(`/explore/api?page=${page + 1}`);
-        if (response.ok) {
-            const newCourses = await response.json();
-            setCourses(c => [...c, ...newCourses.data]);
-            setPage(p => p + 1);
-        } else {
-            console.error('Failed to fetch more courses');
+        if (!ignoreNextFetch || page === 0) {
+            const queryString = Object.entries(filters)
+                .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+                .join('&');
+
+            const url = `/explore/api?${queryString}&subject=${subject}&nextTerm=${nextTermServer}&currentTerm=${currentTermServer}`;
+
+            const response = await fetch(url);
+            if (response.ok) {
+                const newCourses = await response.json();
+                setCourses(c => [...c, ...newCourses.data]);
+                setCourseTotal(newCourses.totalCount)
+                setPage(p => p + 1);
+            } else {
+                console.error('Failed to fetch more courses');
+            }
         }
-    }, [page]);
+        setIgnoreNextFetch(false)
+    }, [page, ignoreNextFetch]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(entries => {
@@ -33,14 +64,95 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
                 fetchMoreCourses();
             }
         }, { threshold: 0.1, rootMargin: "200px" });
-    
+
         const currentLoader = loaderRef.current;
         if (currentLoader) {
             observer.observe(currentLoader);
         }
-    
+
         return () => observer.disconnect();
     }, [page, fetchMoreCourses]);
+
+    const handleSliderChange = (e: { target: { value: SetStateAction<string>; }; }) => {
+        const val = e.target.value
+        setSlider(Number(val))
+
+        switch (val) {
+            case '0':
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 0
+                }));
+                break;
+            case '1':
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 1
+                }));
+                break;
+            case '2':
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 5
+                }));
+                break;
+            case '3':
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 10
+                }));
+                break;
+            case '4':
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 20
+                }));
+                break;
+            case '5':
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 50
+                }));
+                break;
+            case '6':
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 75
+                }));
+                break;
+            case '7':
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 100
+                }));
+                break;
+            case '8':
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 200
+                }));
+                break;
+            case '9':
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 500
+                }));
+                break;
+        }
+    }
+
+    const resetFilter = () => {
+        setFilters(({
+            firstYear: true,
+            secondYear: true,
+            thirdYear: true,
+            fourthYear: true,
+            seniorYear: true,
+            minRatings: 0,
+            thisTerm: false,
+            afterTerm: false,
+        }));
+    };
 
     return (
         <>
@@ -57,15 +169,30 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
                     <h1 className="text-2xl font-semibold">Filter your results</h1>
                     <h1 className="pt-8">Course Code</h1>
                     <div className="pt-2 flex flex-row">
-                        <span className="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium bg-blue-600 text-white dark:bg-primary">1XX</span>
-                        <span className="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium bg-blue-600 text-white dark:bg-primary ml-4">2XX</span>
-                        <span className="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium bg-blue-600 text-white dark:bg-primary ml-4">3XX</span>
-                        <span className="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium bg-blue-600 text-white dark:bg-primary ml-4">4XX</span>
-                        <span className="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium bg-blue-600 text-white dark:bg-primary ml-4">5XX+</span>
+                        <button onClick={() => setFilters(prevFilters => ({
+                            ...prevFilters,
+                            firstYear: !filters.firstYear
+                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${filters.firstYear ? ('dark:bg-primary') : (null)}`}>1XX</button>
+                        <button onClick={() => setFilters(prevFilters => ({
+                            ...prevFilters,
+                            secondYear: !filters.secondYear
+                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${filters.secondYear ? ('dark:bg-primary') : (null)} ml-4`}>2XX</button>
+                        <button onClick={() => setFilters(prevFilters => ({
+                            ...prevFilters,
+                            thirdYear: !filters.thirdYear
+                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${filters.thirdYear ? ('dark:bg-primary') : (null)} ml-4`}>3XX</button>
+                        <button onClick={() => setFilters(prevFilters => ({
+                            ...prevFilters,
+                            fourthYear: !filters.fourthYear
+                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${filters.fourthYear ? ('dark:bg-primary') : (null)} ml-4`}>4XX</button>
+                        <button onClick={() => setFilters(prevFilters => ({
+                            ...prevFilters,
+                            seniorYear: !filters.seniorYear
+                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${filters.seniorYear ? ('dark:bg-primary') : (null)} ml-4`}>5XX+</button>
                     </div>
                     <div className="pt-8 flex flex-row justify-between">
                         <h1>Min # of ratings</h1>
-                        <h1>≥ x ratings</h1>
+                        <h1>≥ {filters.minRatings} ratings</h1>
                     </div>
                     <input type="range" className="pt-4 w-full bg-transparent cursor-pointer appearance-none disabled:opacity-50 disabled:pointer-events-none focus:outline-none
 [&::-webkit-slider-thumb]:w-2.5
@@ -85,7 +212,7 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
 [&::-moz-range-thumb]:appearance-none
 [&::-moz-range-thumb]:bg-white
 [&::-moz-range-thumb]:border-4
-[&::-moz-range-thumb]:border-blue-600
+[&::-moz-range-thumb]:border-primary
 [&::-moz-range-thumb]:rounded-full
 [&::-moz-range-thumb]:transition-all
 [&::-moz-range-thumb]:duration-150
@@ -100,23 +227,38 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
 [&::-moz-range-track]:w-full
 [&::-moz-range-track]:h-2
 [&::-moz-range-track]:bg-gray-100
-[&::-moz-range-track]:rounded-full" id="steps-range-slider-usage" min="0" max="9" step="1" value="0"></input>
+[&::-moz-range-track]:rounded-full" id="steps-range-slider-usage" min="0" max="9" step="1" value={slider} onChange={handleSliderChange}></input>
 
                     <h1 className="pt-8">Offered in</h1>
                     <div className="pt-4 ml-1 flex flex-row">
                         <div className="flex flex-row items-center">
-                            <input type="checkbox" className="scale-150 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" />
+                            <input type="checkbox" className="scale-150 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onClick={() => setFilters(prevFilters => ({
+                                ...prevFilters,
+                                thisTerm: false,
+                                afterTerm: false
+                            }))} checked={(!filters.thisTerm && !filters.afterTerm)} />
+                            <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">All terms</h1>
+                        </div>
+
+                        <div className="flex flex-row items-center">
+                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onClick={() => setFilters(prevFilters => ({
+                                ...prevFilters,
+                                thisTerm: !filters.thisTerm
+                            }))} checked={filters.thisTerm} />
                             <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">This term ({currentTerm})</h1>
                         </div>
 
                         <div className="flex flex-row items-center">
-                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" />
+                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onClick={() => setFilters(prevFilters => ({
+                                ...prevFilters,
+                                afterTerm: !filters.afterTerm
+                            }))} checked={filters.afterTerm} />
                             <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">Next term ({nextTerm})</h1>
                         </div>
                     </div>
 
-                    <button type="button" className="mt-12 py-3 px-4 gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
-                        {courses.length}
+                    <button onClick={resetFilter} type="button" className="mt-12 py-3 px-4 gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                        Reset Filter
                     </button>
                 </div>
                 <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
@@ -146,9 +288,9 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.course_title}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.total_reviews}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.useful ? (course.useful) : ('N/A')}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.easy ? (course.easy) : ('N/A')}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.liked ? (course.liked) : ('N/A')}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.useful || course.useful === 0 ? (course.useful) : ('N/A')}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.easy || course.easy === 0 ? (course.easy) : ('N/A')}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.liked || course.liked === 0 ? (course.liked) : ('N/A')}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -156,8 +298,9 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
                             </div>
                         </div>
                     </div>
-                    <div ref={loaderRef} className={`flex flex-row items-center ${(courseTotalCount === courses.length) ? ('hidden') : (null)}`} style={{ height: '100px', margin: '10px 0' }}><Spinner /></div>
+                    <div ref={loaderRef} className={`flex flex-row items-center ${(courseTotal === courses.length) ? ('hidden') : (null)}`} style={{ height: '100px', margin: '10px 0' }}><Spinner /></div>
                 </div>
+                <h1 className={`p-6 flex-1 ${courseTotal !== 0 ? ('hidden') : (null)}`}>No courses found matching your criteria. Try adjusting your filters to broaden your search. Consider using less specific terms.</h1>
             </div>
         </>
     );
