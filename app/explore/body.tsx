@@ -1,14 +1,12 @@
 'use client'
 
 import Spinner from "@/components/Spinner";
-import { SupabaseClient, createClient } from "@supabase/supabase-js";
 import { useSearchParams } from "next/navigation";
 import { SetStateAction, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { courseInfoDBResponse } from "../course/CourseInfo";
-import { cookies } from "next/headers";
 import Link from "next/link";
 
-export default function Body({ currentTerm, nextTerm, initialCourses, courseTotalCount }: { currentTerm: string, nextTerm: string, initialCourses: courseInfoDBResponse[], courseTotalCount: any }) {
+export default function Body({ currentTerm, nextTerm, initialCourses, courseTotalCount, currentTermServer, nextTermServer }: { currentTerm: string, nextTerm: string, initialCourses: courseInfoDBResponse[], courseTotalCount: any, currentTermServer: string, nextTermServer: string }) {
     const searchParams = useSearchParams()
     const subject = searchParams.get('subject') || 'all'
     const [courses, setCourses] = useState(initialCourses)
@@ -16,28 +14,45 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
     const loaderRef = useRef(null)
 
     //Filters
-    const [firstYear, setFirstYear] = useState(false)
-    const [secondYear, setSecondYear] = useState(true)
-    const [thirdYear, setThirdYear] = useState(true)
-    const [fourthYear, setFourthYear] = useState(true)
-    const [seniorYear, setSeniorYear] = useState(true)
+    const [filters, setFilters] = useState({
+        firstYear: true,
+        secondYear: true,
+        thirdYear: true,
+        fourthYear: true,
+        seniorYear: true,
+        minRatings: 0,
+        thisTerm: false,
+        afterTerm: false
+    });
 
     const [slider, setSlider] = useState(0)
-    const [minRatings, setMinRatings] = useState(0)
+    const [ignoreNextFetch, setIgnoreNextFetch] = useState(false)
 
-    const [thisTerm, setThisTerm] = useState(false)
-    const [afterTerm, setAfterTerm] = useState(false)
+    useEffect(() => {
+        setCourses([])
+        setPage(-1)
+        setIgnoreNextFetch(true)
+    }, [filters])
 
     const fetchMoreCourses = useCallback(async () => {
-        const response = await fetch(`/explore/api?page=${page + 1}`);
-        if (response.ok) {
-            const newCourses = await response.json();
-            setCourses(c => [...c, ...newCourses.data]);
-            setPage(p => p + 1);
-        } else {
-            console.error('Failed to fetch more courses');
+        if (!ignoreNextFetch || page === 0) {
+            const queryString = Object.entries(filters)
+                .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+                .join('&');
+
+            const url = `/explore/api?${queryString}&subject=${subject}&nextTerm=${nextTermServer}&currentTerm=${currentTermServer}`;
+
+            const response = await fetch(url);
+            if (response.ok) {
+                const newCourses = await response.json();
+                setCourses(c => [...c, ...newCourses.data]);
+                setPage(p => p + 1);
+            } else {
+                console.error('Failed to fetch more courses');
+            }
         }
-    }, [page]);
+        setIgnoreNextFetch(false)
+    }, [page, ignoreNextFetch]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(entries => {
@@ -61,49 +76,80 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
 
         switch (val) {
             case '0':
-                setMinRatings(0)
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 0
+                }));
                 break;
             case '1':
-                setMinRatings(1)
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 1
+                }));
                 break;
             case '2':
-                setMinRatings(5)
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 5
+                }));
                 break;
             case '3':
-                setMinRatings(10)
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 10
+                }));
                 break;
             case '4':
-                setMinRatings(20)
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 20
+                }));
                 break;
             case '5':
-                setMinRatings(50)
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 50
+                }));
                 break;
             case '6':
-                setMinRatings(75)
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 75
+                }));
                 break;
             case '7':
-                setMinRatings(100)
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 100
+                }));
                 break;
             case '8':
-                setMinRatings(200)
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 200
+                }));
                 break;
             case '9':
-                setMinRatings(500)
+                setFilters(prevFilters => ({
+                    ...prevFilters,
+                    minRatings: 500
+                }));
                 break;
         }
     }
 
     const resetFilter = () => {
-        setFirstYear(true)
-        setSecondYear(true)
-        setThirdYear(true)
-        setFourthYear(true)
-        setSeniorYear(true)
-        setMinRatings(0)
-        setSlider(0)
-        setAfterTerm(false)
-        setThisTerm(false)
-    }
+        setFilters(({
+            firstYear: true,
+            secondYear: true,
+            thirdYear: true,
+            fourthYear: true,
+            seniorYear: true,
+            minRatings: 0,
+            thisTerm: false,
+            afterTerm: false,
+        }));
+    };
 
     return (
         <>
@@ -120,15 +166,30 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
                     <h1 className="text-2xl font-semibold">Filter your results</h1>
                     <h1 className="pt-8">Course Code</h1>
                     <div className="pt-2 flex flex-row">
-                        <button onClick={() => setFirstYear(!firstYear)} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${firstYear ? ('dark:bg-primary') : (null)}`}>1XX</button>
-                        <button onClick={() => setSecondYear(!secondYear)} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${secondYear ? ('dark:bg-primary') : (null)} ml-4`}>2XX</button>
-                        <button onClick={() => setThirdYear(!thirdYear)} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${thirdYear ? ('dark:bg-primary') : (null)} ml-4`}>3XX</button>
-                        <button onClick={() => setFourthYear(!fourthYear)} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${fourthYear ? ('dark:bg-primary') : (null)} ml-4`}>4XX</button>
-                        <button onClick={() => setSeniorYear(!seniorYear)} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${seniorYear ? ('dark:bg-primary') : (null)} ml-4`}>5XX+</button>
+                        <button onClick={() => setFilters(prevFilters => ({
+                            ...prevFilters,
+                            firstYear: !filters.firstYear
+                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${filters.firstYear ? ('dark:bg-primary') : (null)}`}>1XX</button>
+                        <button onClick={() => setFilters(prevFilters => ({
+                            ...prevFilters,
+                            secondYear: !filters.secondYear
+                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${filters.secondYear ? ('dark:bg-primary') : (null)} ml-4`}>2XX</button>
+                        <button onClick={() => setFilters(prevFilters => ({
+                            ...prevFilters,
+                            thirdYear: !filters.thirdYear
+                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${filters.thirdYear ? ('dark:bg-primary') : (null)} ml-4`}>3XX</button>
+                        <button onClick={() => setFilters(prevFilters => ({
+                            ...prevFilters,
+                            fourthYear: !filters.fourthYear
+                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${filters.fourthYear ? ('dark:bg-primary') : (null)} ml-4`}>4XX</button>
+                        <button onClick={() => setFilters(prevFilters => ({
+                            ...prevFilters,
+                            seniorYear: !filters.seniorYear
+                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${filters.seniorYear ? ('dark:bg-primary') : (null)} ml-4`}>5XX+</button>
                     </div>
                     <div className="pt-8 flex flex-row justify-between">
                         <h1>Min # of ratings</h1>
-                        <h1>≥ {minRatings} ratings</h1>
+                        <h1>≥ {filters.minRatings} ratings</h1>
                     </div>
                     <input type="range" className="pt-4 w-full bg-transparent cursor-pointer appearance-none disabled:opacity-50 disabled:pointer-events-none focus:outline-none
 [&::-webkit-slider-thumb]:w-2.5
@@ -168,17 +229,27 @@ export default function Body({ currentTerm, nextTerm, initialCourses, courseTota
                     <h1 className="pt-8">Offered in</h1>
                     <div className="pt-4 ml-1 flex flex-row">
                         <div className="flex flex-row items-center">
-                            <input type="checkbox" className="scale-150 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" checked={(!thisTerm && !afterTerm)} />
+                            <input type="checkbox" className="scale-150 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onClick={() => setFilters(prevFilters => ({
+                            ...prevFilters,
+                            thisTerm: false,
+                            afterTerm: false
+                        }))} checked={(!filters.thisTerm && !filters.afterTerm)} />
                             <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">All terms</h1>
                         </div>
 
                         <div className="flex flex-row items-center">
-                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onClick={() => setThisTerm(!thisTerm)} checked={thisTerm} />
+                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onClick={() => setFilters(prevFilters => ({
+                                ...prevFilters,
+                                thisTerm: !filters.thisTerm
+                            }))} checked={filters.thisTerm} />
                             <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">This term ({currentTerm})</h1>
                         </div>
 
                         <div className="flex flex-row items-center">
-                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onClick={() => setAfterTerm(!afterTerm)} checked={afterTerm} />
+                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onClick={() => setFilters(prevFilters => ({
+                                ...prevFilters,
+                                afterTerm: !filters.afterTerm
+                            }))} checked={filters.afterTerm} />
                             <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">Next term ({nextTerm})</h1>
                         </div>
                     </div>
