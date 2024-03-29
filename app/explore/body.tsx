@@ -10,7 +10,8 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
     const searchParams = useSearchParams()
     const subject = searchParams.get('subject') || 'all'
     const [filteredCourses, setFilteredCourses] = useState(courses)
-    const [page, setPage] = useState(0)
+    const itemsPerPage = 50
+    const [visibleCount, setVisibleCount] = useState(itemsPerPage)
     const loaderRef = useRef(null)
 
     //Filters
@@ -26,7 +27,7 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
     });
 
     const [slider, setSlider] = useState(0)
-    const [ignoreNextFetch, setIgnoreNextFetch] = useState(false)
+    
 
     /*
     const fetchMoreCourses = useCallback(async () => {
@@ -49,12 +50,13 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
         }
         setIgnoreNextFetch(false)
     }, [page, ignoreNextFetch]);
+    */
 
     useEffect(() => {
         const observer = new IntersectionObserver(entries => {
             const firstEntry = entries[0];
             if (firstEntry.isIntersecting) {
-                fetchMoreCourses();
+                setVisibleCount((prevCount) => Math.min(filteredCourses.length, prevCount + itemsPerPage));
             }
         }, { threshold: 0.1, rootMargin: "200px" });
 
@@ -64,8 +66,7 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
         }
 
         return () => observer.disconnect();
-    }, [page, fetchMoreCourses]);
-    */
+    }, [filteredCourses.length]);
 
     const handleSliderChange = (e: { target: { value: SetStateAction<string>; }; }) => {
         const val = e.target.value
@@ -146,7 +147,16 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
             thisTerm: false,
             afterTerm: false,
         }));
+
+        setSlider(0)
     };
+
+    const handleCurrentTermChange = () => {
+    }
+
+    const handleNextTermChange = () => {
+
+    }
 
     return (
         <>
@@ -235,18 +245,12 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
                         </div>
 
                         <div className="flex flex-row items-center">
-                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={() => setFilters(prevFilters => ({
-                                ...prevFilters,
-                                thisTerm: !filters.thisTerm
-                            }))} checked={filters.thisTerm} />
+                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={handleCurrentTermChange} checked={filters.thisTerm} />
                             <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">This term ({currentTerm})</h1>
                         </div>
 
                         <div className="flex flex-row items-center">
-                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={() => setFilters(prevFilters => ({
-                                ...prevFilters,
-                                afterTerm: !filters.afterTerm
-                            }))} checked={filters.afterTerm} />
+                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={handleNextTermChange} checked={filters.afterTerm} />
                             <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">Next term ({nextTerm})</h1>
                         </div>
                     </div>
@@ -259,7 +263,7 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
 
                 <div className="flex flex-col">
                     <div className="overflow-x-auto">
-                        <div className="p-1.5 min-w-full inline-block align-middle">
+                        <div className="min-w-full inline-block align-middle">
                             <div className="overflow-hidden">
                                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                     <thead>
@@ -273,9 +277,9 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {courses.map((course, index) => (
+                                        {filteredCourses.slice(0, visibleCount).map((course, index) => (
                                             <tr key={index} className="odd:bg-white even:bg-gray-100 dark:odd:bg-slate-950 dark:even:bg-slate-900">
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200 underline">
                                                     <Link href={`/course/${course.course_code.replace(/\s+/g, '')}`}>
                                                         {course.course_code}
                                                     </Link>
@@ -289,6 +293,7 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
                                         ))}
                                     </tbody>
                                 </table>
+                                <div ref={loaderRef} style={{ height: "20px" }}></div>
                             </div>
                         </div>
                     </div>

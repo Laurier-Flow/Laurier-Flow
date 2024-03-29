@@ -17,31 +17,45 @@ export interface courseInfoDBResponseExplore {
     course_title: string,
     isOfferedThisTerm: boolean,
     isOfferedNextTerm: boolean
-  }
+}
 
 async function getCourses(supabase: SupabaseClient, currentTerm: string, nextTerm: string) {
     let hasMore = true;
+    let hasMoreSections = true;
     let page = 0;
+    let sectionsPage = 0;
     const limit = 1000;
     let allCourses: courseInfoDBResponseExplore[] = [];
+    let sectionsData: any[] = []
 
-    const { data: sectionsData, error: sectionsError } = await supabase
-        .from('sections')
-        .select('course_code_fk, term')
-        .in('term', [currentTerm, nextTerm])
+    while (hasMoreSections) {
+        const { data, error } = await supabase
+            .from('sections')
+            .select('course_code_fk, term')
+            .in('term', [currentTerm, nextTerm])
+            .range(sectionsPage * limit, (sectionsPage + 1) * limit - 1);
 
-    if (sectionsError) {
-        console.error(sectionsError)
-        return []
+        if (error) {
+            console.error(error)
+            return []
+        }
+
+        sectionsData = [...sectionsData, ...data]
+
+        if (data.length < limit) {
+            hasMoreSections = false;
+        } else {
+            sectionsPage++;
+        }
     }
 
-    interface CourseOffering {
+    interface courseOffering {
         isOfferedThisTerm: boolean;
         isOfferedNextTerm: boolean;
     }
 
     interface CourseOfferingsMap {
-        [key: string]: CourseOffering;
+        [key: string]: courseOffering;
     }
 
     const courseOfferings = sectionsData.reduce<CourseOfferingsMap>((acc, { course_code_fk, term }) => {
@@ -105,7 +119,6 @@ export default async function ExplorePage() {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore)
     const courses = await getCourses(supabase, currentTermServer, nextTermServer)
-    const courseTotalCount = await getCourseTotalCount(supabase)
 
     return (
         <Suspense fallback={<div className="w-full h-full"><Spinner /></div>}>

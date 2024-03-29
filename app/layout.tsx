@@ -26,7 +26,7 @@ export default async function RootLayout({
           </main>
           <Footer />
         </ThemeProvider>
-      </body>
+      </body> 
     </html>
   );
 }
