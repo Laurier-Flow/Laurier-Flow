@@ -52,6 +52,7 @@ export async function GET(req: Request) {
             .select(`
                 *, sections!inner(*)
             `, { count: 'exact' })
+            .ilikeAnyOf('sections.term', termPattern)
             .ilikeAnyOf('course_code', levelPatterns)
             .ilike('course_code', `${(subject === 'all') ? ('%') : (`${subject}%`)}`)
             .gte('total_reviews', minRatings)
