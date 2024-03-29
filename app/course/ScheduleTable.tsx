@@ -34,8 +34,8 @@ async function ScheduleTab({
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                                    {termSections.length ? (termSections.map((item: section) => (
-                                        <tr>
+                                    {termSections.length ? (termSections.map((item: section, index) => (
+                                        <tr key={index}>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.crn}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.type}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.section}</td>
