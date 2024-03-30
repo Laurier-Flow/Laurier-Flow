@@ -123,7 +123,8 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
         }
     }
 
-    const [slider, setSlider] = useState(0)
+    const [courseSlider, setCourseSlider] = useState(0)
+    const [instructorSlider, setInstructorSlider] = useState(0)
 
     const [activeTab, setActiveTab] = useState(1)
 
@@ -149,6 +150,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
 
     const handleSliderChange = (e: { target: { value: SetStateAction<string>; }; }) => {
         const val = e.target.value
+        const setSlider = (activeTab === 1 ? (setCourseSlider) : (setInstructorSlider))
         setSlider(Number(val))
         const setFilters = (activeTab === 1 ? (setCourseFilters) : (setInstructorFilters))
 
@@ -217,6 +219,8 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
     }
 
     const resetFilter = () => {
+        const setSlider = (activeTab === 1 ? (setCourseSlider) : (setInstructorSlider))
+
         if (activeTab === 1) {
             setCourseFilters(({
                 firstYear: true,
@@ -362,7 +366,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
 [&::-moz-range-track]:w-full
 [&::-moz-range-track]:h-2
 [&::-moz-range-track]:bg-gray-100
-[&::-moz-range-track]:rounded-full" id="steps-range-slider-usage" min="0" max="9" step="1" value={slider} onChange={handleSliderChange}></input>
+[&::-moz-range-track]:rounded-full" id="steps-range-slider-usage" min="0" max="9" step="1" value={courseSlider} onChange={handleSliderChange}></input>
 
                     <h1 className="pt-8">Offered in</h1>
                     <div className="pt-4 ml-1 flex flex-row">
@@ -400,7 +404,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                     <h1 className="text-2xl font-semibold">Filter your results</h1>
                     <div className="pt-8 flex flex-row justify-between">
                         <h1>Min # of ratings</h1>
-                        <h1>≥ {courseFilters.minRatings} ratings</h1>
+                        <h1>≥ {instructorFilters.minRatings} ratings</h1>
                     </div>
                     <input type="range" className="pt-4 w-full bg-transparent cursor-pointer appearance-none disabled:opacity-50 disabled:pointer-events-none focus:outline-none
 [&::-webkit-slider-thumb]:w-2.5
@@ -435,7 +439,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
 [&::-moz-range-track]:w-full
 [&::-moz-range-track]:h-2
 [&::-moz-range-track]:bg-gray-100
-[&::-moz-range-track]:rounded-full" id="steps-range-slider-usage" min="0" max="9" step="1" value={slider} onChange={handleSliderChange}></input>
+[&::-moz-range-track]:rounded-full" id="steps-range-slider-usage" min="0" max="9" step="1" value={instructorSlider} onChange={handleSliderChange}></input>
                     <button onClick={resetFilter} type="button" className="mt-12 py-3 px-4 gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
                         Reset Filter
                     </button>
@@ -443,10 +447,10 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                 <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
 
                 <nav suppressHydrationWarning className="flex space-x-2" aria-label="Tabs" role="tablist">
-                    <button suppressHydrationWarning onClick={() => { resetFilter(); setActiveTab(1); setVisibleCount(50) }} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 1 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 1 ? 'dark:text-white' : 'text-gray-400'} dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 1 ? 'active' : ''}`} id="equal-width-elements-item-1" data-hs-tab="#equal-width-elements-1" aria-controls="equal-width-elements-1" role="tab">
+                    <button suppressHydrationWarning onClick={() => { setActiveTab(1); setVisibleCount(50) }} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 1 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 1 ? 'dark:text-white' : 'text-gray-400'} dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 1 ? 'active' : ''}`} id="equal-width-elements-item-1" data-hs-tab="#equal-width-elements-1" aria-controls="equal-width-elements-1" role="tab">
                         Courses ({sortedCourses.length})
                     </button>
-                    <button suppressHydrationWarning onClick={() => { resetFilter(); setActiveTab(2); setVisibleCount(50) }} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 2 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 2 ? 'dark:text-white' : 'text-gray-400'} dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 2 ? 'active' : ''}`} data-hs-tab="#equal-width-elements-2" aria-controls="equal-width-elements-2" role="tab">
+                    <button suppressHydrationWarning onClick={() => { setActiveTab(2); setVisibleCount(50) }} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 2 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 2 ? 'dark:text-white' : 'text-gray-400'} dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 2 ? 'active' : ''}`} data-hs-tab="#equal-width-elements-2" aria-controls="equal-width-elements-2" role="tab">
                         Instructors ({sortedInstructors.length})
                     </button>
                 </nav>
