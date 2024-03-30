@@ -11,10 +11,16 @@ export default function About() {
         </div>
       }
     >
+      <div className="min-w-full flex flex-col p-4 dark:bg-[url('/banner-sm.jpg')] bg-[url('/banner-sm-light.jpg')] md:dark:bg-[url('/banner-md.jpg')] md:bg-[url('/banner-md-light.jpg')] lg:dark:bg-[url('/banner.jpg')] lg:bg-[url('/banner-light.jpg')] md:flex-row md:justify-center">
+        <div className="flex flex-1 pt-20 flex-row justify-between w-f max-w-6xl">
+          <div className="flex flex-1 flex-col justify-end pl-4">
+            <h1 className='mb-2 text-2xl font-bold md:text-5xl'>About</h1>
+          </div>
+        </div>
+      </div>
+
       <div className="card">
-        <h1 className="text-3xl py-3 text-center font-bold">About WLU Flow</h1>
-        <hr className="border-gray-300 dark:border-gray-800"></hr>
-        <h2 className="text-xl py-2 font-semibold">Welcome to WLU Flow!</h2>
+        <h2 className="text-xl py-4 font-semibold">Welcome to WLU Flow!</h2>
         <p className="pb-2">
           Flow is a course planning website for University of Waterloo students.
           You can find everything from courses and professors to prerequisites
@@ -30,12 +36,12 @@ export default function About() {
           experiences help us help more than 30,000 students like you every
           month choose great courses and avoid not so great ones.
         </p>
-        <h2 className="text-xl py-2 font-semibold">Our History</h2>
+        <h2 className="text-xl pt-8 font-semibold">Our History</h2>
         <p className="pb-2">
           The most handsome brown boys from the double degree decided to
           collaborate and bless the WLU community - "Soham Nagi"
         </p>
-        <h2 className="text-xl py-2 font-semibold">Meet The Team</h2>
+        <h2 className="text-xl pt-8 font-semibold">Meet The Team</h2>
         <div>
           <TeamMember
             name="Faizaan Qureshi"
