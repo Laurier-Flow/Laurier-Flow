@@ -18,11 +18,11 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
     const [visibleCount, setVisibleCount] = useState(itemsPerPage)
     const loaderRef = useRef(null)
 
-    const [sortField, setSortField] = useState(null)
     const [order, setOrder] = useState('none')
+    const [sortField, setSortField] = useState<SortableCourseFields>('course_code')
 
-    function sortCoursesArray(sortField: SortableCourseFields, order: string) {
-        const sorted = [...filteredCourses].sort((a, b) => {
+    function sortCoursesArray(sortField: SortableCourseFields, order: string, filtered: courseInfoDBResponseExplore[] = filteredCourses) {
+        const sorted = [...filtered].sort((a, b) => {
             if (a[sortField] === null) return 1;
             if (b[sortField] === null) return -1;
 
@@ -36,7 +36,18 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
         setSortedCourses(sorted)
     }
 
+    const handleResort = (sortField: SortableCourseFields, filtered: courseInfoDBResponseExplore[] = filteredCourses) => {
+        if (order === 'none') {
+            setSortedCourses(filtered)
+        } else if (order === 'desc') {
+            sortCoursesArray(sortField, 'desc', filtered)
+        } else {
+            sortCoursesArray(sortField, 'asc', filtered)
+        }
+    }
+
     const handleSort = (sortField: SortableCourseFields) => {
+        setSortField(sortField)
         if (order === 'none') {
             setOrder('desc')
             sortCoursesArray(sortField, 'desc')
@@ -162,11 +173,44 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
         setSlider(0)
     };
 
+    useEffect(() => {
+        const filtered = courses.filter((course) => {
+            if (course.total_reviews < filters.minRatings) return false
+            if (!course.isOfferedThisTerm && filters.thisTerm) return false
+            if (!course.isOfferedNextTerm && filters.afterTerm) return false
+            
+            let firstSpaceIndex = course.course_code.indexOf(' ')
+            let charAfterSpace = course.course_code[firstSpaceIndex + 1]
+
+            if (!filters.firstYear && charAfterSpace === '1') return false
+            if (!filters.secondYear && charAfterSpace === '2') return false
+            if (!filters.thirdYear && charAfterSpace === '3') return false
+            if (!filters.fourthYear && charAfterSpace === '4') return false
+            if (!filters.seniorYear && charAfterSpace >= '5') return false
+
+            if (filters.thisTerm && !course.isOfferedThisTerm) return false
+            if (filters.afterTerm && !course.isOfferedNextTerm) return false
+
+            return true
+        })
+
+        setFilteredCourses(filtered)
+        handleResort(sortField, filtered)
+
+    }, [filters])
+
     const handleCurrentTermChange = () => {
+        setFilters(prevFilters => ({
+            ...prevFilters,
+            thisTerm: !prevFilters.thisTerm
+        }));
     }
 
     const handleNextTermChange = () => {
-
+        setFilters(prevFilters => ({
+            ...prevFilters,
+            afterTerm: !prevFilters.afterTerm
+        }));
     }
 
     return (
@@ -279,12 +323,12 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
                                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                     <thead>
                                         <tr>
-                                            <th onClick={() => { handleSort('course_code') }} scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course Code</th>
-                                            <th onClick={() => { handleSort('course_title') }} scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course Name</th>
-                                            <th onClick={() => { handleSort('total_reviews') }} scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Ratings</th>
-                                            <th onClick={() => { handleSort('useful') }} scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Useful</th>
-                                            <th onClick={() => { handleSort('easy') }} scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Easy</th>
-                                            <th onClick={() => { handleSort('liked') }} scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Liked</th>
+                                            <th onClick={() => { handleSort('course_code') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course Code {(sortField === 'course_code' && order === 'desc') ? ('˅') : (null)} {(sortField === 'course_code' && order === 'asc') ? ('˄') : (null)}</th>
+                                            <th onClick={() => { handleSort('course_title') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course Name {(sortField === 'course_title' && order === 'desc') ? ('˅') : (null)} {(sortField === 'course_title' && order === 'asc') ? ('˄') : (null)}</th>
+                                            <th onClick={() => { handleSort('total_reviews') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Ratings {(sortField === 'total_reviews' && order === 'desc') ? ('˅') : (null)} {(sortField === 'total_reviews' && order === 'asc') ? ('˄') : (null)}</th>
+                                            <th onClick={() => { handleSort('useful') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Useful {(sortField === 'useful' && order === 'desc') ? ('˅') : (null)} {(sortField === 'useful' && order === 'asc') ? ('˄') : (null)}</th>
+                                            <th onClick={() => { handleSort('easy') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Easy {(sortField === 'easy' && order === 'desc') ? ('˅') : (null)} {(sortField === 'easy' && order === 'asc') ? ('˄') : (null)}</th>
+                                            <th onClick={() => { handleSort('liked') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Liked {(sortField === 'liked' && order === 'desc') ? ('˅') : (null)} {(sortField === 'liked' && order === 'asc') ? ('˄') : (null)}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
