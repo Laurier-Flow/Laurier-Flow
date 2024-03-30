@@ -14,8 +14,10 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
     const subject = searchParams.get('subject') || 'all'
 
     const itemsPerPage = 50
-    const [visibleCount, setVisibleCount] = useState(itemsPerPage)
-    const loaderRef = useRef(null)
+    const [visibleCourseCount, setVisibleCourseCount] = useState(itemsPerPage);
+    const [visibleInstructorCount, setVisibleInstructorCount] = useState(itemsPerPage);
+    const courseLoaderRef = useRef(null)
+    const instructorLoaderRef = useRef(null)
 
     /////////////////////////////////////////////////////////////////////////////// COURSE HOOKS AND VARS
     const [filteredCourses, setFilteredCourses] = useState(courses)
@@ -129,24 +131,25 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
     const [activeTab, setActiveTab] = useState(1)
 
     useEffect(() => {
+        const currentLoader = activeTab === 1 ? courseLoaderRef.current : instructorLoaderRef.current;
+
         const observer = new IntersectionObserver(entries => {
             const firstEntry = entries[0];
             if (firstEntry.isIntersecting) {
                 if (activeTab === 1) {
-                    setVisibleCount((prevCount) => Math.min(filteredCourses.length, prevCount + itemsPerPage));
-                } else {
-                    setVisibleCount((prevCount) => Math.min(filteredInstructors.length, prevCount + itemsPerPage));
+                    setVisibleCourseCount((prevCount) => Math.min(filteredCourses.length, prevCount + itemsPerPage));
+                } else if (activeTab === 2) {
+                    setVisibleInstructorCount((prevCount) => Math.min(filteredInstructors.length, prevCount + itemsPerPage));
                 }
             }
         }, { threshold: 0.1, rootMargin: "200px" });
 
-        const currentLoader = loaderRef.current;
         if (currentLoader) {
             observer.observe(currentLoader);
         }
 
         return () => observer.disconnect();
-    }, [filteredCourses.length, filteredInstructors.length]);
+    }, [activeTab, filteredCourses.length, filteredInstructors.length]);
 
     const handleSliderChange = (e: { target: { value: SetStateAction<string>; }; }) => {
         const val = e.target.value
@@ -395,11 +398,6 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                     </button>
                 </div>
 
-
-
-
-
-
                 <div className={`flex flex-col p-6 ${activeTab === 2 ? '' : 'hidden'}`}>
                     <h1 className="text-2xl font-semibold">Filter your results</h1>
                     <div className="pt-8 flex flex-row justify-between">
@@ -447,10 +445,10 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                 <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
 
                 <nav suppressHydrationWarning className="flex space-x-2" aria-label="Tabs" role="tablist">
-                    <button suppressHydrationWarning onClick={() => { setActiveTab(1); setVisibleCount(50) }} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 1 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 1 ? 'dark:text-white' : 'text-gray-400'} dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 1 ? 'active' : ''}`} id="equal-width-elements-item-1" data-hs-tab="#equal-width-elements-1" aria-controls="equal-width-elements-1" role="tab">
+                    <button suppressHydrationWarning onClick={() => { setActiveTab(1); setVisibleCourseCount(50) }} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 1 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 1 ? 'dark:text-white' : 'text-gray-400'} dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 1 ? 'active' : ''}`} id="equal-width-elements-item-1" data-hs-tab="#equal-width-elements-1" aria-controls="equal-width-elements-1" role="tab">
                         Courses ({sortedCourses.length})
                     </button>
-                    <button suppressHydrationWarning onClick={() => { setActiveTab(2); setVisibleCount(50) }} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 2 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 2 ? 'dark:text-white' : 'text-gray-400'} dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 2 ? 'active' : ''}`} data-hs-tab="#equal-width-elements-2" aria-controls="equal-width-elements-2" role="tab">
+                    <button suppressHydrationWarning onClick={() => { setActiveTab(2); setVisibleInstructorCount(50) }} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 2 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 2 ? 'dark:text-white' : 'text-gray-400'} dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 2 ? 'active' : ''}`} data-hs-tab="#equal-width-elements-2" aria-controls="equal-width-elements-2" role="tab">
                         Instructors ({sortedInstructors.length})
                     </button>
                 </nav>
@@ -472,7 +470,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {sortedCourses.slice(0, visibleCount).map((course, index) => (
+                                            {sortedCourses.slice(0, visibleCourseCount).map((course, index) => (
                                                 <tr key={index} className="odd:bg-white even:bg-gray-100 dark:odd:bg-slate-950 dark:even:bg-slate-900">
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200 underline">
                                                         <Link href={`/course/${course.course_code.replace(/\s+/g, '')}`}>
@@ -488,7 +486,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                                             ))}
                                         </tbody>
                                     </table>
-                                    <div ref={loaderRef} style={{ height: "20px" }}></div>
+                                    <div ref={courseLoaderRef} style={{ height: "20px" }}></div>
                                 </div>
                             </div>
                         </div>
@@ -512,7 +510,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {sortedInstructors.slice(0, visibleCount).map((instructor, index) => (
+                                            {sortedInstructors.slice(0, visibleInstructorCount).map((instructor, index) => (
                                                 <tr key={index} className="odd:bg-white even:bg-gray-100 dark:odd:bg-slate-950 dark:even:bg-slate-900">
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200 underline">
                                                         <Link href={`/instructor/${instructor.instructor_name.replace(/\s+/g, '%20')}`}>
@@ -527,7 +525,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                                             ))}
                                         </tbody>
                                     </table>
-                                    <div ref={loaderRef} style={{ height: "20px" }}></div>
+                                    <div ref={instructorLoaderRef} style={{ height: "20px" }}></div>
                                 </div>
                             </div>
                         </div>
