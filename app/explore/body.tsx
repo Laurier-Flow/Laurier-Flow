@@ -1,18 +1,53 @@
 'use client'
 
-import Spinner from "@/components/Spinner";
 import { useSearchParams } from "next/navigation";
-import { SetStateAction, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import { courseInfoDBResponseExplore } from "./page";
 import Link from "next/link";
+
+type SortableCourseFields = keyof courseInfoDBResponseExplore;
 
 export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: string, nextTerm: string, courses: courseInfoDBResponseExplore[] }) {
     const searchParams = useSearchParams()
     const subject = searchParams.get('subject') || 'all'
+
     const [filteredCourses, setFilteredCourses] = useState(courses)
+    const [sortedCourses, setSortedCourses] = useState(courses)
+
     const itemsPerPage = 50
     const [visibleCount, setVisibleCount] = useState(itemsPerPage)
     const loaderRef = useRef(null)
+
+    const [sortField, setSortField] = useState(null)
+    const [order, setOrder] = useState('none')
+
+    function sortCoursesArray(sortField: SortableCourseFields, order: string) {
+        const sorted = [...filteredCourses].sort((a, b) => {
+            if (a[sortField] === null) return 1;
+            if (b[sortField] === null) return -1;
+
+            if (order === 'asc') {
+                return a[sortField] < b[sortField] ? -1 : a[sortField] > b[sortField] ? 1 : 0;
+            } else {
+                return a[sortField] > b[sortField] ? -1 : a[sortField] < b[sortField] ? 1 : 0;
+            }
+        })
+
+        setSortedCourses(sorted)
+    }
+
+    const handleSort = (sortField: SortableCourseFields) => {
+        if (order === 'none') {
+            setOrder('desc')
+            sortCoursesArray(sortField, 'desc')
+        } else if (order === 'desc') {
+            setOrder('asc')
+            sortCoursesArray(sortField, 'asc')
+        } else {
+            setOrder('none')
+            setSortedCourses(filteredCourses)
+        }
+    }
 
     //Filters
     const [filters, setFilters] = useState({
@@ -27,30 +62,6 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
     });
 
     const [slider, setSlider] = useState(0)
-    
-
-    /*
-    const fetchMoreCourses = useCallback(async () => {
-        if (!ignoreNextFetch || page === 0) {
-            const queryString = Object.entries(filters)
-                .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-                .join('&');
-
-            const url = `/explore/api?${queryString}&subject=${subject}&nextTerm=${nextTermServer}&currentTerm=${currentTermServer}`;
-
-            const response = await fetch(url);
-            if (response.ok) {
-                const newCourses = await response.json();
-                setCourses(c => [...c, ...newCourses.data]);
-                setCourseTotal(newCourses.totalCount)
-                setPage(p => p + 1);
-            } else {
-                console.error('Failed to fetch more courses');
-            }
-        }
-        setIgnoreNextFetch(false)
-    }, [page, ignoreNextFetch]);
-    */
 
     useEffect(() => {
         const observer = new IntersectionObserver(entries => {
@@ -268,16 +279,16 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
                                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                     <thead>
                                         <tr>
-                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course Code</th>
-                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course Name</th>
-                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Ratings</th>
-                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Useful</th>
-                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Easy</th>
-                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Liked</th>
+                                            <th onClick={() => { handleSort('course_code') }} scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course Code</th>
+                                            <th onClick={() => { handleSort('course_title') }} scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course Name</th>
+                                            <th onClick={() => { handleSort('total_reviews') }} scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Ratings</th>
+                                            <th onClick={() => { handleSort('useful') }} scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Useful</th>
+                                            <th onClick={() => { handleSort('easy') }} scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Easy</th>
+                                            <th onClick={() => { handleSort('liked') }} scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Liked</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredCourses.slice(0, visibleCount).map((course, index) => (
+                                        {sortedCourses.slice(0, visibleCount).map((course, index) => (
                                             <tr key={index} className="odd:bg-white even:bg-gray-100 dark:odd:bg-slate-950 dark:even:bg-slate-900">
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200 underline">
                                                     <Link href={`/course/${course.course_code.replace(/\s+/g, '')}`}>
