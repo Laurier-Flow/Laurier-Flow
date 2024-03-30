@@ -7,6 +7,7 @@ import { cookies, headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { courseInfoDBResponse } from "../course/CourseInfo";
+import { instructorInfoDBResponse } from "../instructor/InstructorInfo";
 
 export interface courseInfoDBResponseExplore {
     course_code: string,
@@ -103,12 +104,33 @@ async function getCourses(supabase: SupabaseClient, currentTerm: string, nextTer
     return allCourses;
 }
 
-async function getCourseTotalCount(supabase: SupabaseClient) {
-    const { count, error } = await supabase
-        .from('courses')
-        .select('*', { count: 'exact', head: true })
+async function getInstructors(supabase: SupabaseClient) {
+    let hasMore = true
+    let page = 0
+    let limit = 1000
+    let allInstructors: instructorInfoDBResponse[] = []
 
-    return count
+    while (hasMore) {
+        const { data, error } = await supabase
+            .from('instructors')
+            .select('*')
+            .range(page * limit, (page + 1) * limit - 1);
+
+        if (error) {
+            console.error(error);
+            break;
+        }
+
+        allInstructors = [...allInstructors, ...data];
+
+        if (data.length < limit) {
+            hasMore = false;
+        } else {
+            page++;
+        }
+    }
+
+    return allInstructors;
 }
 
 export default async function ExplorePage() {
@@ -119,10 +141,11 @@ export default async function ExplorePage() {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore)
     const courses = await getCourses(supabase, currentTermServer, nextTermServer)
+    const instructors = await getInstructors(supabase)
 
     return (
         <Suspense fallback={<div className="w-full h-full"><Spinner /></div>}>
-            <Body currentTerm={currentTerm} nextTerm={nextTerm} courses={courses} />
+            <Body currentTerm={currentTerm} nextTerm={nextTerm} courses={courses} instructors={instructors} />
         </Suspense>
     );
 }
