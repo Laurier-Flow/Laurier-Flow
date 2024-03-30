@@ -19,9 +19,10 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
     const loaderRef = useRef(null)
 
     const [order, setOrder] = useState('none')
+    const [sortField, setSortField] = useState<SortableCourseFields>('course_code')
 
-    function sortCoursesArray(sortField: SortableCourseFields, order: string) {
-        const sorted = [...filteredCourses].sort((a, b) => {
+    function sortCoursesArray(sortField: SortableCourseFields, order: string, filtered: courseInfoDBResponseExplore[] = filteredCourses) {
+        const sorted = [...filtered].sort((a, b) => {
             if (a[sortField] === null) return 1;
             if (b[sortField] === null) return -1;
 
@@ -35,7 +36,18 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
         setSortedCourses(sorted)
     }
 
+    const handleResort = (sortField: SortableCourseFields, filtered: courseInfoDBResponseExplore[] = filteredCourses) => {
+        if (order === 'none') {
+            setSortedCourses(filtered)
+        } else if (order === 'desc') {
+            sortCoursesArray(sortField, 'desc', filtered)
+        } else {
+            sortCoursesArray(sortField, 'asc', filtered)
+        }
+    }
+
     const handleSort = (sortField: SortableCourseFields) => {
+        setSortField(sortField)
         if (order === 'none') {
             setOrder('desc')
             sortCoursesArray(sortField, 'desc')
@@ -176,19 +188,29 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
             if (!filters.fourthYear && charAfterSpace === '4') return false
             if (!filters.seniorYear && charAfterSpace >= '5') return false
 
+            if (filters.thisTerm && !course.isOfferedThisTerm) return false
+            if (filters.afterTerm && !course.isOfferedNextTerm) return false
+
             return true
         })
 
         setFilteredCourses(filtered)
+        handleResort(sortField, filtered)
 
     }, [filters])
 
     const handleCurrentTermChange = () => {
-        
+        setFilters(prevFilters => ({
+            ...prevFilters,
+            thisTerm: !prevFilters.thisTerm
+        }));
     }
 
     const handleNextTermChange = () => {
-
+        setFilters(prevFilters => ({
+            ...prevFilters,
+            afterTerm: !prevFilters.afterTerm
+        }));
     }
 
     return (
@@ -301,16 +323,16 @@ export default function Body({ currentTerm, nextTerm, courses }: { currentTerm: 
                                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                     <thead>
                                         <tr>
-                                            <th onClick={() => { handleSort('course_code') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course Code</th>
-                                            <th onClick={() => { handleSort('course_title') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course Name</th>
-                                            <th onClick={() => { handleSort('total_reviews') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Ratings</th>
-                                            <th onClick={() => { handleSort('useful') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Useful</th>
-                                            <th onClick={() => { handleSort('easy') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Easy</th>
-                                            <th onClick={() => { handleSort('liked') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Liked</th>
+                                            <th onClick={() => { handleSort('course_code') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course Code {(sortField === 'course_code' && order === 'desc') ? ('˅') : (null)} {(sortField === 'course_code' && order === 'asc') ? ('˄') : (null)}</th>
+                                            <th onClick={() => { handleSort('course_title') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course Name {(sortField === 'course_title' && order === 'desc') ? ('˅') : (null)} {(sortField === 'course_title' && order === 'asc') ? ('˄') : (null)}</th>
+                                            <th onClick={() => { handleSort('total_reviews') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Ratings {(sortField === 'total_reviews' && order === 'desc') ? ('˅') : (null)} {(sortField === 'total_reviews' && order === 'asc') ? ('˄') : (null)}</th>
+                                            <th onClick={() => { handleSort('useful') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Useful {(sortField === 'useful' && order === 'desc') ? ('˅') : (null)} {(sortField === 'useful' && order === 'asc') ? ('˄') : (null)}</th>
+                                            <th onClick={() => { handleSort('easy') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Easy {(sortField === 'easy' && order === 'desc') ? ('˅') : (null)} {(sortField === 'easy' && order === 'asc') ? ('˄') : (null)}</th>
+                                            <th onClick={() => { handleSort('liked') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Liked {(sortField === 'liked' && order === 'desc') ? ('˅') : (null)} {(sortField === 'liked' && order === 'asc') ? ('˄') : (null)}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredCourses.slice(0, visibleCount).map((course, index) => (
+                                        {sortedCourses.slice(0, visibleCount).map((course, index) => (
                                             <tr key={index} className="odd:bg-white even:bg-gray-100 dark:odd:bg-slate-950 dark:even:bg-slate-900">
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200 underline">
                                                     <Link href={`/course/${course.course_code.replace(/\s+/g, '')}`}>
