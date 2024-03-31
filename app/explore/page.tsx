@@ -97,7 +97,10 @@ async function getCourses(supabase: SupabaseClient, currentTerm: string, nextTer
         const processedCourses = data.map(course => ({
             ...course,
             isOfferedThisTerm: courseOfferings[course.course_code]?.isOfferedThisTerm || false,
-            isOfferedNextTerm: courseOfferings[course.course_code]?.isOfferedNextTerm || false
+            isOfferedNextTerm: courseOfferings[course.course_code]?.isOfferedNextTerm || false,
+            easy: course.total_reviews !== 0 ? ((course.easy / course.total_reviews) * 20) : null,
+            useful: course.total_reviews !== 0 ? ((course.useful / course.total_reviews) * 20) : null,
+            liked: course.total_reviews !== 0 ? Math.round((course.liked / course.total_reviews) * 100) : null
         }));
 
         allCourses = [...allCourses, ...processedCourses];
@@ -144,17 +147,17 @@ async function getInstructors(supabase: SupabaseClient) {
     interface CoursesTaughtMap {
         [key: string]: string[];
     }
-    
-    const coursesTaught = sectionsData.reduce<CoursesTaughtMap>((acc, {course_code_fk, instructor_name_fk}) => {
+
+    const coursesTaught = sectionsData.reduce<CoursesTaughtMap>((acc, { course_code_fk, instructor_name_fk }) => {
         if (!acc[instructor_name_fk]) {
             acc[instructor_name_fk] = [course_code_fk]
         } else if (!acc[instructor_name_fk].includes(course_code_fk)) {
             acc[instructor_name_fk].push(course_code_fk)
         }
-    
+
         return acc
     }, {});
-    
+
 
     while (hasMore) {
         const { data, error } = await supabase
@@ -167,7 +170,14 @@ async function getInstructors(supabase: SupabaseClient) {
             break;
         }
 
-        allInstructors = [...allInstructors, ...data];
+        const processedInstructors = data.map(instructor => ({
+            ...instructor,
+            clear: instructor.total_reviews !== 0 ? ((instructor.clear / instructor.total_reviews) * 20) : null,
+            engaging: instructor.total_reviews !== 0 ? ((instructor.engaging / instructor.total_reviews) * 20) : null,
+            liked: instructor.total_reviews !== 0 ? Math.round((instructor.liked / instructor.total_reviews) * 100) : null
+        }));
+
+        allInstructors = [...allInstructors, ...processedInstructors];
 
         if (data.length < limit) {
             hasMore = false;
@@ -179,7 +189,7 @@ async function getInstructors(supabase: SupabaseClient) {
     allInstructors = allInstructors.map(instructor => {
         const instructorName = instructor.instructor_name;
         const courses = coursesTaught[instructorName] || [];
-    
+
         return {
             ...instructor,
             coursesTaught: courses
@@ -199,7 +209,7 @@ export default async function ExplorePage() {
 
     const cookieStore = cookies();
     const supabase = createClient(cookieStore)
-    
+
     const [courses, instructors] = await Promise.all([
         getCourses(supabase, currentTermServer, nextTermServer),
         getInstructors(supabase),

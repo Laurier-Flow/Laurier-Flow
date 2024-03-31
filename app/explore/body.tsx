@@ -319,7 +319,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                 </div>
             </div>
 
-            <div className="exploreCard lg:flex-row-reverse">
+            <div className="exploreCard lg:flex-row-reverse flex-1">
                 <div className={`flex lg:p-12 lg:pt-8 lg:w-1/3 flex-col p-6 ${activeTab === 1 ? '' : 'hidden'}`}>
                     <h1 className="text-2xl font-semibold">Filter your results</h1>
                     <h1 className="pt-8">Course Code</h1>
@@ -494,9 +494,9 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.course_title}</td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.total_reviews}</td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.useful || course.useful === 0 ? (course.useful) : ('N/A')}</td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.easy || course.easy === 0 ? (course.easy) : ('N/A')}</td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.liked || course.liked === 0 ? (course.liked) : ('N/A')}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.useful || course.useful === 0 ? (course.useful + '%') : ('N/A')}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.easy || course.easy === 0 ? (course.easy + '%') : ('N/A')}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.liked || course.liked === 0 ? (course.liked + '%') : ('N/A')}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -533,9 +533,9 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                                                             </Link>
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{instructor.total_reviews}</td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{instructor.clear || instructor.clear === 0 ? (instructor.clear) : ('N/A')}</td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{instructor.engaging || instructor.engaging === 0 ? (instructor.engaging) : ('N/A')}</td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{instructor.liked || instructor.liked === 0 ? (instructor.liked) : ('N/A')}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{instructor.clear || instructor.clear === 0 ? (instructor.clear + '%') : ('N/A')}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{instructor.engaging || instructor.engaging === 0 ? (instructor.engaging + '%') : ('N/A')}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{instructor.liked || instructor.liked === 0 ? (instructor.liked + '%') : ('N/A')}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
