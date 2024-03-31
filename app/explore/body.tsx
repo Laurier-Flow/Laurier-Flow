@@ -327,23 +327,23 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                         <button onClick={() => setCourseFilters(prevFilters => ({
                             ...prevFilters,
                             firstYear: !courseFilters.firstYear
-                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${courseFilters.firstYear ? ('dark:bg-primary') : (null)}`}>1XX</button>
+                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium dark:text-white border-2 border-amber-300 dark:border-primary ${courseFilters.firstYear ? ('bg-amber-300 dark:bg-primary') : (null)}`}>1XX</button>
                         <button onClick={() => setCourseFilters(prevFilters => ({
                             ...prevFilters,
                             secondYear: !courseFilters.secondYear
-                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${courseFilters.secondYear ? ('dark:bg-primary') : (null)} ml-4`}>2XX</button>
+                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium dark:text-white border-2 border-amber-300 dark:border-primary ${courseFilters.secondYear ? ('bg-amber-300 dark:bg-primary') : (null)} ml-4`}>2XX</button>
                         <button onClick={() => setCourseFilters(prevFilters => ({
                             ...prevFilters,
                             thirdYear: !courseFilters.thirdYear
-                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${courseFilters.thirdYear ? ('dark:bg-primary') : (null)} ml-4`}>3XX</button>
+                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium dark:text-white border-2 border-amber-300 dark:border-primary ${courseFilters.thirdYear ? ('bg-amber-300 dark:bg-primary') : (null)} ml-4`}>3XX</button>
                         <button onClick={() => setCourseFilters(prevFilters => ({
                             ...prevFilters,
                             fourthYear: !courseFilters.fourthYear
-                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${courseFilters.fourthYear ? ('dark:bg-primary') : (null)} ml-4`}>4XX</button>
+                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium dark:text-white border-2 border-amber-300 dark:border-primary ${courseFilters.fourthYear ? ('bg-amber-300 dark:bg-primary') : (null)} ml-4`}>4XX</button>
                         <button onClick={() => setCourseFilters(prevFilters => ({
                             ...prevFilters,
                             seniorYear: !courseFilters.seniorYear
-                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium text-white border-2 border-primary ${courseFilters.seniorYear ? ('dark:bg-primary') : (null)} ml-4`}>5XX+</button>
+                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium dark:text-white border-2 border-amber-300 dark:border-primary ${courseFilters.seniorYear ? ('bg-amber-300 dark:bg-primary') : (null)} ml-4`}>5XX+</button>
                     </div>
                     <div className="pt-8 flex flex-row justify-between">
                         <h1>Min # of ratings</h1>
@@ -355,12 +355,13 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
 [&::-webkit-slider-thumb]:-mt-0.5
 [&::-webkit-slider-thumb]:appearance-none
 [&::-webkit-slider-thumb]:bg-white
-[&::-webkit-slider-thumb]:shadow-[0_0_0_4px_rgba(37,99,235,1)]
+[&::-webkit-slider-thumb]:dark:shadow-[0_0_0_4px_rgba(109,40,217,1)]
+[&::-webkit-slider-thumb]:shadow-[0_0_0_4px_rgba(252,211,77,1)]
 [&::-webkit-slider-thumb]:rounded-full
 [&::-webkit-slider-thumb]:transition-all
 [&::-webkit-slider-thumb]:duration-150
 [&::-webkit-slider-thumb]:ease-in-out
-[&::-webkit-slider-thumb]:dark:bg-slate-700
+[&::-webkit-slider-thumb]:dark:bg-white
 
 [&::-moz-range-thumb]:w-2.5
 [&::-moz-range-thumb]:h-2.5
@@ -387,7 +388,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                     <h1 className="pt-8">Offered in</h1>
                     <div className="pt-4 ml-1 flex flex-row">
                         <div className="flex flex-row items-center">
-                            <input type="checkbox" className="scale-150 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={() => setCourseFilters(prevFilters => ({
+                            <input type="checkbox" className="scale-150 shrink-0 mt-0.5 border-gray-200 rounded dark:text-primary text-amber-400 dark:focus:ring-primary focus:ring-amber-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-primary dark:checked:border-primary dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={() => setCourseFilters(prevFilters => ({
                                 ...prevFilters,
                                 thisTerm: false,
                                 afterTerm: false
@@ -396,17 +397,17 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                         </div>
 
                         <div className="flex flex-row items-center">
-                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={handleCurrentTermChange} checked={courseFilters.thisTerm} />
+                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded dark:text-primary text-amber-400 dark:focus:ring-primary focus:ring-amber-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-primary dark:checked:border-primary dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={handleCurrentTermChange} checked={courseFilters.thisTerm} />
                             <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">This term ({currentTerm})</h1>
                         </div>
 
                         <div className="flex flex-row items-center">
-                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={handleNextTermChange} checked={courseFilters.afterTerm} />
+                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded dark:text-primary text-amber-400 dark:focus:ring-primary focus:ring-amber-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-primary dark:checked:border-primary dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={handleNextTermChange} checked={courseFilters.afterTerm} />
                             <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">Next term ({nextTerm})</h1>
                         </div>
                     </div>
 
-                    <button onClick={resetFilter} type="button" className="mt-12 py-3 px-4 gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                    <button onClick={resetFilter} type="button" className="mt-12 py-3 px-4 gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-amber-300 dark:bg-primary dark:text-white hover:bg-amber-500 dark:hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
                         Reset Filter
                     </button>
                 </div>
@@ -451,7 +452,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
 [&::-moz-range-track]:h-2
 [&::-moz-range-track]:bg-gray-100
 [&::-moz-range-track]:rounded-full" id="steps-range-slider-usage" min="0" max="9" step="1" value={instructorSlider} onChange={handleSliderChange}></input>
-                    <button onClick={resetFilter} type="button" className="mt-12 py-3 px-4 gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                    <button onClick={resetFilter} type="button" className="mt-12 py-3 px-4 gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-amber-300 dark:bg-primary dark:text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
                         Reset Filter
                     </button>
                 </div>
