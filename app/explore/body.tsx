@@ -319,31 +319,31 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                 </div>
             </div>
 
-            <div className="exploreCard">
-                <div className={`flex flex-col p-6 ${activeTab === 1 ? '' : 'hidden'}`}>
+            <div className="exploreCard lg:flex-row-reverse">
+                <div className={`flex lg:p-12 lg:pt-8 lg:w-1/3 flex-col p-6 ${activeTab === 1 ? '' : 'hidden'}`}>
                     <h1 className="text-2xl font-semibold">Filter your results</h1>
                     <h1 className="pt-8">Course Code</h1>
-                    <div className="pt-2 flex flex-row">
+                    <div className="pt-2 flex flex-row flex-wrap">
                         <button onClick={() => setCourseFilters(prevFilters => ({
                             ...prevFilters,
                             firstYear: !courseFilters.firstYear
-                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium dark:text-white border-2 border-amber-300 dark:border-primary ${courseFilters.firstYear ? ('bg-amber-300 dark:bg-primary') : (null)}`}>1XX</button>
+                        }))} className={`text-sm inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium dark:text-white border-2 border-amber-300 dark:border-primary ${courseFilters.firstYear ? ('bg-amber-300 dark:bg-primary') : (null)} mt-2 mr-4`}>1XX</button>
                         <button onClick={() => setCourseFilters(prevFilters => ({
                             ...prevFilters,
                             secondYear: !courseFilters.secondYear
-                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium dark:text-white border-2 border-amber-300 dark:border-primary ${courseFilters.secondYear ? ('bg-amber-300 dark:bg-primary') : (null)} ml-4`}>2XX</button>
+                        }))} className={`text-sm inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium dark:text-white border-2 border-amber-300 dark:border-primary ${courseFilters.secondYear ? ('bg-amber-300 dark:bg-primary') : (null)} mt-2 mr-4`}>2XX</button>
                         <button onClick={() => setCourseFilters(prevFilters => ({
                             ...prevFilters,
                             thirdYear: !courseFilters.thirdYear
-                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium dark:text-white border-2 border-amber-300 dark:border-primary ${courseFilters.thirdYear ? ('bg-amber-300 dark:bg-primary') : (null)} ml-4`}>3XX</button>
+                        }))} className={`text-sm inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium dark:text-white border-2 border-amber-300 dark:border-primary ${courseFilters.thirdYear ? ('bg-amber-300 dark:bg-primary') : (null)} mt-2 mr-4`}>3XX</button>
                         <button onClick={() => setCourseFilters(prevFilters => ({
                             ...prevFilters,
                             fourthYear: !courseFilters.fourthYear
-                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium dark:text-white border-2 border-amber-300 dark:border-primary ${courseFilters.fourthYear ? ('bg-amber-300 dark:bg-primary') : (null)} ml-4`}>4XX</button>
+                        }))} className={`text-sm inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium dark:text-white border-2 border-amber-300 dark:border-primary ${courseFilters.fourthYear ? ('bg-amber-300 dark:bg-primary') : (null)} mt-2 mr-4`}>4XX</button>
                         <button onClick={() => setCourseFilters(prevFilters => ({
                             ...prevFilters,
                             seniorYear: !courseFilters.seniorYear
-                        }))} className={`inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium dark:text-white border-2 border-amber-300 dark:border-primary ${courseFilters.seniorYear ? ('bg-amber-300 dark:bg-primary') : (null)} ml-4`}>5XX+</button>
+                        }))} className={`text-sm inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-md font-medium dark:text-white border-2 border-amber-300 dark:border-primary ${courseFilters.seniorYear ? ('bg-amber-300 dark:bg-primary') : (null)} mt-2`}>5XX+</button>
                     </div>
                     <div className="pt-8 flex flex-row justify-between">
                         <h1>Min # of ratings</h1>
@@ -393,17 +393,17 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                                 thisTerm: false,
                                 afterTerm: false
                             }))} checked={(!courseFilters.thisTerm && !courseFilters.afterTerm)} />
-                            <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">All terms</h1>
+                            <h1 className="text-sm text-gray-500 ms-4 dark:text-gray-400">All terms</h1>
                         </div>
 
                         <div className="flex flex-row items-center">
                             <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded dark:text-primary text-amber-400 dark:focus:ring-primary focus:ring-amber-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-primary dark:checked:border-primary dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={handleCurrentTermChange} checked={courseFilters.thisTerm} />
-                            <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">This term ({currentTerm})</h1>
+                            <h1 className="text-sm text-gray-500 ms-4 dark:text-gray-400">This term ({currentTerm})</h1>
                         </div>
 
                         <div className="flex flex-row items-center">
                             <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded dark:text-primary text-amber-400 dark:focus:ring-primary focus:ring-amber-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-primary dark:checked:border-primary dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={handleNextTermChange} checked={courseFilters.afterTerm} />
-                            <h1 className="text-lg text-gray-500 ms-4 dark:text-gray-400">Next term ({nextTerm})</h1>
+                            <h1 className="text-sm text-gray-500 ms-4 dark:text-gray-400">Next term ({nextTerm})</h1>
                         </div>
                     </div>
 
@@ -412,7 +412,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                     </button>
                 </div>
 
-                <div className={`flex flex-col p-6 ${activeTab === 2 ? '' : 'hidden'}`}>
+                <div className={`flex lg:w-1/3 lg:p-12 lg:pt-8 flex-col p-6 ${activeTab === 2 ? '' : 'hidden'}`}>
                     <h1 className="text-2xl font-semibold">Filter your results</h1>
                     <div className="pt-8 flex flex-row justify-between">
                         <h1>Min # of ratings</h1>
@@ -458,92 +458,94 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                 </div>
                 <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
 
-                <nav suppressHydrationWarning className="flex space-x-2" aria-label="Tabs" role="tablist">
-                    <button suppressHydrationWarning onClick={() => { setActiveTab(1); setVisibleCourseCount(50) }} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 1 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 1 ? 'dark:text-white' : 'text-gray-400'} dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 1 ? 'active' : ''}`} id="equal-width-elements-item-1" data-hs-tab="#equal-width-elements-1" aria-controls="equal-width-elements-1" role="tab">
-                        Courses ({sortedCourses.length})
-                    </button>
-                    <button suppressHydrationWarning onClick={() => { setActiveTab(2); setVisibleInstructorCount(50) }} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 2 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 2 ? 'dark:text-white' : 'text-gray-400'} dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 2 ? 'active' : ''}`} data-hs-tab="#equal-width-elements-2" aria-controls="equal-width-elements-2" role="tab">
-                        Instructors ({sortedInstructors.length})
-                    </button>
-                </nav>
+                <div className="lg:flex lg:flex-col flex-1 lg:pt-6">
+                    <nav suppressHydrationWarning className="flex space-x-2" aria-label="Tabs" role="tablist">
+                        <button suppressHydrationWarning onClick={() => { setActiveTab(1); setVisibleCourseCount(50) }} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 1 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 1 ? 'dark:text-white' : 'text-gray-400'} dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 1 ? 'active' : ''}`} id="equal-width-elements-item-1" data-hs-tab="#equal-width-elements-1" aria-controls="equal-width-elements-1" role="tab">
+                            Courses ({sortedCourses.length})
+                        </button>
+                        <button suppressHydrationWarning onClick={() => { setActiveTab(2); setVisibleInstructorCount(50) }} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 2 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 2 ? 'dark:text-white' : 'text-gray-400'} dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 2 ? 'active' : ''}`} data-hs-tab="#equal-width-elements-2" aria-controls="equal-width-elements-2" role="tab">
+                            Instructors ({sortedInstructors.length})
+                        </button>
+                    </nav>
 
-                <div id="equal-width-elements-1" className={activeTab === 1 ? '' : 'hidden'} role="tabpanel" aria-labelledby="equal-width-elements-item-1">
-                    <div className="flex flex-col pt-6">
-                        <div className="overflow-x-auto">
-                            <div className="min-w-full inline-block align-middle">
-                                <div className="overflow-hidden">
-                                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                        <thead>
-                                            <tr>
-                                                <th onClick={() => { handleCourseSort('course_code') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course Code {(courseSortField === 'course_code' && courseOrder === 'desc') ? ('˅') : (null)} {(courseSortField === 'course_code' && courseOrder === 'asc') ? ('˄') : (null)}</th>
-                                                <th onClick={() => { handleCourseSort('course_title') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course Name {(courseSortField === 'course_title' && courseOrder === 'desc') ? ('˅') : (null)} {(courseSortField === 'course_title' && courseOrder === 'asc') ? ('˄') : (null)}</th>
-                                                <th onClick={() => { handleCourseSort('total_reviews') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Ratings {(courseSortField === 'total_reviews' && courseOrder === 'desc') ? ('˅') : (null)} {(courseSortField === 'total_reviews' && courseOrder === 'asc') ? ('˄') : (null)}</th>
-                                                <th onClick={() => { handleCourseSort('useful') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Useful {(courseSortField === 'useful' && courseOrder === 'desc') ? ('˅') : (null)} {(courseSortField === 'useful' && courseOrder === 'asc') ? ('˄') : (null)}</th>
-                                                <th onClick={() => { handleCourseSort('easy') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Easy {(courseSortField === 'easy' && courseOrder === 'desc') ? ('˅') : (null)} {(courseSortField === 'easy' && courseOrder === 'asc') ? ('˄') : (null)}</th>
-                                                <th onClick={() => { handleCourseSort('liked') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Liked {(courseSortField === 'liked' && courseOrder === 'desc') ? ('˅') : (null)} {(courseSortField === 'liked' && courseOrder === 'asc') ? ('˄') : (null)}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {sortedCourses.slice(0, visibleCourseCount).map((course, index) => (
-                                                <tr key={index} className="odd:bg-white even:bg-gray-100 dark:odd:bg-slate-950 dark:even:bg-slate-900">
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200 underline">
-                                                        <Link href={`/course/${course.course_code.replace(/\s+/g, '%20')}`}>
-                                                            {course.course_code}
-                                                        </Link>
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.course_title}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.total_reviews}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.useful || course.useful === 0 ? (course.useful) : ('N/A')}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.easy || course.easy === 0 ? (course.easy) : ('N/A')}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.liked || course.liked === 0 ? (course.liked) : ('N/A')}</td>
+                    <div id="equal-width-elements-1" className={activeTab === 1 ? '' : 'hidden'} role="tabpanel" aria-labelledby="equal-width-elements-item-1">
+                        <div className="flex flex-col pt-6">
+                            <div className="overflow-x-auto">
+                                <div className="min-w-full inline-block align-middle">
+                                    <div className="overflow-hidden">
+                                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                            <thead>
+                                                <tr>
+                                                    <th onClick={() => { handleCourseSort('course_code') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course Code {(courseSortField === 'course_code' && courseOrder === 'desc') ? ('˅') : (null)} {(courseSortField === 'course_code' && courseOrder === 'asc') ? ('˄') : (null)}</th>
+                                                    <th onClick={() => { handleCourseSort('course_title') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course Name {(courseSortField === 'course_title' && courseOrder === 'desc') ? ('˅') : (null)} {(courseSortField === 'course_title' && courseOrder === 'asc') ? ('˄') : (null)}</th>
+                                                    <th onClick={() => { handleCourseSort('total_reviews') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Ratings {(courseSortField === 'total_reviews' && courseOrder === 'desc') ? ('˅') : (null)} {(courseSortField === 'total_reviews' && courseOrder === 'asc') ? ('˄') : (null)}</th>
+                                                    <th onClick={() => { handleCourseSort('useful') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Useful {(courseSortField === 'useful' && courseOrder === 'desc') ? ('˅') : (null)} {(courseSortField === 'useful' && courseOrder === 'asc') ? ('˄') : (null)}</th>
+                                                    <th onClick={() => { handleCourseSort('easy') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Easy {(courseSortField === 'easy' && courseOrder === 'desc') ? ('˅') : (null)} {(courseSortField === 'easy' && courseOrder === 'asc') ? ('˄') : (null)}</th>
+                                                    <th onClick={() => { handleCourseSort('liked') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Liked {(courseSortField === 'liked' && courseOrder === 'desc') ? ('˅') : (null)} {(courseSortField === 'liked' && courseOrder === 'asc') ? ('˄') : (null)}</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                    <div ref={courseLoaderRef} style={{ height: "20px" }}></div>
+                                            </thead>
+                                            <tbody>
+                                                {sortedCourses.slice(0, visibleCourseCount).map((course, index) => (
+                                                    <tr key={index} className="odd:bg-white even:bg-gray-100 dark:odd:bg-slate-950 dark:even:bg-slate-900">
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200 underline">
+                                                            <Link href={`/course/${course.course_code.replace(/\s+/g, '%20')}`}>
+                                                                {course.course_code}
+                                                            </Link>
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.course_title}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.total_reviews}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.useful || course.useful === 0 ? (course.useful) : ('N/A')}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.easy || course.easy === 0 ? (course.easy) : ('N/A')}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{course.liked || course.liked === 0 ? (course.liked) : ('N/A')}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                        <div ref={courseLoaderRef} style={{ height: "20px" }}></div>
+                                    </div>
                                 </div>
                             </div>
+                            <h1 className={`p-6 flex-1 ${filteredCourses.length !== 0 ? ('hidden') : (null)}`}>No courses found matching your criteria. Try adjusting your courseFilters to broaden your search. Consider using less specific terms.</h1>
                         </div>
-                        <h1 className={`p-6 flex-1 ${filteredCourses.length !== 0 ? ('hidden') : (null)}`}>No courses found matching your criteria. Try adjusting your courseFilters to broaden your search. Consider using less specific terms.</h1>
                     </div>
-                </div>
 
-                <div id="equal-width-elements-1" className={activeTab === 2 ? '' : 'hidden'} role="tabpanel" aria-labelledby="equal-width-elements-item-1">
-                    <div className="flex flex-col pt-6">
-                        <div className="overflow-x-auto">
-                            <div className="min-w-full inline-block align-middle">
-                                <div className="overflow-hidden">
-                                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                        <thead>
-                                            <tr>
-                                                <th onClick={() => { handleInstructorSort('instructor_name') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Instructor Name {(instructorSortField === 'instructor_name' && instructorOrder === 'desc') ? ('˅') : (null)} {(instructorSortField === 'instructor_name' && instructorOrder === 'asc') ? ('˄') : (null)}</th>
-                                                <th onClick={() => { handleInstructorSort('total_reviews') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Ratings {(instructorSortField === 'total_reviews' && instructorOrder === 'desc') ? ('˅') : (null)} {(instructorSortField === 'total_reviews' && instructorOrder === 'asc') ? ('˄') : (null)}</th>
-                                                <th onClick={() => { handleInstructorSort('clear') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Clear {(instructorSortField === 'clear' && instructorOrder === 'desc') ? ('˅') : (null)} {(instructorSortField === 'clear' && instructorOrder === 'asc') ? ('˄') : (null)}</th>
-                                                <th onClick={() => { handleInstructorSort('engaging') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Engaging {(instructorSortField === 'engaging' && instructorOrder === 'desc') ? ('˅') : (null)} {(instructorSortField === 'engaging' && instructorOrder === 'asc') ? ('˄') : (null)}</th>
-                                                <th onClick={() => { handleInstructorSort('liked') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Liked {(instructorSortField === 'liked' && instructorOrder === 'desc') ? ('˅') : (null)} {(instructorSortField === 'liked' && instructorOrder === 'asc') ? ('˄') : (null)}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {sortedInstructors.slice(0, visibleInstructorCount).map((instructor, index) => (
-                                                <tr key={index} className="odd:bg-white even:bg-gray-100 dark:odd:bg-slate-950 dark:even:bg-slate-900">
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200 underline">
-                                                        <Link href={`/instructor/${instructor.instructor_name.replace(/\s+/g, '%20')}`}>
-                                                            {instructor.instructor_name}
-                                                        </Link>
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{instructor.total_reviews}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{instructor.clear || instructor.clear === 0 ? (instructor.clear) : ('N/A')}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{instructor.engaging || instructor.engaging === 0 ? (instructor.engaging) : ('N/A')}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{instructor.liked || instructor.liked === 0 ? (instructor.liked) : ('N/A')}</td>
+                    <div id="equal-width-elements-1" className={activeTab === 2 ? '' : 'hidden'} role="tabpanel" aria-labelledby="equal-width-elements-item-1">
+                        <div className="flex flex-col pt-6">
+                            <div className="overflow-x-auto">
+                                <div className="min-w-full inline-block align-middle">
+                                    <div className="overflow-hidden">
+                                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                            <thead>
+                                                <tr>
+                                                    <th onClick={() => { handleInstructorSort('instructor_name') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Instructor Name {(instructorSortField === 'instructor_name' && instructorOrder === 'desc') ? ('˅') : (null)} {(instructorSortField === 'instructor_name' && instructorOrder === 'asc') ? ('˄') : (null)}</th>
+                                                    <th onClick={() => { handleInstructorSort('total_reviews') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Ratings {(instructorSortField === 'total_reviews' && instructorOrder === 'desc') ? ('˅') : (null)} {(instructorSortField === 'total_reviews' && instructorOrder === 'asc') ? ('˄') : (null)}</th>
+                                                    <th onClick={() => { handleInstructorSort('clear') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Clear {(instructorSortField === 'clear' && instructorOrder === 'desc') ? ('˅') : (null)} {(instructorSortField === 'clear' && instructorOrder === 'asc') ? ('˄') : (null)}</th>
+                                                    <th onClick={() => { handleInstructorSort('engaging') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Engaging {(instructorSortField === 'engaging' && instructorOrder === 'desc') ? ('˅') : (null)} {(instructorSortField === 'engaging' && instructorOrder === 'asc') ? ('˄') : (null)}</th>
+                                                    <th onClick={() => { handleInstructorSort('liked') }} scope="col" className="hover:cursor-pointer underline px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Liked {(instructorSortField === 'liked' && instructorOrder === 'desc') ? ('˅') : (null)} {(instructorSortField === 'liked' && instructorOrder === 'asc') ? ('˄') : (null)}</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                    <div ref={instructorLoaderRef} style={{ height: "20px" }}></div>
+                                            </thead>
+                                            <tbody>
+                                                {sortedInstructors.slice(0, visibleInstructorCount).map((instructor, index) => (
+                                                    <tr key={index} className="odd:bg-white even:bg-gray-100 dark:odd:bg-slate-950 dark:even:bg-slate-900">
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200 underline">
+                                                            <Link href={`/instructor/${instructor.instructor_name.replace(/\s+/g, '%20')}`}>
+                                                                {instructor.instructor_name}
+                                                            </Link>
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{instructor.total_reviews}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{instructor.clear || instructor.clear === 0 ? (instructor.clear) : ('N/A')}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{instructor.engaging || instructor.engaging === 0 ? (instructor.engaging) : ('N/A')}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{instructor.liked || instructor.liked === 0 ? (instructor.liked) : ('N/A')}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                        <div ref={instructorLoaderRef} style={{ height: "20px" }}></div>
+                                    </div>
                                 </div>
                             </div>
+                            <h1 className={`p-6 flex-1 ${filteredCourses.length !== 0 ? ('hidden') : (null)}`}>No courses found matching your criteria. Try adjusting your courseFilters to broaden your search. Consider using less specific terms.</h1>
                         </div>
-                        <h1 className={`p-6 flex-1 ${filteredCourses.length !== 0 ? ('hidden') : (null)}`}>No courses found matching your criteria. Try adjusting your courseFilters to broaden your search. Consider using less specific terms.</h1>
                     </div>
                 </div>
             </div>
