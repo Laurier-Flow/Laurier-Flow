@@ -386,7 +386,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
 [&::-moz-range-track]:rounded-full" id="steps-range-slider-usage" min="0" max="9" step="1" value={courseSlider} onChange={handleSliderChange}></input>
 
                     <h1 className="pt-8">Offered in</h1>
-                    <div className="pt-4 ml-1 flex flex-row">
+                    <div className="pt-4 ml-1 flex flex-row lg:flex-col">
                         <div className="flex flex-row items-center">
                             <input type="checkbox" className="scale-150 shrink-0 mt-0.5 border-gray-200 rounded dark:text-primary text-amber-400 dark:focus:ring-primary focus:ring-amber-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-primary dark:checked:border-primary dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={() => setCourseFilters(prevFilters => ({
                                 ...prevFilters,
@@ -397,13 +397,13 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                         </div>
 
                         <div className="flex flex-row items-center">
-                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded dark:text-primary text-amber-400 dark:focus:ring-primary focus:ring-amber-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-primary dark:checked:border-primary dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={handleCurrentTermChange} checked={courseFilters.thisTerm} />
-                            <h1 className="text-sm text-gray-500 ms-4 dark:text-gray-400">This term ({currentTerm})</h1>
+                            <input type="checkbox" className="scale-150 ml-8 lg:ml-0 lg:mt-6 shrink-0 mt-0.5 border-gray-200 rounded dark:text-primary text-amber-400 dark:focus:ring-primary focus:ring-amber-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-primary dark:checked:border-primary dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={handleCurrentTermChange} checked={courseFilters.thisTerm} />
+                            <h1 className="text-sm text-gray-500 ms-4 dark:text-gray-400 lg:mt-6">This term ({currentTerm})</h1>
                         </div>
 
                         <div className="flex flex-row items-center">
-                            <input type="checkbox" className="scale-150 ml-8 shrink-0 mt-0.5 border-gray-200 rounded dark:text-primary text-amber-400 dark:focus:ring-primary focus:ring-amber-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-primary dark:checked:border-primary dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={handleNextTermChange} checked={courseFilters.afterTerm} />
-                            <h1 className="text-sm text-gray-500 ms-4 dark:text-gray-400">Next term ({nextTerm})</h1>
+                            <input type="checkbox" className="scale-150 ml-8 lg:ml-0 lg:mt-6 shrink-0 mt-0.5 border-gray-200 rounded dark:text-primary text-amber-400 dark:focus:ring-primary focus:ring-amber-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-primary dark:checked:border-primary dark:focus:ring-offset-gray-800" id="hs-default-checkbox" onChange={handleNextTermChange} checked={courseFilters.afterTerm} />
+                            <h1 className="text-sm text-gray-500 ms-4 dark:text-gray-400 lg:mt-6">Next term ({nextTerm})</h1>
                         </div>
                     </div>
 
@@ -460,10 +460,10 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
 
                 <div className="lg:flex lg:flex-col flex-1 lg:pt-6">
                     <nav suppressHydrationWarning className="flex space-x-2" aria-label="Tabs" role="tablist">
-                        <button suppressHydrationWarning onClick={() => { setActiveTab(1); setVisibleCourseCount(50) }} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 1 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 1 ? 'dark:text-white' : 'text-gray-400'} dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 1 ? 'active' : ''}`} id="equal-width-elements-item-1" data-hs-tab="#equal-width-elements-1" aria-controls="equal-width-elements-1" role="tab">
+                        <button suppressHydrationWarning onClick={() => { setActiveTab(1); setVisibleCourseCount(50) }} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-lg font-medium text-center ${activeTab === 1 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 1 ? 'dark:text-white' : 'text-gray-400'} dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 1 ? 'active' : ''}`} id="equal-width-elements-item-1" data-hs-tab="#equal-width-elements-1" aria-controls="equal-width-elements-1" role="tab">
                             Courses ({sortedCourses.length})
                         </button>
-                        <button suppressHydrationWarning onClick={() => { setActiveTab(2); setVisibleInstructorCount(50) }} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-sm font-medium text-center ${activeTab === 2 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 2 ? 'dark:text-white' : 'text-gray-400'} dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 2 ? 'active' : ''}`} data-hs-tab="#equal-width-elements-2" aria-controls="equal-width-elements-2" role="tab">
+                        <button suppressHydrationWarning onClick={() => { setActiveTab(2); setVisibleInstructorCount(50) }} type="button" className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white py-3 px-4 text-center basis-0 grow inline-flex justify-center items-center gap-x-2 bg-transparent text-lg font-medium text-center ${activeTab === 2 ? 'text-slate-900' : 'text-gray-200'} hover:text-slate-800 rounded-lg disabled:opacity-50 disabled:pointer-events-none ${activeTab === 2 ? 'dark:text-white' : 'text-gray-400'} dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 2 ? 'active' : ''}`} data-hs-tab="#equal-width-elements-2" aria-controls="equal-width-elements-2" role="tab">
                             Instructors ({sortedInstructors.length})
                         </button>
                     </nav>
@@ -505,7 +505,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                                     </div>
                                 </div>
                             </div>
-                            <h1 className={`p-6 flex-1 ${filteredCourses.length !== 0 ? ('hidden') : (null)}`}>No courses found matching your criteria. Try adjusting your courseFilters to broaden your search. Consider using less specific terms.</h1>
+                            <h1 className={`p-6 flex-1 ${filteredCourses.length !== 0 ? ('hidden') : (null)}`}>No courses found matching your criteria. Try adjusting your course filters to broaden your search. Consider using less specific terms.</h1>
                         </div>
                     </div>
 
@@ -544,7 +544,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                                     </div>
                                 </div>
                             </div>
-                            <h1 className={`p-6 flex-1 ${filteredCourses.length !== 0 ? ('hidden') : (null)}`}>No courses found matching your criteria. Try adjusting your courseFilters to broaden your search. Consider using less specific terms.</h1>
+                            <h1 className={`p-6 flex-1 ${filteredCourses.length !== 0 ? ('hidden') : (null)}`}>No instructors found matching your criteria. Try adjusting your instructor filters to broaden your search. Consider using less specific terms.</h1>
                         </div>
                     </div>
                 </div>

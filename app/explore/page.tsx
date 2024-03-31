@@ -190,14 +190,20 @@ async function getInstructors(supabase: SupabaseClient) {
 }
 
 export default async function ExplorePage() {
-    const currentTerm = await getCurrentTerm(true)
-    const nextTerm = await getNextTerm(true)
-    const currentTermServer = await getCurrentTerm(false)
-    const nextTermServer = await getNextTerm(false)
+    const [currentTerm, nextTerm, currentTermServer, nextTermServer] = await Promise.all([
+        getCurrentTerm(true),
+        getNextTerm(true),
+        getCurrentTerm(false),
+        getNextTerm(false),
+    ]);
+
     const cookieStore = cookies();
     const supabase = createClient(cookieStore)
-    const courses = await getCourses(supabase, currentTermServer, nextTermServer)
-    const instructors = await getInstructors(supabase)
+    
+    const [courses, instructors] = await Promise.all([
+        getCourses(supabase, currentTermServer, nextTermServer),
+        getInstructors(supabase),
+    ]);
 
     return (
         <Suspense fallback={<div className="w-full h-full"><Spinner /></div>}>
