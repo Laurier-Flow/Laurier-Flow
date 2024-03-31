@@ -473,7 +473,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
                                             {sortedCourses.slice(0, visibleCourseCount).map((course, index) => (
                                                 <tr key={index} className="odd:bg-white even:bg-gray-100 dark:odd:bg-slate-950 dark:even:bg-slate-900">
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200 underline">
-                                                        <Link href={`/course/${course.course_code.replace(/\s+/g, '')}`}>
+                                                        <Link href={`/course/${course.course_code.replace(/\s+/g, '%20')}`}>
                                                             {course.course_code}
                                                         </Link>
                                                     </td>
