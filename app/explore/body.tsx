@@ -2,14 +2,13 @@
 
 import { useSearchParams } from "next/navigation";
 import { SetStateAction, useEffect, useMemo, useRef, useState } from "react";
-import { courseInfoDBResponseExplore } from "./page";
+import { courseInfoDBResponseExplore, instructorInfoDBResponseExplore } from "./page";
 import Link from "next/link";
-import { instructorInfoDBResponse } from "../instructor/InstructorInfo";
 
 type SortableCourseFields = keyof courseInfoDBResponseExplore;
-type SortableInstructorFields = keyof instructorInfoDBResponse;
+type SortableInstructorFields = keyof instructorInfoDBResponseExplore;
 
-export default function Body({ currentTerm, nextTerm, courses, instructors }: { currentTerm: string, nextTerm: string, courses: courseInfoDBResponseExplore[], instructors: instructorInfoDBResponse[] }) {
+export default function Body({ currentTerm, nextTerm, courses, instructors }: { currentTerm: string, nextTerm: string, courses: courseInfoDBResponseExplore[], instructors: instructorInfoDBResponseExplore[] }) {
     const searchParams = useSearchParams()
     const subject = searchParams.get('subject') || 'all'
 
@@ -62,7 +61,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
         setSortedCourses(sorted)
     }
 
-    function sortInstructorsArray(sortField: SortableInstructorFields, order: string, filtered: instructorInfoDBResponse[] = filteredInstructors) {
+    function sortInstructorsArray(sortField: SortableInstructorFields, order: string, filtered: instructorInfoDBResponseExplore[] = filteredInstructors) {
         const sorted = [...filtered].sort((a, b) => {
             if (a[sortField] === null) return 1;
             if (b[sortField] === null) return -1;
@@ -87,7 +86,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
         }
     }
 
-    const handleInstructorResort = (sortField: SortableInstructorFields, filtered: instructorInfoDBResponse[] = filteredInstructors) => {
+    const handleInstructorResort = (sortField: SortableInstructorFields, filtered: instructorInfoDBResponseExplore[] = filteredInstructors) => {
         if (instructorOrder === 'none') {
             setSortedInstructors(filtered)
         } else if (instructorOrder === 'desc') {
@@ -261,6 +260,11 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
 
             if (courseFilters.thisTerm && !course.isOfferedThisTerm) return false
             if (courseFilters.afterTerm && !course.isOfferedNextTerm) return false
+            if (subject !== 'all') {
+                let codeLength = subject.length
+                let extractedCode = course.course_code.substring(0, codeLength);
+                if (extractedCode !== subject) return false
+            }
 
             return true
         })
@@ -273,6 +277,15 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
     useEffect(() => {
         const filtered = instructors.filter((instructor) => {
             if (instructor.total_reviews < instructorFilters.minRatings) return false
+            if (subject !== 'all') {
+                let codeLength = subject.length
+                let codes = []
+                instructor.coursesTaught.forEach((course) => {
+                    let extractedCode = course.substring(0, codeLength)
+                    if (extractedCode == subject) codes.push(extractedCode)
+                })
+                if (codes.length === 0) return false
+            }
 
             return true
         })

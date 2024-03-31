@@ -6,7 +6,6 @@ import Body from "./body";
 import { cookies, headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { SupabaseClient } from "@supabase/supabase-js";
-import { courseInfoDBResponse } from "../course/CourseInfo";
 import { instructorInfoDBResponse } from "../instructor/InstructorInfo";
 
 export interface courseInfoDBResponseExplore {
@@ -18,6 +17,15 @@ export interface courseInfoDBResponseExplore {
     course_title: string,
     isOfferedThisTerm: boolean,
     isOfferedNextTerm: boolean
+}
+
+export interface instructorInfoDBResponseExplore {
+    instructor_name: string,
+    total_reviews: number,
+    clear: number,
+    engaging: number,
+    liked: number,
+    coursesTaught: string[]
 }
 
 async function getCourses(supabase: SupabaseClient, currentTerm: string, nextTerm: string) {
@@ -107,8 +115,46 @@ async function getCourses(supabase: SupabaseClient, currentTerm: string, nextTer
 async function getInstructors(supabase: SupabaseClient) {
     let hasMore = true
     let page = 0
+    let sectionsPage = 0;
     let limit = 1000
-    let allInstructors: instructorInfoDBResponse[] = []
+    let hasMoreSections = true;
+    let allInstructors: instructorInfoDBResponseExplore[] = []
+    let sectionsData: any[] = []
+
+    while (hasMoreSections) {
+        const { data, error } = await supabase
+            .from('sections')
+            .select('course_code_fk, instructor_name_fk')
+            .range(sectionsPage * limit, (sectionsPage + 1) * limit - 1);
+
+        if (error) {
+            console.error(error)
+            return []
+        }
+
+        sectionsData = [...sectionsData, ...data]
+
+        if (data.length < limit) {
+            hasMoreSections = false;
+        } else {
+            sectionsPage++;
+        }
+    }
+
+    interface CoursesTaughtMap {
+        [key: string]: string[];
+    }
+    
+    const coursesTaught = sectionsData.reduce<CoursesTaughtMap>((acc, {course_code_fk, instructor_name_fk}) => {
+        if (!acc[instructor_name_fk]) {
+            acc[instructor_name_fk] = [course_code_fk]
+        } else if (!acc[instructor_name_fk].includes(course_code_fk)) {
+            acc[instructor_name_fk].push(course_code_fk)
+        }
+    
+        return acc
+    }, {});
+    
 
     while (hasMore) {
         const { data, error } = await supabase
@@ -129,6 +175,16 @@ async function getInstructors(supabase: SupabaseClient) {
             page++;
         }
     }
+
+    allInstructors = allInstructors.map(instructor => {
+        const instructorName = instructor.instructor_name;
+        const courses = coursesTaught[instructorName] || [];
+    
+        return {
+            ...instructor,
+            coursesTaught: courses
+        };
+    });
 
     return allInstructors;
 }
