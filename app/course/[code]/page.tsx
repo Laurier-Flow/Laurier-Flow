@@ -36,8 +36,7 @@ export interface section {
 async function CoursePage({ params }: { params: { code: string } }) {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    let courseCode = params.code.toUpperCase();
-    courseCode = courseCode.slice(0, 2) + " " + courseCode.slice(2);
+    let courseCode = decodeURIComponent(params.code.toUpperCase())
 
     return (
         <Suspense fallback={<div className="w-full h-full"><Spinner /></div>}>

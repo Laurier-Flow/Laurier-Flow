@@ -77,7 +77,7 @@ export default function Header({user}: {user: User | null}): React.ReactElement 
             </Link>
             <nav className="flex items-center gap-6 text-sm">
               <Link href="/explore">Explore</Link>
-              <Link href="/course/BU283">Courses</Link>
+              <Link href="/course/BU%20283">Courses</Link>
               <Link href="/instructor/Kenneth%20Jackson">Instructor</Link>
               <Link href="/about">About</Link>
               <Link href="/privacy">Privacy</Link>
