@@ -28,176 +28,162 @@ export interface instructorInfoDBResponseExplore {
     coursesTaught: string[]
 }
 
-async function getCourses(supabase: SupabaseClient, currentTerm: string, nextTerm: string) {
-    let hasMore = true;
-    let hasMoreSections = true;
-    let page = 0;
+interface courseOffering {
+    isOfferedThisTerm: boolean;
+    isOfferedNextTerm: boolean;
+}
+
+interface courseOfferingsMap {
+    [key: string]: courseOffering;
+}
+
+async function getCourses(supabase: SupabaseClient, currentTerm: string, nextTerm: string): Promise<courseInfoDBResponseExplore[]> {
     let sectionsPage = 0;
     const limit = 1000;
-    let allCourses: courseInfoDBResponseExplore[] = [];
-    let sectionsData: any[] = []
+    let hasMoreSections = true;
+    let sectionsData: any[] = []; // Consider defining a more specific type for your data structure
+    const courseOfferingsMap: courseOfferingsMap = {};
 
-    while (hasMoreSections) {
-        const { data, error } = await supabase
-            .from('sections')
-            .select('course_code_fk, term')
-            .in('term', [currentTerm, nextTerm])
-            .range(sectionsPage * limit, (sectionsPage + 1) * limit - 1);
+    // Fetch sections and map course offerings to terms
+    try {
+        while (hasMoreSections) {
+            const { data, error } = await supabase
+                .from('sections')
+                .select('course_code_fk, term')
+                .in('term', [currentTerm, nextTerm])
+                .range(sectionsPage * limit, (sectionsPage + 1) * limit - 1);
 
-        if (error) {
-            console.error(error)
-            return []
-        }
+            if (error) {
+                throw new Error(error.message);
+            }
 
-        sectionsData = [...sectionsData, ...data]
+            data.forEach(({ course_code_fk, term }) => {
+                if (!courseOfferingsMap[course_code_fk]) {
+                    courseOfferingsMap[course_code_fk] = { isOfferedThisTerm: false, isOfferedNextTerm: false };
+                }
 
-        if (data.length < limit) {
-            hasMoreSections = false;
-        } else {
+                courseOfferingsMap[course_code_fk].isOfferedThisTerm ||= term === currentTerm;
+                courseOfferingsMap[course_code_fk].isOfferedNextTerm ||= term === nextTerm;
+            });
+
+            hasMoreSections = data.length === limit;
             sectionsPage++;
         }
+    } catch (error) {
+        console.error("Error fetching sections:", error);
+        return [];
     }
 
-    interface courseOffering {
-        isOfferedThisTerm: boolean;
-        isOfferedNextTerm: boolean;
-    }
+    let allCourses: courseInfoDBResponseExplore[] = [];
+    let coursesPage = 0;
+    let hasMoreCourses = true;
 
-    interface CourseOfferingsMap {
-        [key: string]: courseOffering;
-    }
+    // Fetch courses and enrich with offerings data
+    try {
+        while (hasMoreCourses) {
+            const { data, error } = await supabase
+                .from('courses')
+                .select('*')
+                .range(coursesPage * limit, (coursesPage + 1) * limit - 1);
 
-    const courseOfferings = sectionsData.reduce<CourseOfferingsMap>((acc, { course_code_fk, term }) => {
-        if (!acc[course_code_fk]) {
-            acc[course_code_fk] = { isOfferedThisTerm: false, isOfferedNextTerm: false };
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            const processedCourses: courseInfoDBResponseExplore[] = data.map(course => ({
+                ...course,
+                isOfferedThisTerm: courseOfferingsMap[course.course_code]?.isOfferedThisTerm || false,
+                isOfferedNextTerm: courseOfferingsMap[course.course_code]?.isOfferedNextTerm || false,
+                easy: course.total_reviews > 0 ? Math.round((course.easy / course.total_reviews) * 20) : null,
+                useful: course.total_reviews > 0 ? Math.round((course.useful / course.total_reviews) * 20) : null,
+                liked: course.total_reviews > 0 ? Math.round((course.liked / course.total_reviews) * 100) : null,
+            }));
+
+            allCourses.push(...processedCourses);
+            hasMoreCourses = data.length === limit;
+            coursesPage++;
         }
-
-        if (term === currentTerm) {
-            acc[course_code_fk].isOfferedThisTerm = true
-        }
-
-        if (term === nextTerm) {
-            acc[course_code_fk].isOfferedNextTerm = true
-        }
-
-        return acc
-    }, {})
-
-    while (hasMore) {
-        const { data, error } = await supabase
-            .from('courses')
-            .select('*')
-            .range(page * limit, (page + 1) * limit - 1);
-
-        if (error) {
-            console.error(error);
-            break;
-        }
-
-        const processedCourses = data.map(course => ({
-            ...course,
-            isOfferedThisTerm: courseOfferings[course.course_code]?.isOfferedThisTerm || false,
-            isOfferedNextTerm: courseOfferings[course.course_code]?.isOfferedNextTerm || false,
-            easy: course.total_reviews !== 0 ? ((course.easy / course.total_reviews) * 20) : null,
-            useful: course.total_reviews !== 0 ? ((course.useful / course.total_reviews) * 20) : null,
-            liked: course.total_reviews !== 0 ? Math.round((course.liked / course.total_reviews) * 100) : null
-        }));
-
-        allCourses = [...allCourses, ...processedCourses];
-
-        if (data.length < limit) {
-            hasMore = false;
-        } else {
-            page++;
-        }
+    } catch (error) {
+        console.error("Error fetching courses:", error);
+        return [];
     }
 
     return allCourses;
 }
 
 async function getInstructors(supabase: SupabaseClient) {
-    let hasMore = true
-    let page = 0
-    let sectionsPage = 0;
-    let limit = 1000
     let hasMoreSections = true;
-    let allInstructors: instructorInfoDBResponseExplore[] = []
-    let sectionsData: any[] = []
+    let sectionsPage = 0;
+    const limit = 1000;
+    const coursesTaughtMap = new Map();
 
-    while (hasMoreSections) {
-        const { data, error } = await supabase
-            .from('sections')
-            .select('course_code_fk, instructor_name_fk')
-            .range(sectionsPage * limit, (sectionsPage + 1) * limit - 1);
+    try {
+        while (hasMoreSections) {
+            const { data, error } = await supabase
+                .from('sections')
+                .select('course_code_fk, instructor_name_fk')
+                .range(sectionsPage * limit, (sectionsPage + 1) * limit - 1);
 
-        if (error) {
-            console.error(error)
-            return []
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            data.forEach(({ course_code_fk, instructor_name_fk }) => {
+                const courses = coursesTaughtMap.get(instructor_name_fk) || new Set();
+                courses.add(course_code_fk);
+                coursesTaughtMap.set(instructor_name_fk, courses);
+            });
+
+            if (data.length < limit) {
+                hasMoreSections = false;
+            } else {
+                sectionsPage++;
+            }
         }
-
-        sectionsData = [...sectionsData, ...data]
-
-        if (data.length < limit) {
-            hasMoreSections = false;
-        } else {
-            sectionsPage++;
-        }
+    } catch (error) {
+        console.error("Failed to fetch sections:", error);
+        return [];
     }
 
-    interface CoursesTaughtMap {
-        [key: string]: string[];
+    let hasMoreInstructors = true;
+    let instructorPage = 0;
+    let allInstructors = [];
+
+    try {
+        while (hasMoreInstructors) {
+            const { data, error } = await supabase
+                .from('instructors')
+                .select('*')
+                .range(instructorPage * limit, (instructorPage + 1) * limit - 1);
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            const processedInstructors = data.map(instructor => ({
+                ...instructor,
+                clear: instructor.total_reviews > 0 ? Math.round((instructor.clear / instructor.total_reviews) * 20) : 0,
+                engaging: instructor.total_reviews > 0 ? Math.round((instructor.engaging / instructor.total_reviews) * 20) : 0,
+                liked: instructor.total_reviews > 0 ? Math.round((instructor.liked / instructor.total_reviews) * 100) : 0,
+                coursesTaught: Array.from(coursesTaughtMap.get(instructor.instructor_name) || [])
+            }));
+
+            allInstructors.push(...processedInstructors);
+
+            if (data.length < limit) {
+                hasMoreInstructors = false;
+            } else {
+                instructorPage++;
+            }
+        }
+    } catch (error) {
+        console.error("Failed to fetch instructors:", error);
+        return [];
     }
-
-    const coursesTaught = sectionsData.reduce<CoursesTaughtMap>((acc, { course_code_fk, instructor_name_fk }) => {
-        if (!acc[instructor_name_fk]) {
-            acc[instructor_name_fk] = [course_code_fk]
-        } else if (!acc[instructor_name_fk].includes(course_code_fk)) {
-            acc[instructor_name_fk].push(course_code_fk)
-        }
-
-        return acc
-    }, {});
-
-
-    while (hasMore) {
-        const { data, error } = await supabase
-            .from('instructors')
-            .select('*')
-            .range(page * limit, (page + 1) * limit - 1);
-
-        if (error) {
-            console.error(error);
-            break;
-        }
-
-        const processedInstructors = data.map(instructor => ({
-            ...instructor,
-            clear: instructor.total_reviews !== 0 ? ((instructor.clear / instructor.total_reviews) * 20) : null,
-            engaging: instructor.total_reviews !== 0 ? ((instructor.engaging / instructor.total_reviews) * 20) : null,
-            liked: instructor.total_reviews !== 0 ? Math.round((instructor.liked / instructor.total_reviews) * 100) : null
-        }));
-
-        allInstructors = [...allInstructors, ...processedInstructors];
-
-        if (data.length < limit) {
-            hasMore = false;
-        } else {
-            page++;
-        }
-    }
-
-    allInstructors = allInstructors.map(instructor => {
-        const instructorName = instructor.instructor_name;
-        const courses = coursesTaught[instructorName] || [];
-
-        return {
-            ...instructor,
-            coursesTaught: courses
-        };
-    });
 
     return allInstructors;
 }
+
 
 export default async function ExplorePage() {
     const [currentTerm, nextTerm, currentTermServer, nextTermServer] = await Promise.all([
