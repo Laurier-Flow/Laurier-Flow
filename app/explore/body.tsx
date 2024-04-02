@@ -263,7 +263,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
             if (subject !== 'all') {
                 let codeLength = subject.length
                 let extractedCode = course.course_code.substring(0, codeLength);
-                if (extractedCode !== subject) return false
+                if (extractedCode !== subject.toUpperCase()) return false
             }
 
             return true
