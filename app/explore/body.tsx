@@ -10,7 +10,7 @@ type SortableInstructorFields = keyof instructorInfoDBResponseExplore;
 
 export default function Body({ currentTerm, nextTerm, courses, instructors }: { currentTerm: string, nextTerm: string, courses: courseInfoDBResponseExplore[], instructors: instructorInfoDBResponseExplore[] }) {
     const searchParams = useSearchParams()
-    const subject = searchParams.get('subject') || 'all'
+    const subject = searchParams.get('subject')?.toUpperCase() || 'all'
 
     const itemsPerPage = 50
     const [visibleCourseCount, setVisibleCourseCount] = useState(itemsPerPage);
