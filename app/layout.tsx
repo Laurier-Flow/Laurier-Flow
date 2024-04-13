@@ -9,8 +9,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }): Promise<React.ReactElement> {
-  const user = await fetchUser();
-
   return (
     <html lang="en">
       <body className="bg-slate-50 dark:bg-background text-foreground h-screen flex flex-col">
@@ -20,7 +18,6 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header user={user} />
           <main className="flex grow justify-start items-center flex-col">
             {children}
           </main>
