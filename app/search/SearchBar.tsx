@@ -115,14 +115,15 @@ export default function SearchBar() {
 
   return (
     <div>
-      <div className='flex w-fit flex-row justify-center container'>
-        <div className='w-[240px]'>
+      <div className='flex w-full flex-row justify-center'>
+        <div className='flex-1'>
           <Input
             type='search'
             placeholder='Search for Courses or Professors'
             onChange={(e) => {
               console.log(e.target.value)
               setSearchQuery(e.target.value)}}
+            className='bg-white'
           />
         </div>
         <div>
