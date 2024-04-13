@@ -10,6 +10,9 @@ export default function Index(): React.ReactElement {
       </div>
       <div className="relative z-10">
         <SearchBar />
+        <div>
+          <h1 className="text-lg font-normal italic">Plan your courses • Read course and professor reviews • Find classes</h1>
+        </div>
       </div>
     </div>
   );
