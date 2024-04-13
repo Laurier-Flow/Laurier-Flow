@@ -7,6 +7,8 @@ import { cookies, headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { instructorInfoDBResponse } from "../instructor/InstructorInfo";
+import { fetchUser } from "@/utils/supabase/authActions";
+import Header from "@/components/Header";
 
 export interface courseInfoDBResponseExplore {
     course_code: string,
@@ -195,6 +197,7 @@ export default async function ExplorePage() {
 
     const cookieStore = cookies();
     const supabase = createClient(cookieStore)
+    const user = await fetchUser();
 
     const [courses, instructors] = await Promise.all([
         getCourses(supabase, currentTermServer, nextTermServer),
@@ -202,8 +205,11 @@ export default async function ExplorePage() {
     ]);
 
     return (
-        <Suspense fallback={<div className="w-full h-full"><Spinner /></div>}>
-            <Body currentTerm={currentTerm} nextTerm={nextTerm} courses={courses} instructors={instructors} />
-        </Suspense>
+        <>
+            <Header user={user} />
+            <Suspense fallback={<div className="w-full h-full"><Spinner /></div>}>
+                <Body currentTerm={currentTerm} nextTerm={nextTerm} courses={courses} instructors={instructors} />
+            </Suspense>
+        </>
     );
 }

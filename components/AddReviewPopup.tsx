@@ -2,7 +2,6 @@
 import { User } from '@supabase/supabase-js';
 import React, { useRef, useEffect, useState } from 'react';
 import { handleCourseReviewSubmit, handleInstructorReviewSubmit } from '@/app/course/AddReviewAction';
-import Spinner from "@/components/Spinner";
 
 export default function AddReviewPopup({
     onClose,
