@@ -8,11 +8,10 @@ export default function Index(): React.ReactElement {
       <div className="fixed inset-0 z-0">
         <BackgroundGradientAnimation />
       </div>
-      <div className="relative z-10">
+      <div className="relative z-10 max-w-6xl">
+        <h1 className="text-5xl font-bold leading-tight mb-6">Explore thousands of course and professor reviews from Laurier students</h1>
         <SearchBar />
-        <div>
-          <h1 className="text-lg font-normal italic">Plan your courses • Read course and professor reviews • Find classes</h1>
-        </div>
+        <h1 className="text-lg font-normal italic mt-6">Plan your courses • Read course and professor reviews • Find classes</h1>
       </div>
     </div>
   );
