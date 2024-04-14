@@ -120,7 +120,7 @@ async function CourseRequisites({ supabase, courseName }: { supabase: SupabaseCl
             <div className="mt-8">
                 <h1 className="text-xl">{courseData[0].course_code} Leads To</h1>
                 <div className="pt-2">
-                    {leadsTo.length > 0 ? (
+                    {leadsTo && leadsTo.length > 0 ? (
                         leadsTo.map((courseName: string, index: any) => (
                             <React.Fragment key={index}>
                                 <b>
