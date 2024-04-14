@@ -14,33 +14,23 @@ import { useEffect, useState } from "react";
 export default function RootLayout({
     children,
 }: {
-    children: React.ReactNode;
-}): React.ReactElement {
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        setLoading(false);
-    }, []);
-
-    return (
-        <html lang="en">
-            <body className="bg-background text-foreground w-full h-full flex flex-col">
-                {loading ? (
-                    <LoadingSpinner loading={loading} />
-                ) : (
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="system"
-                        enableSystem
-                        disableTransitionOnChange>
-                        <Header />
-                        <main className="justify-center w-full min-h-[100dvh]">
-                            {children}
-                        </main>
-                        <Footer />
-                    </ThemeProvider>
-                )}
-            </body>
-        </html>
-    );
+  children: React.ReactNode;
+}): Promise<React.ReactElement> {
+  return (
+    <html lang="en">
+      <body className="bg-slate-50 dark:bg-background text-foreground h-screen flex flex-col">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <main className="flex grow justify-start items-center flex-col">
+            {children}
+          </main>
+          <Footer />
+        </ThemeProvider>
+      </body> 
+    </html>
+  );
 }

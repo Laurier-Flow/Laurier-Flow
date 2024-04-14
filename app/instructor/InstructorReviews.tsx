@@ -16,7 +16,7 @@ async function getInstructorReviews(supabase: SupabaseClient<any, "public", any>
         const { data, error } = await supabase
             .from('instructor_reviews')
             .select()
-            .eq('instructor_fk', instructorName)
+            .eq('instructor_name_fk', instructorName)
 
         let reviews: Record<string, instructorReview[]> = {}
 

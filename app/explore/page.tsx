@@ -1,186 +1,215 @@
-"use client";
+import Spinner from "@/components/Spinner";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+import { getCurrentTerm, getNextTerm } from "../course/CourseSchedule";
+import Body from "./body";
+import { cookies, headers } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { instructorInfoDBResponse } from "../instructor/InstructorInfo";
+import { fetchUser } from "@/utils/supabase/authActions";
+import Header from "@/components/Header";
 
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  getKeyValue,
-  Spinner,
-} from "@nextui-org/react";
-import { useAsyncList } from "@react-stately/data";
-import dynamic from "next/dynamic";
-import { useState, useMemo, useEffect } from "react";
-const GPACalculator = dynamic(() => import("../../components/GPACalculator"), {
-  ssr: false,
-});
-
-interface Intructor {
-  name: string;
-  height: string;
-  mass: string;
-  birth_year: string;
+export interface courseInfoDBResponseExplore {
+    course_code: string,
+    total_reviews: number,
+    easy: number,
+    useful: number,
+    liked: number,
+    course_title: string,
+    isOfferedThisTerm: boolean,
+    isOfferedNextTerm: boolean
 }
 
-interface Course {
-  name: string;
-  height: string;
-  mass: string;
-  birth_year: string;
-  hair_color: string;
+export interface instructorInfoDBResponseExplore {
+    instructor_name: string,
+    total_reviews: number,
+    clear: number,
+    engaging: number,
+    liked: number,
+    coursesTaught: string[]
 }
 
-export default function Explore() {
-  const [filterValue, setFilterValue] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [showCoursesList, setShowCoursesList] = useState(true);
-  const [showProfList, setShowProfList] = useState(false);
+interface courseOffering {
+    isOfferedThisTerm: boolean;
+    isOfferedNextTerm: boolean;
+}
 
-  let courses_list = useAsyncList({
-    async load({ signal }) {
-      let res = await fetch("https://swapi.py4e.com/api/people/?search", {
-        signal,
-      });
-      let json = await res.json();
-      setIsLoading(false);
+interface courseOfferingsMap {
+    [key: string]: courseOffering;
+}
 
-      return {
-        items: json.results,
-      };
-    },
-    async sort({ items, sortDescriptor }) {
-      return {
-        items: items.sort((a: any, b: any) => {
-          let first = a[sortDescriptor.column as keyof Course];
-          let second = b[sortDescriptor.column as keyof Course];
-          let cmp =
-            (parseInt(first) || first) < (parseInt(second) || second) ? -1 : 1;
+async function getCourses(supabase: SupabaseClient, currentTerm: string, nextTerm: string): Promise<courseInfoDBResponseExplore[]> {
+    let sectionsPage = 0;
+    const limit = 1000;
+    let hasMoreSections = true;
+    let sectionsData: any[] = []; // Consider defining a more specific type for your data structure
+    const courseOfferingsMap: courseOfferingsMap = {};
 
-          if (sortDescriptor.direction === "descending") {
-            cmp *= -1;
-          }
+    // Fetch sections and map course offerings to terms
+    try {
+        while (hasMoreSections) {
+            const { data, error } = await supabase
+                .from('sections')
+                .select('course_code_fk, term')
+                .in('term', [currentTerm, nextTerm])
+                .range(sectionsPage * limit, (sectionsPage + 1) * limit - 1);
 
-          return cmp;
-        }),
-      };
-    },
-  });
+            if (error) {
+                throw new Error(error.message);
+            }
 
-  let prof_list = useAsyncList({
-    async load({ signal }) {
-      let res = await fetch("https://swapi.py4e.com/api/people/?search", {
-        signal,
-      });
-      let json = await res.json();
-      setIsLoading(false);
+            data.forEach(({ course_code_fk, term }) => {
+                if (!courseOfferingsMap[course_code_fk]) {
+                    courseOfferingsMap[course_code_fk] = { isOfferedThisTerm: false, isOfferedNextTerm: false };
+                }
 
-      return {
-        items: json.results,
-      };
-    },
-    async sort({ items, sortDescriptor }) {
-      return {
-        items: items.sort((a: any, b: any) => {
-          let first = a[sortDescriptor.column as keyof Intructor];
-          let second = b[sortDescriptor.column as keyof Intructor];
-          let cmp =
-            (parseInt(first) || first) < (parseInt(second) || second) ? -1 : 1;
+                courseOfferingsMap[course_code_fk].isOfferedThisTerm ||= term === currentTerm;
+                courseOfferingsMap[course_code_fk].isOfferedNextTerm ||= term === nextTerm;
+            });
 
-          if (sortDescriptor.direction === "descending") {
-            cmp *= -1;
-          }
-
-          return cmp;
-        }),
-      };
-    },
-  });
-
-  return (
-    <div className="w-8/12 bg-center *:py-2 mt-5">
-      <h1 className="text-3xl py-5 font-bold underline mt-5">
-        View all courses and professors
-      </h1>
-      <div className="mt-5">
-        <GPACalculator title="GPA Calculator" />
-        <button
-          type="button"
-          className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium  text-lg px-10 py-2.5 text-center me-2 mb-2"
-          onClick={() => {
-            setShowCoursesList(true);
-            setShowProfList(false);
-          }}>
-          Courses
-        </button>
-        <button
-          type="button"
-          className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium  text-lg px-10 py-2.5 text-center me-2 mb-2"
-          onClick={() => {
-            setShowCoursesList(false);
-            setShowProfList(true);
-          }}>
-          Instructors
-        </button>
-      </div>
-      <Table
-        sortDescriptor={
-          showCoursesList
-            ? courses_list.sortDescriptor
-            : prof_list.sortDescriptor
+            hasMoreSections = data.length === limit;
+            sectionsPage++;
         }
-        onSortChange={showCoursesList ? courses_list.sort : prof_list.sort}
-        classNames={{
-          table: "min-h-[400px]",
-        }}>
-        {showCoursesList ? (
-          <TableHeader>
-            <TableColumn key="name" allowsSorting>
-              Name
-            </TableColumn>
-            <TableColumn key="height" allowsSorting>
-              Height
-            </TableColumn>
-            <TableColumn key="mass" allowsSorting>
-              Mass
-            </TableColumn>
-            <TableColumn key="birth_year" allowsSorting>
-              Birth year
-            </TableColumn>
-            <TableColumn key="birth_year" allowsSorting>
-              Hair Color
-            </TableColumn>
-          </TableHeader>
-        ) : (
-          <TableHeader>
-            <TableColumn key="name" allowsSorting>
-              Name
-            </TableColumn>
-            <TableColumn key="height" allowsSorting>
-              Height
-            </TableColumn>
-            <TableColumn key="mass" allowsSorting>
-              Mass
-            </TableColumn>
-            <TableColumn key="birth_year" allowsSorting>
-              Birth year
-            </TableColumn>
-          </TableHeader>
-        )}
-        <TableBody
-          items={showCoursesList ? courses_list.items : prof_list.items}
-          isLoading={isLoading}
-          loadingContent={<Spinner label="Loading..." />}>
-          {(item: any) => (
-            <TableRow key={item.name}>
-              {(columnKey: any) => (
-                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
-  );
+    } catch (error) {
+        console.error("Error fetching sections:", error);
+        return [];
+    }
+
+    let allCourses: courseInfoDBResponseExplore[] = [];
+    let coursesPage = 0;
+    let hasMoreCourses = true;
+
+    // Fetch courses and enrich with offerings data
+    try {
+        while (hasMoreCourses) {
+            const { data, error } = await supabase
+                .from('courses')
+                .select('*')
+                .range(coursesPage * limit, (coursesPage + 1) * limit - 1);
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            const processedCourses: courseInfoDBResponseExplore[] = data.map(course => ({
+                ...course,
+                isOfferedThisTerm: courseOfferingsMap[course.course_code]?.isOfferedThisTerm || false,
+                isOfferedNextTerm: courseOfferingsMap[course.course_code]?.isOfferedNextTerm || false,
+                easy: course.total_reviews > 0 ? Math.round((course.easy / course.total_reviews) * 20) : null,
+                useful: course.total_reviews > 0 ? Math.round((course.useful / course.total_reviews) * 20) : null,
+                liked: course.total_reviews > 0 ? Math.round((course.liked / course.total_reviews) * 100) : null,
+            }));
+
+            allCourses.push(...processedCourses);
+            hasMoreCourses = data.length === limit;
+            coursesPage++;
+        }
+    } catch (error) {
+        console.error("Error fetching courses:", error);
+        return [];
+    }
+
+    return allCourses;
+}
+
+async function getInstructors(supabase: SupabaseClient) {
+    let hasMoreSections = true;
+    let sectionsPage = 0;
+    const limit = 1000;
+    const coursesTaughtMap = new Map();
+
+    try {
+        while (hasMoreSections) {
+            const { data, error } = await supabase
+                .from('sections')
+                .select('course_code_fk, instructor_name_fk')
+                .range(sectionsPage * limit, (sectionsPage + 1) * limit - 1);
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            data.forEach(({ course_code_fk, instructor_name_fk }) => {
+                const courses = coursesTaughtMap.get(instructor_name_fk) || new Set();
+                courses.add(course_code_fk);
+                coursesTaughtMap.set(instructor_name_fk, courses);
+            });
+
+            if (data.length < limit) {
+                hasMoreSections = false;
+            } else {
+                sectionsPage++;
+            }
+        }
+    } catch (error) {
+        console.error("Failed to fetch sections:", error);
+        return [];
+    }
+
+    let hasMoreInstructors = true;
+    let instructorPage = 0;
+    let allInstructors = [];
+
+    try {
+        while (hasMoreInstructors) {
+            const { data, error } = await supabase
+                .from('instructors')
+                .select('*')
+                .range(instructorPage * limit, (instructorPage + 1) * limit - 1);
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            const processedInstructors = data.map(instructor => ({
+                ...instructor,
+                clear: instructor.total_reviews > 0 ? Math.round((instructor.clear / instructor.total_reviews) * 20) : 0,
+                engaging: instructor.total_reviews > 0 ? Math.round((instructor.engaging / instructor.total_reviews) * 20) : 0,
+                liked: instructor.total_reviews > 0 ? Math.round((instructor.liked / instructor.total_reviews) * 100) : 0,
+                coursesTaught: Array.from(coursesTaughtMap.get(instructor.instructor_name) || [])
+            }));
+
+            allInstructors.push(...processedInstructors);
+
+            if (data.length < limit) {
+                hasMoreInstructors = false;
+            } else {
+                instructorPage++;
+            }
+        }
+    } catch (error) {
+        console.error("Failed to fetch instructors:", error);
+        return [];
+    }
+
+    return allInstructors;
+}
+
+
+export default async function ExplorePage() {
+    const [currentTerm, nextTerm, currentTermServer, nextTermServer] = await Promise.all([
+        getCurrentTerm(true),
+        getNextTerm(true),
+        getCurrentTerm(false),
+        getNextTerm(false),
+    ]);
+
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore)
+    const user = await fetchUser();
+
+    const [courses, instructors] = await Promise.all([
+        getCourses(supabase, currentTermServer, nextTermServer),
+        getInstructors(supabase),
+    ]);
+
+    return (
+        <>
+            <Header user={user} />
+            <Suspense fallback={<div className="w-full h-full"><Spinner /></div>}>
+                <Body currentTerm={currentTerm} nextTerm={nextTerm} courses={courses} instructors={instructors} />
+            </Suspense>
+        </>
+    );
 }

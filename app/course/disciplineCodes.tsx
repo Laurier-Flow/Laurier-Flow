@@ -1,8 +1,8 @@
 export const disciplineCodes: { [key: string]: string } = {
     "Arabic": "AB",
-    "Faculty of Arts": "AF",
+    "Arts Faculty": "AF",
     "Anthropology": "AN",
-    "Archaeology": "AR",
+    "Archaeology and Heritage Studies": "AR",
     "Astronomy": "AS",
     "Foundations": "BF",
     "Biology": "BI",
@@ -17,7 +17,7 @@ export const disciplineCodes: { [key: string]: string } = {
     "Economics": "EC",
     "Education minor": "EM",
     "English": "EN",
-    "Environmental Studies": "ES",
+    "Environmental Science": "ES",
     "Bachelor of Education": "EU",
     "French": "FR",
     "Film Studies": "FS",
@@ -62,7 +62,16 @@ export const disciplineCodes: { [key: string]: string } = {
     "Statistics": "ST",
     "Sociology": "SY",
     "Spanish": "SP",
-    "University Interdisciplinary": "UU",
+    "Interdisciplinary": "UU",
     "User Experience Design": "UX",
-    "Youth and Children's Studies": "YC"
+    "Youth and Children's Studies": "YC",
+    "Data Science": "DATA",
+    "Digital Media and Journalism": "DMJN",
+    "Entrepreneurship": "ENTR",
+    "Geography and Environmental Studies": "GESC",
+    "Global Crime and Justice": "UNDC",
+    "International Education Studies": "INED",
+    "Labour Studies and Career Development": "WORK",
+    "Public Safety": "SAFE",
+    "Social and Environmental Justice": "SOJE"
 }

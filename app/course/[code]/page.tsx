@@ -9,6 +9,9 @@ import { Suspense } from "react";
 import CourseSchedule from "../CourseSchedule";
 import CourseRequisites from "../CourseRequisites";
 import Spinner from "@/components/Spinner";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import { fetchUser } from "@/utils/supabase/authActions";
 const AddReview = dynamic(() => import("../AddReview"), { ssr: false });
 
 export interface days {
@@ -36,10 +39,12 @@ export interface section {
 async function CoursePage({ params }: { params: { code: string } }) {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    let courseCode = params.code.toUpperCase();
-    courseCode = courseCode.slice(0, 2) + " " + courseCode.slice(2);
+    let courseCode = decodeURIComponent(params.code.toUpperCase())
+    const user = await fetchUser();
 
     return (
+        <>
+        <Header user={user} />
         <Suspense fallback={<div className="w-full h-full"><Spinner /></div>}>
             <div className="hidden lg:inline min-w-full">
                 <CourseInfo supabase={supabase} courseName={courseCode} />
@@ -61,6 +66,7 @@ async function CoursePage({ params }: { params: { code: string } }) {
                 </div>
             </div>
         </Suspense>
+        </>
     );
 }
 
