@@ -69,12 +69,27 @@ async function getPrerequisites(subjectCode: string, courseNumber: string) {
     }
 }
 
+async function getLeadsTo(courseName: string, supabase: SupabaseClient<any, "public", any>) {
+    const { data, error } = await supabase
+        .from('courses')
+        .select('leads_to')
+        .eq('course_code', courseName)
+
+    if (!data || data?.length === 0) {
+        return []
+    } else {
+        return data[0].leads_to
+    }
+}
+
 async function CourseRequisites({ supabase, courseName }: { supabase: SupabaseClient<any, "public", any>, courseName: string }) {
-    const subjectCode = courseName.slice(0, 2);
-    const courseNumber = courseName.slice(3);
+    const parts = courseName.split(' ')
+    const subjectCode = parts[0];
+    const courseNumber = parts[1];
     const requisites = await getPrerequisites(subjectCode, courseNumber)
     const prerequisites: prerequisite[] = requisites.prerequisites;
     const restrictions: restriction[] = requisites.restrictions;
+    const leadsTo = await getLeadsTo(courseName, supabase)
     const courseData: courseInfoDBResponse[] = await getCourseData(supabase, courseName);
 
     return (
@@ -100,6 +115,25 @@ async function CourseRequisites({ supabase, courseName }: { supabase: SupabaseCl
                         'No Prerequisite Information Available'
                     )}
                 </h2>
+            </div>
+
+            <div className="mt-8">
+                <h1 className="text-xl">{courseData[0].course_code} Leads To</h1>
+                <div className="pt-2">
+                    {leadsTo.length > 0 ? (
+                        leadsTo.map((courseName: string, index: any) => (
+                            <React.Fragment key={index}>
+                                <b>
+                                    <Link className="underline text-black dark:text-white underline-offset-2" href={`/course/${courseName}`}>
+                                        {courseName}
+                                    </Link>
+                                </b>{index === leadsTo.length ? ('') : (', ')}
+                            </React.Fragment>
+                        ))
+                    ) : (
+                        'No Leads To Information Available'
+                    )}
+                </div>
             </div>
 
             <div className="mt-8">
