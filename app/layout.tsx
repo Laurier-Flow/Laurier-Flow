@@ -2,13 +2,20 @@ import "@/app/globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { fetchUser } from "@/utils/supabase/authActions";
+import { CirclesWithBar } from "react-loader-spinner";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { useEffect, useState } from "react";
 
-export default async function RootLayout({
-  children,
+// export const metadata = {
+//   title: "Laurier Flow",
+//   description: "The best way to plan your Laurier schedule",
+// };
+
+export default function RootLayout({
+    children,
 }: {
   children: React.ReactNode;
-}): Promise<React.ReactElement> {
+}) {
   return (
     <html lang="en">
       <body className="bg-slate-50 dark:bg-background text-foreground h-screen flex flex-col">
