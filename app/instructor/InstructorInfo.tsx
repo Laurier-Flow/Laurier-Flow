@@ -46,8 +46,10 @@ async function InstructorInfo({
   supabase: SupabaseClient<any, "public", any>,
   instructorName: string
 }) {
-  const instructorData: instructorInfoDBResponse[] = await getInstructorData(supabase, instructorName);
-  const currentCourses = await getCurrentCourses(supabase, instructorName)
+  const [instructorData, currentCourses] = await Promise.all([
+    getInstructorData(supabase, instructorName),
+    getCurrentCourses(supabase, instructorName)
+  ]);
 
   return (
     <div className="md:bg-white md:dark:bg-slate-950">
