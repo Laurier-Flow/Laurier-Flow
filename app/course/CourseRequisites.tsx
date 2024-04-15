@@ -86,11 +86,13 @@ async function CourseRequisites({ supabase, courseName }: { supabase: SupabaseCl
     const parts = courseName.split(' ')
     const subjectCode = parts[0];
     const courseNumber = parts[1];
-    const requisites = await getPrerequisites(subjectCode, courseNumber)
+    const [requisites, leadsTo, courseData] = await Promise.all([
+        getPrerequisites(subjectCode, courseNumber),
+        getLeadsTo(courseName, supabase),
+        getCourseData(supabase, courseName)
+    ]);
     const prerequisites: prerequisite[] = requisites.prerequisites;
     const restrictions: restriction[] = requisites.restrictions;
-    const leadsTo = await getLeadsTo(courseName, supabase)
-    const courseData: courseInfoDBResponse[] = await getCourseData(supabase, courseName);
 
     return (
         <div className="flex flex-col p-4 lg:border-l lg:border-gray-300 lg:dark:border-gray-800 lg:pl-8 lg:w-1/3">
@@ -127,7 +129,7 @@ async function CourseRequisites({ supabase, courseName }: { supabase: SupabaseCl
                                     <Link className="underline text-black dark:text-white underline-offset-2" href={`/course/${courseName}`}>
                                         {courseName}
                                     </Link>
-                                </b>{index === leadsTo.length ? ('') : (', ')}
+                                </b>{index === (leadsTo.length - 1) ? ('') : (', ')}
                             </React.Fragment>
                         ))
                     ) : (
