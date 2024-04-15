@@ -1,7 +1,7 @@
 'use server'
 
 import axios from 'axios';
-import { SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient, User } from '@supabase/supabase-js';
 import * as cheerio from 'cheerio';
 import dynamic from 'next/dynamic';
 const ScheduleTable = dynamic(() => import('./ScheduleTab'), { ssr: false });
@@ -25,7 +25,9 @@ export interface section {
   enrollmentMax: string | undefined | null,
   beginTime: string | undefined | null,
   endTime: string | undefined | null,
-  days: days | null
+  days: days | null,
+  location: string | undefined | null,
+  instructor: string | undefined | null
 }
 
 export interface sections {
@@ -60,7 +62,7 @@ async function fetchSectionData(sectionData: sectionResponseDB) {
   }
 }
 
-export async function getCourseSections(nextTerm: string, currentTerm: string, previousTerm: string, filterCol: string, colValue: string, supabase: SupabaseClient<any, "public", any>) {
+export async function getCourseSections(nextTerm: string, currentTerm: string, previousTerm: string, filterCol: string, colValue: string, supabase: SupabaseClient<any, "public", any>, user: User | null) {
   const { data: sectionData, error: sectionError } = await supabase
     .from('sections')
     .select()
@@ -103,6 +105,14 @@ export async function getCourseSections(nextTerm: string, currentTerm: string, p
         saturday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.saturday,
         sunday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.sunday
       };
+      const location = (user ? element.facultyMeetingTimes.fmt[0]?.meetingTime?.room : null)
+
+      let instructor = null
+      if (filterCol === 'instructor_name_fk') {
+        instructor = (user ? element.sectionData.course_code_fk : null)
+      } else {
+        instructor = (user ? element.sectionData.instructor_name_fk : null)
+      }
 
       let c: section = {
         crn: element.sectionData.course_registration_number.toString(),
@@ -113,7 +123,9 @@ export async function getCourseSections(nextTerm: string, currentTerm: string, p
         enrollmentMax: enrollmentMax,
         beginTime: beginTime,
         endTime: endTime,
-        days: days
+        days: days,
+        location: location,
+        instructor: instructor
       }
 
       if (element.sectionData.term == nextTerm) {
@@ -131,10 +143,12 @@ export async function getCourseSections(nextTerm: string, currentTerm: string, p
 
 async function CourseSchedule({
   supabase,
-  courseName
+  courseName,
+  user
 }: {
   supabase: SupabaseClient<any, "public", any>,
-  courseName: string
+  courseName: string,
+  user: User | null
 }) {
   const [nextTerm, previousTerm, currentTerm, nextTermData, currentTermData, previousTermData] = await Promise.all([
     getNextTerm(true),
@@ -145,7 +159,7 @@ async function CourseSchedule({
     getPreviousTerm(false)
   ]);
 
-  const termSections = await getCourseSections(nextTermData, currentTermData, previousTermData, 'course_code_fk', courseName, supabase);
+  const termSections = await getCourseSections(nextTermData, currentTermData, previousTermData, 'course_code_fk', courseName, supabase, user);
   
   const currentTermSections: section[] = termSections['currentTerm']
   const previousTermSections: section[] = termSections['previousTerm']
@@ -154,7 +168,7 @@ async function CourseSchedule({
   return (
     <div className="flex flex-col p-4 lg:mt-8">
       <h1 className="text-xl">Course Schedule</h1>
-      <ScheduleTable nextTerm={nextTerm} previousTerm={previousTerm} currentTerm={currentTerm} currentTermSections={currentTermSections} previousTermSections={previousTermSections} nextTermSections={nextTermSections} professor={false} />
+      <ScheduleTable nextTerm={nextTerm} previousTerm={previousTerm} currentTerm={currentTerm} currentTermSections={currentTermSections} previousTermSections={previousTermSections} nextTermSections={nextTermSections} professor={false} user={user} />
     </div>
   );
 }

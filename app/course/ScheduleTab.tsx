@@ -4,69 +4,126 @@ import { useState } from "react";
 import { section } from "./CourseSchedule";
 import DaysDisplay from "./DaysDisplay";
 import React from "react";
+import Link from "next/link";
+import { User } from "@supabase/supabase-js";
+import { useManageBodyScroll, usePopupManager } from "@/components/Header";
+import LoginPopup from "@/components/LoginPopup";
+import SignUpPopup from "@/components/SignUpPopup";
 
 function ScheduleTab({
     activeTab,
     tabNumber,
     termSections,
-    professor
+    professor,
+    user
 }: {
     activeTab: number,
     tabNumber: number,
     termSections: section[],
-    professor: boolean
+    professor: boolean,
+    user: User | null
 }) {
+    const [showAddReviewPopup, setShowAddReviewPopup] = useState<boolean>(false);
+
+    const {
+        showLoginPopup,
+        toggleLoginPopup,
+        showSignUpPopup,
+        toggleSignUpPopup,
+    } = usePopupManager();
+
+    useManageBodyScroll(showLoginPopup || showSignUpPopup || showAddReviewPopup);
+
     return (
-        <div id="equal-width-elements-1" className={activeTab === tabNumber ? '' : 'hidden'} role="tabpanel" aria-labelledby="equal-width-elements-item-1">
-            <div className="flex flex-col">
-                <div className="-m-1.5 overflow-x-auto">
-                    <div className="p-1.5 min-w-full inline-block align-middle">
-                        <div className="overflow-hidden">
-                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">CRN</th>
-                                        <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Type</th>
-                                        <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Section</th>
-                                        <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Campus</th>
-                                        <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Enrolled</th>
-                                        <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Time</th>
-                                        <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Date</th>
-                                        <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Location</th>
-                                        {professor ? (
-                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course</th>
-                                        ) : (
-                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Instructor</th>
-                                        )}
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                                    {termSections.length ? (termSections.map((item: section) => (
+        <>
+            <div id="equal-width-elements-1" className={activeTab === tabNumber ? '' : 'hidden'} role="tabpanel" aria-labelledby="equal-width-elements-item-1">
+                <div className="flex flex-col">
+                    <div className="-m-1.5 overflow-x-auto">
+                        <div className="p-1.5 min-w-full inline-block align-middle">
+                            <div className="overflow-hidden">
+                                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                    <thead>
                                         <tr>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.crn}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.type}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.section}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.campus}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.enrollment + '/' + item.enrollmentMax}</td>
-                                            {item.beginTime ? (
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{convertTo12HourFormat(item.beginTime) + ' - ' + convertTo12HourFormat(item.endTime)}</td>
-                                            ) : (<td></td>)}
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200"><DaysDisplay days={item.days} /></td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200"></td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200"></td>
+                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">CRN</th>
+                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Type</th>
+                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Section</th>
+                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Campus</th>
+                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Enrolled</th>
+                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Time</th>
+                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Date</th>
+                                            <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Location</th>
+                                            {professor ? (
+                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Course</th>
+                                            ) : (
+                                                <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Instructor</th>
+                                            )}
                                         </tr>
-                                    ))) : (
-                                        <tr>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">No Sections Found</td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                        {professor ? (<tr><td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                                            <button className="underline" onClick={toggleLoginPopup}>
+                                                Login to View
+                                            </button>
+                                        </td></tr>) : (
+                                            termSections.length ? (termSections.map((item: section, index) => (
+                                                <tr key={index} >
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.crn}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.type}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.section}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.campus}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.enrollment + '/' + item.enrollmentMax}</td>
+                                                    {item.beginTime ? (
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{convertTo12HourFormat(item.beginTime) + ' - ' + convertTo12HourFormat(item.endTime)}</td>
+                                                    ) : (<td></td>)}
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200"><DaysDisplay days={item.days} /></td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{(index === 0 && !user) ? (
+                                                        <button className="underline" onClick={toggleLoginPopup}>
+                                                            Login to View
+                                                        </button>
+                                                    ) : (
+                                                        <h1>
+                                                            {item.location}
+                                                        </h1>
+                                                    )}</td>
+                                                    <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200 ${item.instructor ? ('underline') : (null)}`}>{(index === 0 && !user) ? (
+                                                        <button className="underline" onClick={toggleLoginPopup}>
+                                                            Login to View
+                                                        </button>
+                                                    ) : (
+                                                        <Link href={`/${professor ? ('course') : ('instructor')}/${item.instructor?.replace(/\s+/g, '%20')}`}>{item.instructor}</Link>
+                                                    )}</td>
+                                                </tr>
+                                            ))) : (
+                                                <tr>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">No Sections Found</td>
+                                                </tr>
+                                            ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            {showLoginPopup && !showSignUpPopup && (
+                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 flex items-center justify-center z-50">
+                    <LoginPopup
+                        searchParams={{ message: '' }}
+                        onClose={toggleLoginPopup}
+                        toggleSignUp={toggleSignUpPopup}
+                    />
+                </div>
+            )}
+            {showSignUpPopup && !showLoginPopup && (
+                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 flex items-center justify-center z-50">
+                    <SignUpPopup
+                        searchParams={{ message: '' }}
+                        onClose={toggleSignUpPopup}
+                        toggleLogIn={toggleLoginPopup}
+                    />
+                </div>
+            )}
+        </>
     )
 }
 
@@ -87,7 +144,7 @@ function convertTo12HourFormat(timeString: string | null | undefined) {
     }
 }
 
-export default function ScheduleTable({ nextTerm, currentTerm, previousTerm, nextTermSections, currentTermSections, previousTermSections, professor }: { nextTerm: string, currentTerm: string, previousTerm: string, nextTermSections: section[], currentTermSections: section[], previousTermSections: section[], professor: boolean }) {
+export default function ScheduleTable({ nextTerm, currentTerm, previousTerm, nextTermSections, currentTermSections, previousTermSections, professor, user }: { nextTerm: string, currentTerm: string, previousTerm: string, nextTermSections: section[], currentTermSections: section[], previousTermSections: section[], professor: boolean, user: User | null }) {
     const [activeTab, setActiveTab] = useState(1);
     const handleTabClick = (tabNumber: number) => {
         setActiveTab(tabNumber);
@@ -107,9 +164,9 @@ export default function ScheduleTable({ nextTerm, currentTerm, previousTerm, nex
                 </button>
             </nav>
 
-            <ScheduleTab termSections={nextTermSections} activeTab={activeTab} tabNumber={1} professor={professor} />
-            <ScheduleTab termSections={currentTermSections} activeTab={activeTab} tabNumber={2} professor={professor} />
-            <ScheduleTab termSections={previousTermSections} activeTab={activeTab} tabNumber={3} professor={professor} />
+            <ScheduleTab termSections={nextTermSections} activeTab={activeTab} tabNumber={1} professor={professor} user={user} />
+            <ScheduleTab termSections={currentTermSections} activeTab={activeTab} tabNumber={2} professor={professor} user={user} />
+            <ScheduleTab termSections={previousTermSections} activeTab={activeTab} tabNumber={3} professor={professor} user={user} />
         </>
     )
 }
