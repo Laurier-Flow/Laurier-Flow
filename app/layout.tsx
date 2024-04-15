@@ -15,7 +15,7 @@ export default function RootLayout({
     children,
 }: {
   children: React.ReactNode;
-}): Promise<React.ReactElement> {
+}) {
   return (
     <html lang="en">
       <body className="bg-slate-50 dark:bg-background text-foreground h-screen flex flex-col">
