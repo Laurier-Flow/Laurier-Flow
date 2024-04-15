@@ -136,10 +136,19 @@ async function CourseSchedule({
   supabase: SupabaseClient<any, "public", any>,
   courseName: string
 }) {
-  const nextTerm = await getNextTerm(true)
-  const previousTerm = await getPreviousTerm(true)
-  const currentTerm = await getCurrentTerm(true)
-  const termSections: sections = await getCourseSections(await getNextTerm(false), await getCurrentTerm(false), await getPreviousTerm(false), 'course_code_fk', courseName, supabase)
+  const [nextTerm, previousTerm, currentTerm] = await Promise.all([
+    getNextTerm(true),
+    getPreviousTerm(true),
+    getCurrentTerm(true)
+  ]);
+
+  const [nextTermData, currentTermData, previousTermData] = await Promise.all([
+    getNextTerm(false),
+    getCurrentTerm(false),
+    getPreviousTerm(false)
+  ]);
+  const termSections = await getCourseSections(nextTermData, currentTermData, previousTermData, 'course_code_fk', courseName, supabase);
+  
   const currentTermSections: section[] = termSections['currentTerm']
   const previousTermSections: section[] = termSections['previousTerm']
   const nextTermSections: section[] = termSections['nextTerm']
