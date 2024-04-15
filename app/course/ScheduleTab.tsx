@@ -60,7 +60,7 @@ function ScheduleTab({
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                                        {professor ? (<tr><td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                                        {professor && !user ? (<tr><td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
                                             <button className="underline" onClick={toggleLoginPopup}>
                                                 Login to View
                                             </button>
