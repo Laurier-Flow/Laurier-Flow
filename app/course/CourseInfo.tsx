@@ -48,8 +48,10 @@ async function CourseInfo({
 }) {
   const subjectCode = courseName.slice(0, 2);
   const courseNumber = courseName.slice(3);
-  const courseDescription = await getCourseDescription(subjectCode, courseNumber);
-  const courseData: courseInfoDBResponse[] = await getCourseData(supabase, courseName);
+  const [courseDescription, courseData] = await Promise.all([
+    getCourseDescription(subjectCode, courseNumber),
+    getCourseData(supabase, courseName)
+  ]);
 
   return (
     <div className="md:bg-white md:dark:bg-slate-950">
