@@ -42,7 +42,7 @@ export default function Index(): React.ReactElement {
 	}, []);
 
 	return (
-		<BackgroundGradientAnimation gradientBackgroundStart={isDarkMode ? 'rgb(2,6,23)' : 'rgb(255,255,255)'} gradientBackgroundEnd={isDarkMode ? 'rgb(3,7,18)' : 'rgb(248,250,252)'} firstColor={isDarkMode ? '65,18,124' : '255,237,103'} secondColor={isDarkMode ? '65,18,124' : '255,237,103'} thirdColor={isDarkMode ? '65,18,124' : '255,237,103'} fourthColor={isDarkMode ? '65,18,124' : '255,237,103'} fifthColor={isDarkMode ? '65,18,124' : '255,237,103'} pointerColor={isDarkMode ? '65,18,124' : '255,237,103'}>
+		<BackgroundGradientAnimation gradientBackgroundStart='var(--gradient-start)' gradientBackgroundEnd='var(--gradient-end)' firstColor='var(--bubble)' secondColor='var(--bubble)' thirdColor='var(--bubble)' fourthColor='var(--bubble)' fifthColor='var(--bubble)' pointerColor='var(--bubble)'>
 			<div className=' flex flex-col justify-center items-center fixed inset-0 z-10'>
 				<div>
 					<TypewriterEffect
