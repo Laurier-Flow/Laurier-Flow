@@ -121,16 +121,16 @@ export default function SearchBar() {
 	}, [searchQuery])
 
   let searchBarStyle = 'bg-background text-base'
-  let searchResultStyle = 'absolute bg-background text-foreground z-[1] w-full'
+  let searchResultStyle = 'absolute bg-background text-foreground z-[1] w-full text-base'
 
   if (courseResults.length !== 0 || profResults.length !== 0) {
-    searchBarStyle = 'bg-background rounded-b-none'
-    searchResultStyle = 'absolute bg-background text-foreground z-[1] w-full rounded-b-md ring-1'
+    searchBarStyle = 'bg-background rounded-b-none text-base'
+    searchResultStyle = 'absolute bg-background text-foreground z-[1] w-full rounded-b-md ring-1 text-base'
   }
 
 	return (
-		<div className='relative z-[1] block box-border w-full'>
-			<div className='relative block box-border w-full'>
+		<div className='relative z-[1] block box-border w-full text-base'>
+			<div className='relative block box-border w-full text-base'>
 				<Input
 					type='search'
 					placeholder='Search for courses, subjects or professors'
@@ -142,7 +142,7 @@ export default function SearchBar() {
 				/>
 			</div>
 			<div className={searchResultStyle}>
-				<ul className='bg-background text-foreground divide-y divide-{input}'>
+				<ul className='bg-background text-foreground divide-y divide-{input} text-base'>
 					{courseResults.map((course) => (
 						<CourseResultListItem params={course} />
 					))}
