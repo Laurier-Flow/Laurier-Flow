@@ -10,16 +10,16 @@ import {
 
 export default function Index(): React.ReactElement {
 	const homepageTitleWordArray = [
-		{ text: 'Explore', className: 'text-4xl text-foreground' },
-		{ text: 'thousands', className: 'text-4xl text-foreground' },
-		{ text: 'of', className: 'text-4xl text-foreground' },
-		{ text: 'course', className: 'text-4xl text-foreground' },
-		{ text: 'and', className: 'text-4xl text-foreground' },
-		{ text: 'professor', className: 'text-4xl text-foreground' },
-		{ text: 'reviews', className: 'text-4xl text-foreground' },
-		{ text: 'from', className: 'text-4xl text-foreground' },
-		{ text: 'Laurier', className: 'text-4xl text-foreground' },
-		{ text: 'students', className: 'text-4xl text-foreground' }
+		{ text: 'Explore', className: 'text-2xl md:text-4xl text-foreground' },
+		{ text: 'thousands', className: 'text-2xl md:text-4xl text-foreground' },
+		{ text: 'of', className: 'text-2xl md:text-4xl text-foreground' },
+		{ text: 'course', className: 'text-2xl md:text-4xl text-foreground' },
+		{ text: 'and', className: 'text-2xl md:text-4xl text-foreground' },
+		{ text: 'professor', className: 'text-2xl md:text-4xl text-foreground' },
+		{ text: 'reviews', className: 'text-2xl md:text-4xl text-foreground' },
+		{ text: 'from', className: 'text-2xl md:text-4xl text-foreground' },
+		{ text: 'Laurier', className: 'text-2xl md:text-4xl text-foreground' },
+		{ text: 'students', className: 'text-2xl md:text-4xl text-foreground' }
 	]
 
 	const [isDarkMode, setIsDarkMode] = useState(false);
@@ -43,20 +43,23 @@ export default function Index(): React.ReactElement {
 
 	return (
 		<BackgroundGradientAnimation gradientBackgroundStart='var(--gradient-start)' gradientBackgroundEnd='var(--gradient-end)' firstColor='var(--bubble)' secondColor='var(--bubble)' thirdColor='var(--bubble)' fourthColor='var(--bubble)' fifthColor='var(--bubble)' pointerColor='var(--bubble)'>
-			<div className=' flex flex-col justify-center items-center fixed inset-0 z-10'>
-				<div>
-					<TypewriterEffect
-						words={homepageTitleWordArray}
-						cursorClassName='h-10'
-					/>
-				</div>
-				<div className='max-w-6xl'>
-					<SearchBar />
-				</div>
+			<div className='flex flex-col justify-center items-center fixed inset-0 z-10 p-8'>
+				<div className='w-6xl'>
+					<div>
+						<TypewriterEffect
+							words={homepageTitleWordArray}
+							cursorClassName='md:h-10'
+						/>
+					</div>
 
-				<h1 className='text-lg font-normal italic mt-6'>
-					Plan your courses • Read course and professor reviews • Find classes
-				</h1>
+					<div className='pt-12'>
+						<SearchBar />
+					</div>
+
+					<h1 className='text-sm md:text-lg font-normal italic pt-4'>
+						Plan your courses • Read course and professor reviews • Find classes
+					</h1>
+				</div>
 			</div>
 		</BackgroundGradientAnimation>
 	)
