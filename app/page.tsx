@@ -44,7 +44,7 @@ export default function Index(): React.ReactElement {
 	return (
 		<BackgroundGradientAnimation gradientBackgroundStart='var(--gradient-start)' gradientBackgroundEnd='var(--gradient-end)' firstColor='var(--bubble)' secondColor='var(--bubble)' thirdColor='var(--bubble)' fourthColor='var(--bubble)' fifthColor='var(--bubble)' pointerColor='var(--bubble)'>
 			<div className='flex flex-col justify-center items-center fixed inset-0 z-10 p-8'>
-				<div className='w-6xl'>
+				<div className='max-w-5xl'>
 					<div>
 						<TypewriterEffect
 							words={homepageTitleWordArray}
