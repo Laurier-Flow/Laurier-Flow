@@ -16,7 +16,7 @@ export const BackgroundGradientAnimation = ({
   children,
   className,
   interactive = true,
-  containerClassName,
+  containerClassName
 }: {
   gradientBackgroundStart?: string;
   gradientBackgroundEnd?: string;
@@ -48,6 +48,7 @@ export const BackgroundGradientAnimation = ({
       "--gradient-background-end",
       gradientBackgroundEnd
     );
+
     document.body.style.setProperty("--first-color", firstColor);
     document.body.style.setProperty("--second-color", secondColor);
     document.body.style.setProperty("--third-color", thirdColor);

@@ -24,6 +24,9 @@
     --input: 220 13% 91%;
     --ring: 262.1 83.3% 57.8%;
     --radius: 1rem;
+    --gradient-start: rgb(255,255,255);
+    --gradient-end: rgb(248,250,252);
+    --bubble: 255,237,103;
   }
 
   .dark {
@@ -46,6 +49,9 @@
     --border: 215 27.9% 16.9%;
     --input: 215 27.9% 16.9%;
     --ring: 263.4 70% 50.4%;
+    --gradient-start: rgb(2,6,23);
+    --gradient-end: rgb(3,7,18);
+    --bubble: 65,18,124;
   }
 
   .component-absolute-center {
