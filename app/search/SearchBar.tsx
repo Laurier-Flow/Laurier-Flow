@@ -120,7 +120,7 @@ export default function SearchBar() {
 		}
 	}, [searchQuery])
 
-  let searchBarStyle = 'bg-background'
+  let searchBarStyle = 'bg-background text-base'
   let searchResultStyle = 'absolute bg-background text-foreground z-[1] w-full'
 
   if (courseResults.length !== 0 || profResults.length !== 0) {
