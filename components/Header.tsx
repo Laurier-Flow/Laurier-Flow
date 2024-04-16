@@ -70,9 +70,9 @@ export default function Header({ user }: { user: User | null }): React.ReactElem
     <>
       <header className="self-center sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 lg:max-w-6xl items-center">
-          <div className="mr-4 hidden md:flex md:flex-1">
-            <Link href="/" className="mr-6 flex items-center space-x-2">
-              <span className="hidden font-bold sm:inline-block">
+          <div className="mr-4 flex flex-1">
+            <Link href="/" className="hidden sm:flex mr-6 items-center space-x-2">
+              <span className="font-bold">
                 Laurier Flow
               </span>
             </Link>
