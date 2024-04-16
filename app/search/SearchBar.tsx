@@ -133,7 +133,7 @@ export default function SearchBar() {
 			<div className='relative block box-border w-full'>
 				<Input
 					type='search'
-					placeholder='Search for Courses or Professors'
+					placeholder='Search for courses, subjects or professors'
 					onChange={(e) => {
 						console.log(e.target.value)
 						setSearchQuery(e.target.value)
