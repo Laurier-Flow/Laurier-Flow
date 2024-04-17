@@ -28,7 +28,7 @@ function CourseStats(
                     <svg className="h-full w-full" width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-gray-200 dark:text-gray-800" strokeWidth="2"></circle>
                         <g className="origin-center -rotate-90 transform">
-                            <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-amber-400 dark:text-primary circle-animation" strokeWidth="2" strokeDasharray="100" strokeDashoffset="100" style={{ animationName: 'growStroke', animationTimingFunction: 'ease-out', animationDuration: '2s', animationFillMode: 'forwards', strokeDashoffset: likedPercentage }}></circle>
+                            <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-secondary circle-animation" strokeWidth="2" strokeDasharray="100" strokeDashoffset="100" style={{ animationName: 'growStroke', animationTimingFunction: 'ease-out', animationDuration: '2s', animationFillMode: 'forwards', strokeDashoffset: likedPercentage }}></circle>
                         </g>
                     </svg>
                     <div className="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
@@ -48,7 +48,7 @@ function CourseStats(
                             </span>
                         </div>
                         <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-800" role="progressbar" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
-                            <div className="flex flex-col justify-center rounded-full overflow-hidden bg-amber-400 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-primary progress-animation" style={{ width: `${easyPercentage}%` }}></div>
+                            <div className="flex flex-col justify-center rounded-full overflow-hidden bg-secondary text-xs text-white text-center whitespace-nowrap transition duration-500 progress-animation" style={{ width: `${easyPercentage}%` }}></div>
                         </div>
                     </div>
 
@@ -60,7 +60,7 @@ function CourseStats(
                             </span>
                         </div>
                         <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-800" role="progressbar" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
-                            <div className="flex flex-col justify-center rounded-full overflow-hidden bg-amber-400 text-xs text-white text-center whitespace-nowrap transition duration-500 dark:bg-primary progress-animation" style={{ width: `${usefulPercentage}%` }}></div>
+                            <div className="flex flex-col justify-center rounded-full overflow-hidden bg-secondary text-xs text-white text-center whitespace-nowrap transition duration-500 progress-animation" style={{ width: `${usefulPercentage}%` }}></div>
                         </div>
                     </div>
 

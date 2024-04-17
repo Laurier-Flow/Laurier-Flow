@@ -72,7 +72,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
                 <div className="flex justify-end text-foreground cursor-pointer">
                     Forgot password?
                 </div>
-                <button className="bg-secondary rounded-md px-4 py-2 text-background dark:text-foreground">
+                <button className="bg-secondary rounded-md px-4 py-2 dark:text-foreground">
                     Log In
                 </button>
                 <div className="flex justify-center text-gray-500 text-sm mb-4">
@@ -145,7 +145,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
                 />
                 <button
                     formAction={signUp}
-                    className="mb-2 bg-secondary rounded-md px-4 py-2 text-background dark:text-foreground"
+                    className="mb-2 bg-secondary rounded-md px-4 py-2 text-foreground"
                 >
                     Sign Up
                 </button>
