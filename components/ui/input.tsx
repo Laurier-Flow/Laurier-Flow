@@ -9,7 +9,6 @@ export interface InputProps
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
     return (
-      <div className="relative">
         <input
           type={type}
           className={cn(
@@ -19,7 +18,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           {...props}
         />
-      </div>
     )
   }
 )
