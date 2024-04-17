@@ -49,7 +49,7 @@ const ProfResultListItem = ({ params }: { params: ProfResult }) => {
 
   return (
     <Link href={profLink}>
-      <div className="flex flex-row p-2 pl-4 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800">
+      <div className="flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800">
         <div></div>
         <div>{params.instructor_name}</div>
       </div>
