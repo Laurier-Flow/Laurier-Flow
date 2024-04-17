@@ -160,7 +160,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
                     onClick={() => setSignup(false)}
                     className="flex justify-center text-foreground"
                 >
-                    <h1>Already have an account? <span onClick={() => {setSignup(false); setSignUpError(false)}} className="cursor-pointer underline underline-offset-2 decoration-1">Log In</span></h1>
+                    <h1>Already have an account? <span onClick={() => {setSignup(false); setSignUpError('')}} className="cursor-pointer underline underline-offset-2 decoration-1">Log In</span></h1>
                 </div>
             </form>
         </div>
