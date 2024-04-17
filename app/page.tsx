@@ -1,6 +1,3 @@
-'use client'
-
-import React, { useEffect, useState } from 'react'
 import SearchBar from './search/SearchBar'
 import { BackgroundGradientAnimation } from '@/components/background-gradient-animation'
 import {
@@ -9,7 +6,7 @@ import {
 } from '@/components/ui/typewriter-effect'
 import Link from 'next/link'
 
-export default function Index(): React.ReactElement {
+export default async function Index(): Promise<React.ReactElement> {
 	const homepageTitleWordArray = [
 		{ text: 'Explore', className: 'text-2xl md:text-4xl text-foreground' },
 		{ text: 'thousands', className: 'text-2xl md:text-4xl text-foreground' },
@@ -22,25 +19,6 @@ export default function Index(): React.ReactElement {
 		{ text: 'Laurier', className: 'text-2xl md:text-4xl text-foreground' },
 		{ text: 'students', className: 'text-2xl md:text-4xl text-foreground' }
 	]
-
-	const [isDarkMode, setIsDarkMode] = useState(false);
-
-	useEffect(() => {
-		const checkDarkMode = () => {
-			const isDark = document.documentElement.classList.contains('dark');
-			setIsDarkMode(isDark);
-		};
-
-		checkDarkMode();
-
-		const observer = new MutationObserver(checkDarkMode);
-
-		observer.observe(document.documentElement, { attributes: true });
-
-		return () => {
-			observer.disconnect();
-		};
-	}, []);
 
 	return (
 		<BackgroundGradientAnimation gradientBackgroundStart='var(--gradient-start)' gradientBackgroundEnd='var(--gradient-end)' firstColor='var(--bubble)' secondColor='var(--bubble)' thirdColor='var(--bubble)' fourthColor='var(--bubble)' fifthColor='var(--bubble)' pointerColor='var(--bubble)'>
