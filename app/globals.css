@@ -24,9 +24,9 @@
     --input: 220 13% 91%;
     --ring: 262.1 83.3% 57.8%;
     --radius: 1rem;
-    --gradient-start: rgb(27, 4, 43);
-    --gradient-end: rgb(13, 0, 22);
-    --bubble: 71, 26, 125;
+    --gradient-start: rgb(38, 6, 61);
+    --gradient-end: rgb(42, 7, 68);
+    --bubble: 101,5,141;
   }
 
   .dark {
