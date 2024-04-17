@@ -15,6 +15,7 @@ import LoginPopup from "./LoginPopup";
 import SignUpPopup from "./SignUpPopup";
 import { fetchUser, signOut } from '@/utils/supabase/authActions';
 import SearchBar from "@/app/search/SearchBar";
+import { UserNav } from "./UserProfileNav";
 
 export const useManageBodyScroll = (condition: boolean) => {
   useEffect(() => {
@@ -90,22 +91,7 @@ export default function Header({ user }: { user: User | null }): React.ReactElem
           </div>
           <div className="flex items-center justify-between space-x-2 md:justify-end">
             <ThemeToggleButton />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div className="flex items-center rounded-full">
-                  <Button variant="outline" className="relative">
-                    pfp
-                  </Button>
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="center">
-                <DropdownMenuItem>My Account</DropdownMenuItem>
-                {/* <DropdownMenuItem>Settings</DropdownMenuItem> */}
-                <DropdownMenuItem onClick={handleSignOut} className="bg-destructive text-destructive-foreground">
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              <UserNav user={user}></UserNav>
           </div>
         </div>
       </header>
