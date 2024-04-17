@@ -130,7 +130,7 @@ export default function SearchBar() {
   let searchBarStyle =
     "pl-8 relative block box-border w-full bg-background text-base focus-visible:ring-0 focus-visible:ring-transparent border-[2px]";
   let searchResultStyle =
-    "peer absolute bg-transparent text-foreground z-[1] w-full text-base px-3 border-[2px] border-transparent";
+    "peer absolute bg-transparent text-foreground z-[100] w-full text-base px-3 border-[2px] border-transparent";
 
   if (courseResults.length !== 0 || profResults.length !== 0) {
     searchBarStyle =
@@ -140,8 +140,8 @@ export default function SearchBar() {
   }
 
   return (
-    <div className="relative z-[1] block box-border w-full text-base peer has-[:focus-visible]:peer">
-      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground z-[1]" />
+    <div className="relative z-[100] block box-border w-full text-base peer has-[:focus-visible]:peer">
+      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground z-[100]" />
       <Input
 	  	type="search"
         placeholder="Search for courses, subjects or professors"
@@ -152,7 +152,7 @@ export default function SearchBar() {
         className={searchBarStyle}
       />
       <div className={searchResultStyle}>
-        <div className="bg-transparent text-foreground divide-y divide-{input} text-base w-full ">
+        <div className="bg-transparent text-foreground divide-y divide-{input} text-base w-full z-[100]">
           {courseResults.map((course) => (
             <CourseResultListItem params={course} />
           ))}
