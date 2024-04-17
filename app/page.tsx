@@ -2,28 +2,24 @@ import SearchBar from './search/SearchBar'
 import { BackgroundGradientAnimation } from '@/components/background-gradient-animation'
 import {
 	TypewriterEffect,
-	TypewriterEffectSmooth
 } from '@/components/ui/typewriter-effect'
-import Link from 'next/link'
 import { fetchUser, signIn } from "@/utils/supabase/authActions";
-import { cookies } from 'next/headers';
-import { createClient } from "@/utils/supabase/server";
 import LoginComponent from '@/components/LoginComponent';
 
 export default async function Index(): Promise<React.ReactElement> {
     const user = await fetchUser();
 
 	const homepageTitleWordArray = [
-		{ text: 'Explore', className: 'text-2xl md:text-4xl text-foreground' },
-		{ text: 'thousands', className: 'text-2xl md:text-4xl text-foreground' },
-		{ text: 'of', className: 'text-2xl md:text-4xl text-foreground' },
-		{ text: 'course', className: 'text-2xl md:text-4xl text-foreground' },
-		{ text: 'and', className: 'text-2xl md:text-4xl text-foreground' },
-		{ text: 'professor', className: 'text-2xl md:text-4xl text-foreground' },
-		{ text: 'reviews', className: 'text-2xl md:text-4xl text-foreground' },
-		{ text: 'from', className: 'text-2xl md:text-4xl text-foreground' },
-		{ text: 'Laurier', className: 'text-2xl md:text-4xl text-foreground' },
-		{ text: 'students', className: 'text-2xl md:text-4xl text-foreground' }
+		{ text: 'Explore', className: 'text-2xl md:text-4xl text-background dark:text-foreground' },
+		{ text: 'thousands', className: 'text-2xl md:text-4xl text-background dark:text-foreground' },
+		{ text: 'of', className: 'text-2xl md:text-4xl text-background dark:text-foreground' },
+		{ text: 'course', className: 'text-2xl md:text-4xl text-background dark:text-foreground' },
+		{ text: 'and', className: 'text-2xl md:text-4xl text-background dark:text-foreground' },
+		{ text: 'professor', className: 'text-2xl md:text-4xl text-background dark:text-foreground' },
+		{ text: 'reviews', className: 'text-2xl md:text-4xl text-background dark:text-foreground' },
+		{ text: 'from', className: 'text-2xl md:text-4xl text-background dark:text-foreground' },
+		{ text: 'Laurier', className: 'text-2xl md:text-4xl text-background dark:text-foreground' },
+		{ text: 'students', className: 'text-2xl md:text-4xl text-background dark:text-foreground' }
 	]
 
 	return (
@@ -41,7 +37,7 @@ export default async function Index(): Promise<React.ReactElement> {
 						<SearchBar />
 					</div>
 
-					<h1 className='text-sm md:text-lg font-normal italic pt-4'>
+					<h1 className='text-sm md:text-lg font-normal italic pt-4 text-background dark:text-foreground'>
 						Plan your courses • Read course and professor reviews • Find classes
 					</h1>
 				</div>
