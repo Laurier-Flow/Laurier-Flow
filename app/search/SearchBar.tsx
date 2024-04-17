@@ -35,10 +35,9 @@ const CourseResultListItem = ({ params }: { params: CourseResult }) => {
 
   return (
     <Link href={courseLink} className="w-full">
-      <div className="flex flex-row p-2 bg-transparent">
-        <div></div>
+      <div className="flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800">
         <div>
-          {params.course_code} - {params.course_title}
+          <span className="text-secondary font-bold">{params.course_code}</span> — {params.course_title}
         </div>
       </div>
     </Link>
@@ -50,7 +49,7 @@ const ProfResultListItem = ({ params }: { params: ProfResult }) => {
 
   return (
     <Link href={profLink}>
-      <div className="flex flex-row p-2 bg-transparent">
+      <div className="flex flex-row p-2 pl-4 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800">
         <div></div>
         <div>{params.instructor_name}</div>
       </div>
@@ -125,10 +124,16 @@ export default function SearchBar() {
       fetchResults(sanitizedString);
     }
   }, [searchQuery]);
+
   const barStyleOpen = "peer pl-8 relative block box-border w-full bg-background text-base focus-visible:ring-0 focus-visible:ring-transparent border-[2px] rounded-b-none border-b-transparent border-b-0"
   const barStyleClosed = "pl-8 relative block box-border w-full bg-background text-base focus-visible:ring-0 focus-visible:ring-transparent border-[2px]"
   const resultsStyleClosed = "peer absolute bg-transparent text-foreground z-[100] w-full text-base px-3 border-[2px] border-transparent"
   const resultsStyleOpen = "flex absolute bg-background text-foreground w-full text-base rounded-b-md border-input border-[2px] peer-focus-visible:border-secondary border-t-0 rounded-t-transparent shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+
+  const resetResults = () => {
+    setCourseResults([]);
+    setProfResults([]);
+  };
 
   return (
     <div className="relative z-[100] block box-border w-full text-base peer has-[:focus-visible]:peer">
@@ -139,6 +144,7 @@ export default function SearchBar() {
           console.log(e.target.value);
           setSearchQuery(e.target.value);
         }}
+        onBlur={resetResults}
         className={(courseResults.length !== 0 || profResults.length !== 0) ? barStyleOpen : barStyleClosed}
       />
       <div className={(courseResults.length !== 0 || profResults.length !== 0) ? resultsStyleOpen : resultsStyleClosed}>
