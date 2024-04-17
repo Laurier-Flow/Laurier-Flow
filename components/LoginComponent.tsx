@@ -56,14 +56,14 @@ export default function LoginComponent({ user }: { user: User | null }) {
                     <p className="rounded-md p-2 mb-2 bg-red-500 text-white text-center">{loginError}</p>
                 }
                 <input
-                    className="rounded-md px-4 py-2 bg-inherit border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
+                    className="rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
                     name="email"
                     placeholder="Laurier Email"
                     required
                 />
 
                 <input
-                    className="rounded-md px-4 py-2 bg-inherit border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
+                    className="rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
                     type="password"
                     name="password"
                     placeholder="Password"
@@ -72,7 +72,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
                 <div className="flex justify-end text-foreground cursor-pointer">
                     Forgot password?
                 </div>
-                <button className="bg-secondary rounded-md px-4 py-2 text-foreground">
+                <button className="bg-secondary rounded-md px-4 py-2 text-background dark:text-foreground">
                     Log In
                 </button>
                 <div className="flex justify-center text-gray-500 text-sm mb-4">
@@ -87,7 +87,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
             </form>
         </div>
     ) : (
-        <div className={`hidden ${user ? (null) : ('md:flex')} md:flex-col bg-background p-8 border-slate-800 border backdrop-blur rounded-md lg:w-1/3`}>
+        <div className={`hidden ${user ? (null) : ('md:flex')} md:flex-col bg-stone-100 dark:bg-background p-8 border-slate-800 border backdrop-blur rounded-md lg:w-1/3`}>
             <form
                 className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
                 onSubmit={handleSignUp}
@@ -101,20 +101,20 @@ export default function LoginComponent({ user }: { user: User | null }) {
                 }
                 <div className="flex flex-row gap-4 mb-2">
                     <input
-                        className="w-1/2 rounded-md px-4 py-2 bg-inherit border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
+                        className="w-1/2 rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
                         name="first name"
                         placeholder="First Name"
                         required
                     />
                     <input
-                        className="w-1/2 rounded-md px-4 py-2 bg-inherit border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
+                        className="w-1/2 rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
                         name="last name"
                         placeholder="Last Name"
                         required
                     />
                 </div>
                 <select
-                    className="mb-2 rounded-md px-4 py-2 bg-inherit border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 text-gray-400 placeholder-gray-400"
+                    className="mb-2 rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 text-stone-600 dark:text-gray-400 placeholder-stone-400 dark:placeholder-gray-400"
                     name="program"
                     value={selectedProgram}
                     onChange={handleProgramChange}
@@ -124,20 +124,20 @@ export default function LoginComponent({ user }: { user: User | null }) {
                         Select your program
                     </option>
                     {programOptions.map((program) => (
-                        <option key={program} value={program}>
+                        <option className="" key={program} value={program}>
                             {program}
                         </option>
                     ))}
                 </select>
                 <input
-                    className="mb-2 rounded-md px-4 py-2 bg-inherit border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
+                    className="mb-2 rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
                     name="email"
                     placeholder="Email"
                     required
                 />
 
                 <input
-                    className="mb-4 rounded-md px-4 py-2 bg-inherit border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
+                    className="mb-4 rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
                     type="password"
                     name="password"
                     placeholder="Password"
@@ -145,7 +145,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
                 />
                 <button
                     formAction={signUp}
-                    className="mb-2 bg-secondary rounded-md px-4 py-2 text-foreground"
+                    className="mb-2 bg-secondary rounded-md px-4 py-2 text-background dark:text-foreground"
                 >
                     Sign Up
                 </button>
