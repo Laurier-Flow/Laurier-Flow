@@ -151,7 +151,7 @@ export default function SearchBar() {
         className={searchBarStyle}
       />
       <div className={searchResultStyle}>
-        <div className="bg-transparent text-foreground divide-y divide-{input} text-base w-full z-[100]">
+        <div className="bg-background rounded-lg text-foreground divide-y divide-{input} text-base w-full z-[100]">
           {courseResults.map((course) => (
             <CourseResultListItem params={course} />
           ))}
