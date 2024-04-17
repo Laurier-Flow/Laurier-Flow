@@ -34,17 +34,10 @@ const CourseResultListItem = ({ params }: { params: CourseResult }) => {
 	const courseLink = '/course/' + slugify(params.course_code)
 
 	return (
-		<li key={params.course_code} className='w-full'>
-			<button className='w-full'>
-				<Link href={courseLink}>
-					<div className='flex flex-row'>
-						<div></div>
-						<div>
-							{params.course_code} - {params.course_title}
-						</div>
-					</div>
-				</Link>
-			</button>
+		<li key={params.course_code}>
+			<Link href={courseLink}>
+				{params.course_code} - {params.course_title}
+			</Link>
 		</li>
 	)
 }
@@ -53,7 +46,7 @@ const ProfResultListItem = ({ params }: { params: ProfResult }) => {
 	const profLink = '/instructor/' + slugify(params.instructor_name)
 
 	return (
-		<li key={params.instructor_name} className='w-full'>
+		<li key={params.instructor_name}>
 			<Link href={profLink}>{params.instructor_name}</Link>
 		</li>
 	)
@@ -127,17 +120,13 @@ export default function SearchBar() {
 		}
 	}, [searchQuery])
 
-	let searchBarStyle =
-		'bg-background text-base focus-visible:ring-0 focus-visible:ring-transparent border-[2px]'
-	let searchResultStyle =
-		'absolute bg-transparent text-foreground z-[1] w-full text-base px-3 border-[2px] border-transparent'
+  let searchBarStyle = 'bg-background text-base'
+  let searchResultStyle = 'absolute bg-background text-foreground z-[1] w-full text-base'
 
-	if (courseResults.length !== 0 || profResults.length !== 0) {
-		searchBarStyle =
-			'bg-background text-base focus-visible:ring-0 focus-visible:ring-transparent border-[2px] rounded-b-none border-b-transparent border-b-0'
-		searchResultStyle =
-			'flex absolute bg-background text-foreground w-full text-base rounded-b-md border-[2px] border-[#2563eb] border-t-0 rounded-t-transparent shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground  disabled:cursor-not-allowed disabled:opacity-50'
-	}
+  if (courseResults.length !== 0 || profResults.length !== 0) {
+    searchBarStyle = 'bg-background rounded-b-none text-base'
+    searchResultStyle = 'absolute bg-background text-foreground z-[1] w-full rounded-b-md ring-1 text-base'
+  }
 
 	return (
 		<div className='relative z-[1] block box-border w-full text-base'>
@@ -153,7 +142,7 @@ export default function SearchBar() {
 				/>
 			</div>
 			<div className={searchResultStyle}>
-				<ul className='bg-background text-foreground divide-y divide-{input} text-base w-full'>
+				<ul className='bg-background text-foreground divide-y divide-{input} text-base'>
 					{courseResults.map((course) => (
 						<CourseResultListItem params={course} />
 					))}
