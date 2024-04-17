@@ -2,7 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { signUp } from '@/utils/supabase/authActions'
 
-const programOptions = [
+export const programOptions = [
     'Computer Science',
     'Engineering',
     'Business Administration',
