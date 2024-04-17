@@ -67,14 +67,14 @@ export default function Index(): React.ReactElement {
 					>
 						<label className="text-3xl font-bold mb-5 text-foreground">Log In</label>
 						<input
-							className="rounded-md px-4 py-2 bg-inherit border-slate-800 focus:border-secondary focus:outline-none focus:ring-0"
+							className="rounded-md px-4 py-2 bg-inherit border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0"
 							name="email"
 							placeholder="Laurier Email"
 							required
 						/>
 
 						<input
-							className="rounded-md px-4 py-2 bg-inherit border border-slate-800 focus:border-secondary focus:outline-none focus:ring-0"
+							className="rounded-md px-4 py-2 bg-inherit border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0"
 							type="password"
 							name="password"
 							placeholder="Password"
@@ -86,7 +86,7 @@ export default function Index(): React.ReactElement {
 						<button className="bg-secondary rounded-md px-4 py-2 text-foreground">
 							Log In
 						</button>
-						<div className="flex justify-center text-gray-700 text-sm mb-4">
+						<div className="flex justify-center text-gray-500 text-sm mb-4">
 							<h1>Read our <Link href="/privacy" className='underline'>Privacy Policy</Link></h1>
 						</div>
 
