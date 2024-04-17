@@ -34,18 +34,14 @@ const CourseResultListItem = ({ params }: { params: CourseResult }) => {
 	const courseLink = '/course/' + slugify(params.course_code)
 
 	return (
-		<li key={params.course_code} className='w-full'>
-			<button className='w-full'>
-				<Link href={courseLink}>
-					<div className='flex flex-row'>
-						<div></div>
-						<div>
-							{params.course_code} - {params.course_title}
-						</div>
-					</div>
-				</Link>
-			</button>
-		</li>
+		<Link href={courseLink} className='w-full'>
+			<div className='flex flex-row p-2 bg-transparent'>
+				<div></div>
+				<div>
+					{params.course_code} - {params.course_title}
+				</div>
+			</div>
+		</Link>
 	)
 }
 
@@ -53,9 +49,16 @@ const ProfResultListItem = ({ params }: { params: ProfResult }) => {
 	const profLink = '/instructor/' + slugify(params.instructor_name)
 
 	return (
-		<li key={params.instructor_name} className='w-full'>
-			<Link href={profLink}>{params.instructor_name}</Link>
-		</li>
+		<Link href={profLink}>
+			<div className='flex flex-row p-2 bg-transparent'>
+				<div>
+				</div>
+				<div>
+					{params.instructor_name}
+				</div>
+			</div>
+		</Link>
+
 	)
 }
 
@@ -128,39 +131,37 @@ export default function SearchBar() {
 	}, [searchQuery])
 
 	let searchBarStyle =
-		'bg-background text-base focus-visible:ring-0 focus-visible:ring-transparent border-[2px]'
+		'peer relative block box-border w-full bg-background text-base focus-visible:ring-0 focus-visible:ring-transparent border-[2px]'
 	let searchResultStyle =
 		'absolute bg-transparent text-foreground z-[1] w-full text-base px-3 border-[2px] border-transparent'
 
 	if (courseResults.length !== 0 || profResults.length !== 0) {
 		searchBarStyle =
-			'bg-background text-base focus-visible:ring-0 focus-visible:ring-transparent border-[2px] rounded-b-none border-b-transparent border-b-0'
+			'peer relative block box-border w-full bg-background text-base focus-visible:ring-0 focus-visible:ring-transparent border-[2px] rounded-b-none border-b-transparent border-b-0'
 		searchResultStyle =
-			'flex absolute bg-background text-foreground w-full text-base rounded-b-md border-[2px] border-[#2563eb] border-t-0 rounded-t-transparent shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground  disabled:cursor-not-allowed disabled:opacity-50'
+			'flex absolute bg-background text-foreground w-full text-base rounded-b-md border-input border-[2px] peer-focus-visible:border-[#2563eb] border-t-0 rounded-t-transparent shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground  disabled:cursor-not-allowed disabled:opacity-50'
 	}
 
 	return (
 		<div className='relative z-[1] block box-border w-full text-base'>
-			<div className='relative block box-border w-full text-base'>
-				<Input
-					type='search'
-					placeholder='Search for courses, subjects or professors'
-					onChange={(e) => {
-						console.log(e.target.value)
-						setSearchQuery(e.target.value)
-					}}
-					className={searchBarStyle}
-				/>
-			</div>
+			<Input
+				type='search'
+				placeholder='Search for courses, subjects or professors'
+				onChange={(e) => {
+					console.log(e.target.value)
+					setSearchQuery(e.target.value)
+				}}
+				className={searchBarStyle}
+			/>
 			<div className={searchResultStyle}>
-				<ul className='bg-background text-foreground divide-y divide-{input} text-base w-full'>
+				<div className='bg-transparent text-foreground divide-y divide-{input} text-base w-full '>
 					{courseResults.map((course) => (
 						<CourseResultListItem params={course} />
 					))}
 					{profResults.map((prof) => (
 						<ProfResultListItem params={prof} />
 					))}
-				</ul>
+				</div>
 			</div>
 		</div>
 	)
