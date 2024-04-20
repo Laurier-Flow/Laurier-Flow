@@ -1,4 +1,4 @@
-import Review from "@/components/Review";
+import { Review } from "@/components/Review";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export interface courseReview {
@@ -74,11 +74,21 @@ export default async function CourseReviews({
     courseName: string
 }) {
     const courseReviews: courseReview[] | undefined = await getCourseReviews(supabase, courseName);
+    let hasReviewsWithBody: boolean = false
+
+    if (courseReviews) {
+        for (const review of courseReviews) {
+            if (review.body && review.body != '') {
+                hasReviewsWithBody = true
+                break
+            }
+        }
+    }
 
     return (
         <div className="p-4">
             <h1 className="text-xl">Course Reviews</h1>
-            {courseReviews?.length != 0 ? (
+            {(courseReviews?.length != 0 && hasReviewsWithBody) ? (
                 courseReviews?.map((review: courseReview, index: any) => (
                     (((review.body) && (review.body != '')) ? (index === 0 ? (
                         <Review review={review} index={index} />
@@ -88,7 +98,7 @@ export default async function CourseReviews({
                         </div>
                     )
                     ) : null)
-                ))) : (<p className="mt-4 whitespace-nowrap text-md text-gray-800 dark:text-gray-200">No Reviews Yet</p>)}
+                ))) : (<p className="mt-4 whitespace-nowrap text-md text-gray-800 dark:text-gray-200">No Reviews With Body Yet</p>)}
         </div>
     );
 }
