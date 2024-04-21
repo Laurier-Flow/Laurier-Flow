@@ -68,7 +68,7 @@ export default function Header({ user }: { user: User | null }): React.ReactElem
 
   return (
     <>
-      <header className="self-center sticky top-0 z-50 w-full border-b border-border/40 bg-background dark:bg-background/95 dark:backdrop-blur dark:supports-[backdrop-filter]:bg-background/60">
+      <header className="self-center sticky top-0 z-50 w-full border-b border-border/40 bg-white dark:bg-background/95 dark:backdrop-blur dark:supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 lg:max-w-6xl items-center">
           <div className="mr-4 flex flex-1">
             <Link href="/" className="hidden sm:flex mr-6 items-center space-x-2">
