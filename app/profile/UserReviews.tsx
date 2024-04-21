@@ -30,6 +30,7 @@ async function getUserReviews(supabase: SupabaseClient<any, "public", any>, user
 
 export default async function UserReviews({ user, supabase }: { user: User | null, supabase: SupabaseClient<any, "public", any> }) {
     const userReviews = await getUserReviews(supabase, user)
+    console.log(userReviews)
 
     return (
         <div className="card">
