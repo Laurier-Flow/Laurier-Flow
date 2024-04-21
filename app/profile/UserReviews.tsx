@@ -1,5 +1,5 @@
 import { SupabaseClient, User } from "@supabase/supabase-js";
-import { CourseProfileReview, InstructorProfileReview } from "@/components/Review";
+import { CourseProfileReview, InstructorProfileReview } from "@/components/ProfileReview";
 import { courseReview } from "../course/CourseReviews";
 import { instructorReview } from "../instructor/InstructorReviews";
 
@@ -30,7 +30,6 @@ async function getUserReviews(supabase: SupabaseClient<any, "public", any>, user
 
 export default async function UserReviews({ user, supabase }: { user: User | null, supabase: SupabaseClient<any, "public", any> }) {
     const userReviews = await getUserReviews(supabase, user)
-    console.log(userReviews)
 
     return (
         <div className="card">

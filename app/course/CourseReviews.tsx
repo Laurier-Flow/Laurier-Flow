@@ -2,6 +2,7 @@ import { Review } from "@/components/Review";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export interface courseReview {
+    id: string
     course_code_fk: string
     created_at: string,
     easy: number,
@@ -23,6 +24,7 @@ async function getCourseReviews(supabase: SupabaseClient<any, "public", any>, co
 
         if (data !== null && data !== undefined) {
             for (const s of data) {
+                const id = s.id
                 const createdAt = s.created_at
                 const easy = s.easy
                 const useful = s.useful
@@ -44,6 +46,7 @@ async function getCourseReviews(supabase: SupabaseClient<any, "public", any>, co
                     }
 
                     const review = {
+                        id: id,
                         course_code_fk: course,
                         created_at: createdAt,
                         easy: easy,
