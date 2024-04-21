@@ -160,6 +160,11 @@ export function CourseProfileReview({
 }) {
     return (
         <div key={index} className="mt-4 flex flex-col bg-slate-50 border shadow-sm rounded-xl dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7]">
+            <div className="bg-gray-100 border-b rounded-t-xl py-3 px-4 md:py-4 md:px-5 dark:bg-slate-900 dark:border-gray-700">
+                <p className="mt-1 font-medium text-lg text-gray-500 dark:text-gray-300">
+                    {review.course_code_fk}
+                </p>
+            </div>
             <div className="p-4 md:p-5 flex flex-col lg:flex-row">
                 <p className="mt-2 text-gray-500 dark:text-gray-400 flex flex-1 lg:mr-4">
                     {review.body}
@@ -221,7 +226,7 @@ export function CourseProfileReview({
             </div>
             <div className="bg-gray-100 border-t rounded-b-xl py-3 px-4 md:py-4 md:px-5 dark:bg-slate-900 dark:border-gray-700">
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
-                    — {review.program} student{review.instructor ? `, taught by ${review.instructor}` : ''}
+                    — Reviewed on {review.created_at}
                 </p>
             </div>
         </div>
@@ -299,7 +304,7 @@ export function InstructorProfileReview({
             </div>
             <div className="bg-gray-100 border-t rounded-b-xl py-3 px-4 md:py-4 md:px-5 dark:bg-slate-900 dark:border-gray-700">
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
-                    — {review.program} student
+                    — {review.program}
                 </p>
             </div>
         </div>

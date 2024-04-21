@@ -2,7 +2,8 @@ import { Review } from "@/components/Review";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export interface courseReview {
-    createdAt: string,
+    course_code_fk: string
+    created_at: string,
     easy: number,
     useful: number,
     liked: number,
@@ -28,6 +29,7 @@ async function getCourseReviews(supabase: SupabaseClient<any, "public", any>, co
                 const liked = s.liked
                 const instructor = s.instructor_name_fk
                 const body = s.body
+                const course = s.course_code_fk
 
                 try {
                     const { data, error } = await supabase
@@ -42,7 +44,8 @@ async function getCourseReviews(supabase: SupabaseClient<any, "public", any>, co
                     }
 
                     const review = {
-                        createdAt: createdAt,
+                        course_code_fk: course,
+                        created_at: createdAt,
                         easy: easy,
                         useful: useful,
                         liked: liked,
