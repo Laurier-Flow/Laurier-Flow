@@ -8,7 +8,7 @@ export interface courseReview {
     easy: number,
     useful: number,
     liked: number,
-    instructor: string,
+    instructor_name_fk: string,
     program: string,
     body: string
 }
@@ -52,7 +52,7 @@ async function getCourseReviews(supabase: SupabaseClient<any, "public", any>, co
                         easy: easy,
                         useful: useful,
                         liked: liked,
-                        instructor: instructor,
+                        instructor_name_fk: instructor,
                         program: userData,
                         body: body
                     }

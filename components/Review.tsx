@@ -10,7 +10,7 @@ export function Review({
 
 }) {
     return (
-        <div key={index} className="mt-4 flex flex-col bg-slate-50 border shadow-sm rounded-xl dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7]">
+        <div key={index} className="mt-4 flex flex-col bg-stone-50 border shadow-sm rounded-xl dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7]">
             <div className="p-4 md:p-5 flex flex-col lg:flex-row">
                 <p className="mt-2 text-gray-500 dark:text-gray-400 flex flex-1 lg:mr-4">
                     {review.body}
@@ -19,19 +19,19 @@ export function Review({
                 <div className="flex flex-col pt-2 pr-2 mt-4 lg:mt-0">
                     <div className="flex flex-row">
                         <div className="flex items-center">
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.easy > 0 ? 'text-yellow-400' : 'text-gray-300'} ${review.easy > 0 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.easy > 0 ? 'text-secondary' : 'text-slate-300'} ${review.easy > 0 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.easy > 1 ? 'text-yellow-400' : 'text-gray-300'} ${review.easy > 1 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.easy > 1 ? 'text-secondary' : 'text-slate-300'} ${review.easy > 1 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.easy > 2 ? 'text-yellow-400' : 'text-gray-300'} ${review.easy > 2 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.easy > 2 ? 'text-secondary' : 'text-slate-300'} ${review.easy > 2 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.easy > 3 ? 'text-yellow-400' : 'text-gray-300'} ${review.easy > 3 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.easy > 3 ? 'text-secondary' : 'text-slate-300'} ${review.easy > 3 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.easy > 4 ? 'text-yellow-400' : 'text-gray-300'} ${review.easy > 4 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.easy > 4 ? 'text-secondary' : 'text-slate-300'} ${review.easy > 4 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
                         </div>
@@ -39,19 +39,19 @@ export function Review({
                     </div>
                     <div className="flex flex-row pt-2">
                         <div className="flex items-center">
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.useful > 0 ? 'text-yellow-400' : 'text-gray-300'} ${review.useful > 0 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.useful > 0 ? 'text-secondary' : 'text-slate-300'} ${review.useful > 0 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.useful > 1 ? 'text-yellow-400' : 'text-gray-300'} ${review.useful > 1 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.useful > 1 ? 'text-secondary' : 'text-slate-300'} ${review.useful > 1 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.useful > 2 ? 'text-yellow-400' : 'text-gray-300'} ${review.useful > 2 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.useful > 2 ? 'text-secondary' : 'text-slate-300'} ${review.useful > 2 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.useful > 3 ? 'text-yellow-400' : 'text-gray-300'} ${review.useful > 3 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.useful > 3 ? 'text-secondary' : 'text-slate-300'} ${review.useful > 3 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.useful > 4 ? 'text-yellow-400' : 'text-gray-300'} ${review.useful > 4 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.useful > 4 ? 'text-secondary' : 'text-slate-300'} ${review.useful > 4 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
                         </div>
@@ -72,7 +72,7 @@ export function Review({
             </div>
             <div className="bg-gray-100 border-t rounded-b-xl py-3 px-4 md:py-4 md:px-5 dark:bg-slate-900 dark:border-gray-700">
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
-                    — {review.program} student{review.instructor ? `, taught by ${review.instructor}` : ''}
+                    — {review.program} student{review.instructor_name_fk ? `, taught by ${review.instructor_name_fk}` : ''}
                 </p>
             </div>
         </div>
@@ -90,19 +90,19 @@ export function InstructorReview({ review, index }: { review: instructorReview, 
                 <div className="flex flex-col pt-2 pr-2 mt-4 lg:mt-0">
                     <div className="flex flex-row">
                         <div className="flex items-center">
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.clear > 0 ? 'text-yellow-400' : 'text-gray-300'} ${review.clear > 0 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.clear > 0 ? 'text-secondary' : 'text-slate-300'} ${review.clear > 0 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.clear > 1 ? 'text-yellow-400' : 'text-gray-300'} ${review.clear > 1 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.clear > 1 ? 'text-secondary' : 'text-slate-300'} ${review.clear > 1 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.clear > 2 ? 'text-yellow-400' : 'text-gray-300'} ${review.clear > 2 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.clear > 2 ? 'text-secondary' : 'text-slate-300'} ${review.clear > 2 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.clear > 3 ? 'text-yellow-400' : 'text-gray-300'} ${review.clear > 3 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.clear > 3 ? 'text-secondary' : 'text-slate-300'} ${review.clear > 3 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.clear > 4 ? 'text-yellow-400' : 'text-gray-300'} ${review.clear > 4 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.clear > 4 ? 'text-secondary' : 'text-slate-300'} ${review.clear > 4 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
                         </div>
@@ -110,19 +110,19 @@ export function InstructorReview({ review, index }: { review: instructorReview, 
                     </div>
                     <div className="flex flex-row pt-2">
                         <div className="flex items-center">
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.engaging > 0 ? 'text-yellow-400' : 'text-gray-300'} ${review.engaging > 0 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.engaging > 0 ? 'text-secondary' : 'text-slate-300'} ${review.engaging > 0 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.engaging > 1 ? 'text-yellow-400' : 'text-gray-300'} ${review.engaging > 1 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.engaging > 1 ? 'text-secondary' : 'text-slate-300'} ${review.engaging > 1 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.engaging > 2 ? 'text-yellow-400' : 'text-gray-300'} ${review.engaging > 2 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.engaging > 2 ? 'text-secondary' : 'text-slate-300'} ${review.engaging > 2 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.engaging > 3 ? 'text-yellow-400' : 'text-gray-300'} ${review.engaging > 3 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.engaging > 3 ? 'text-secondary' : 'text-slate-300'} ${review.engaging > 3 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
-                            <svg className={`flex-shrink-0 w-5 h-5 ${review.engaging > 4 ? 'text-yellow-400' : 'text-gray-300'} ${review.engaging > 4 ? 'dark:text-yellow-600' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${review.engaging > 4 ? 'text-secondary' : 'text-slate-300'} ${review.engaging > 4 ? 'dark:text-secondary' : 'dark:text-gray-600'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                             </svg>
                         </div>

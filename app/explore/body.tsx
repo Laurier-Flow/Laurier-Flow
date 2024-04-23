@@ -314,7 +314,7 @@ export default function Body({ currentTerm, nextTerm, courses, instructors }: { 
             <div className="min-w-full flex flex-col p-4 dark:bg-[url('/banner-sm.jpg')] bg-[url('/banner-sm-light.jpg')] md:dark:bg-[url('/banner-md.jpg')] md:bg-[url('/banner-md-light.jpg')] lg:dark:bg-[url('/banner.jpg')] lg:bg-[url('/banner-light.jpg')] md:flex-row md:justify-center">
                 <div className="flex flex-1 pt-20 flex-row justify-between w-f max-w-6xl">
                     <div className="flex flex-1 flex-col justify-end pl-4">
-                        <h1 className='mb-2 text-2xl font-bold text-3xl md:text-4xl'>{`Showing ${subject} courses and professors`}</h1>
+                        <h1 className='mb-2 text-2xl font-bold text-3xl text-white md:text-4xl'>{`Showing ${subject} courses and professors`}</h1>
                     </div>
                 </div>
             </div>

@@ -20,7 +20,7 @@ export default async function About() {
         <div className="min-w-full flex flex-col p-4 dark:bg-[url('/banner-sm.jpg')] bg-[url('/banner-sm-light.jpg')] md:dark:bg-[url('/banner-md.jpg')] md:bg-[url('/banner-md-light.jpg')] lg:dark:bg-[url('/banner.jpg')] lg:bg-[url('/banner-light.jpg')] md:flex-row md:justify-center">
           <div className="flex flex-1 pt-20 flex-row justify-between w-f max-w-6xl">
             <div className="flex flex-1 flex-col justify-end pl-4">
-              <h1 className='mb-2 text-2xl font-bold md:text-5xl'>About</h1>
+              <h1 className='mb-2 text-2xl font-bold md:text-5xl text-white'>About</h1>
             </div>
           </div>
         </div>
@@ -52,7 +52,7 @@ export default async function About() {
             <div>
               <TeamMember
                 name="Faizaan Qureshi"
-                role="Heisenberg - Software Engineering 2014"
+                role="Founder & Lead Software Engineer - Computer Science (UW) + Business Administration (BBA)"
                 imageUrl="https://media.licdn.com/dms/image/D5603AQFyfypgQBmhfg/profile-displayphoto-shrink_200_200/0/1693374520689?e=1714003200&v=beta&t=oDNIja1nwBRq1JhSfzwKEVflwcz8kqHzf1MnGxA_qU0"
                 linkedinUrl="https://www.linkedin.com/in/faizaan-qureshi/"
                 igUrl="https://www.instagram.com/faizaanqureshi_"
