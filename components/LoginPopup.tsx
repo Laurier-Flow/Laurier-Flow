@@ -56,7 +56,7 @@ export default function LoginPopup({
   };
 
   return (
-    <div ref={popupRef} className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background border-secondary border-2 rounded-md p-8 max-w-md w-full">
+    <div ref={popupRef} className="overflow-y-auto max-h-[90vh] border-2 border-slate-600 dark:border-slate-800 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background dark:bg-background/80 backdrop-blur rounded-md max-w-xl p-8 w-11/12">
       <div
         className="absolute right-4 top-4 py-2 px-4 rounded-md no-underline text-foreground text-black bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
         onClick={onClose}
