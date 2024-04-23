@@ -15,7 +15,7 @@ export default function DeleteReviewPopup({onClose, reviewId, instructor}: {onCl
     }
 
     return (
-        <div ref={popupRef} className="overflow-y-auto max-h-[90vh] border-2 border-slate-100 dark:border-red-800 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background dark:bg-background/80 backdrop-blur rounded-md max-w-md p-8 w-11/12">
+        <div ref={popupRef} className="overflow-y-auto max-h-[90vh] border-2 dark:border-red-800 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background dark:bg-background/80 backdrop-blur rounded-md max-w-md p-8 w-11/12">
             <form
                 className="flex flex-col gap-4 text-foreground bg-background"
                 action={() => deleteReview(reviewId)}
