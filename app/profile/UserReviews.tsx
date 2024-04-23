@@ -2,6 +2,7 @@ import { SupabaseClient, User } from "@supabase/supabase-js";
 import { CourseProfileReview, InstructorProfileReview } from "@/components/ProfileReview";
 import { courseReview } from "../course/CourseReviews";
 import { instructorReview } from "../instructor/InstructorReviews";
+import { getInstructors } from "../course/AddReview";
 
 export interface profileReviews {
     courseReviews: courseReview[]
@@ -32,22 +33,24 @@ export default async function UserReviews({ user, supabase }: { user: User | nul
     const userReviews = await getUserReviews(supabase, user)
 
     return (
-        <div className="card">
+        <div className="card flex-1 justify-start">
             <div className="p-4">
-                <h2 className="pt-4 text-xl py-2 font-semibold">Your Reviews</h2>
+                <h2 className="pt-4 text-xl font-semibold">Your Reviews</h2>
                 <h2 className="pt-4 text-md py-2 font-semibold">Course Reviews</h2>
-                {userReviews.courseReviews.map((review: courseReview, index: any) => {
+                {userReviews.courseReviews.map(async (review: courseReview, index: any) => {
                     return (
-                        <CourseProfileReview review={review} index={index} />
+                        <CourseProfileReview instructors={await getInstructors(supabase, review.course_code_fk, false, user)} review={review} index={index} />
                     )
                 })}
+                {userReviews.courseReviews.length === 0 ? (<h1>No course reviews</h1>) : (null)}
                 <hr className="mb-8 md:mb-0 mt-8 border-gray-300 dark:border-gray-800"></hr>
                 <h2 className="pt-4 text-md py-2 font-semibold">Instructor Reviews</h2>
-                {userReviews.instructorReviews.map((review: instructorReview, index: any) => {
+                {userReviews.instructorReviews.map(async (review: instructorReview, index: any) => {
                     return (
-                        <InstructorProfileReview review={review} index={index} />
+                        <InstructorProfileReview courses={await getInstructors(supabase, review.instructor_name_fk, true, user)} review={review} index={index} />
                     )
                 })}
+                {userReviews.instructorReviews.length === 0 ? (<h1>No instructor reviews</h1>) : (null)}
             </div>
         </div>
     )

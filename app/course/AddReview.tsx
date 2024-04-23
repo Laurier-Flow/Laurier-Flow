@@ -3,7 +3,7 @@ import { fetchUser } from '@/utils/supabase/authActions';
 import { SupabaseClient } from '@supabase/supabase-js';
 import ReviewButton from '@/components/ReviewButton';
 
-async function getInstructors(supabase: SupabaseClient<any, "public", any>, courseName: string, instructor: boolean, user: User | null) {
+export async function getInstructors(supabase: SupabaseClient<any, "public", any>, courseName: string, instructor: boolean, user: User | null) {
     const fkName = (instructor ? ('instructor_name_fk') : ('course_code_fk'))
     const instructors = new Set<string>()
 

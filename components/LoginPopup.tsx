@@ -1,7 +1,8 @@
 // LoginPopup.jsx
 import Link from 'next/link';
-import { signIn, fetchUser } from '@/utils/supabase/authActions'
+import { signIn } from '@/utils/supabase/authActions'
 import { useRef, useEffect, useState } from 'react';
+import { X } from 'lucide-react';
 
 export default function LoginPopup({
   searchParams,
@@ -56,32 +57,16 @@ export default function LoginPopup({
   };
 
   return (
-    <div ref={popupRef} className="overflow-y-auto max-h-[90vh] border-2 border-slate-600 dark:border-slate-800 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background dark:bg-background/80 backdrop-blur rounded-md max-w-md p-8 w-11/12">
-      <div
-        className="absolute right-4 top-4 py-2 px-4 rounded-md no-underline text-foreground text-black bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
-        onClick={onClose}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <line x1="18" y1="6" x2="6" y2="18" />
-          <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>{' '}
-      </div>
+    <div ref={popupRef} className="overflow-y-auto max-h-[90vh] border-2 dark:border-slate-600 dark:border-slate-800 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background dark:bg-background/80 backdrop-blur rounded-md max-w-md p-8 w-11/12">
       <form
-        className="flex flex-col gap-4 text-foreground bg-background"
+        className="flex flex-col gap-4 text-foreground"
         onSubmit={handleLogin}
         onChange={() => setLoginError('')}
       >
-        <label className="text-3xl font-bold mb-5 text-foreground">Log In</label>
+        <label className="flex flex-row items-center justify-between text-3xl font-bold mb-5 text-foreground">
+          <h1>Log In</h1>
+          <X className='cursor-pointer' onClick={() => onClose()} />
+        </label>
         {loginError &&
           <p className="rounded-md p-2 mb-2 bg-red-500 text-white text-center">{loginError}</p>
         }

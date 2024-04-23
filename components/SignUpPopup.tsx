@@ -2,6 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { signUp } from '@/utils/supabase/authActions'
 import Link from 'next/link';
+import { X } from 'lucide-react';
 
 export const programOptions = [
   'Computer Science',
@@ -67,34 +68,15 @@ export default function SignUpPopup({
   }
 
   return (
-    <div ref={popupRef} className="overflow-y-auto max-h-[90vh] border-2 border-slate-600 dark:border-slate-800 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background dark:bg-background/80 backdrop-blur rounded-md max-w-md p-8 w-11/12">
-      <div
-        className="absolute right-4 top-4 py-2 px-4 rounded-md no-underline text-foreground text-black bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
-        onClick={onClose}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <line x1="18" y1="6" x2="6" y2="18" />
-          <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>{' '}
-      </div>
-
+    <div ref={popupRef} className="overflow-y-auto max-h-[90vh] border-2 dark:border-slate-800 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background dark:bg-background/80 backdrop-blur rounded-md max-w-md p-8 w-11/12">
       <form
         className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
         onSubmit={handleSignUp}
         onChange={() => setSignUpError('')}
       >
-        <label className="text-3xl font-bold mb-5 text-foreground">
-          Sign Up
+        <label className="flex flex-row justify-between items-center text-3xl font-bold mb-5 text-foreground">
+          <h1>Sign Up</h1>
+          <X className='cursor-pointer' onClick={() => onClose()} />
         </label>
         {signUpError &&
           <p className="rounded-md p-2 mb-2 bg-red-500 text-white text-center">{signUpError}</p>

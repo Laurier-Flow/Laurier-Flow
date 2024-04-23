@@ -2,13 +2,15 @@ import { SupabaseClient } from "@supabase/supabase-js"
 import ReviewSection from "./ReviewSection"
 
 export interface instructorReview {
-    createdAt: string,
+    id: string,
+    instructor_name_fk: string,
+    created_at: string,
     clear: number,
     engaging: number,
     liked: number,
-    course: string,
+    course_code_fk: string,
     program: string,
-    body: string
+    body: string,
 }
 
 async function getInstructorReviews(supabase: SupabaseClient<any, "public", any>, instructorName: string) {
@@ -22,6 +24,8 @@ async function getInstructorReviews(supabase: SupabaseClient<any, "public", any>
 
         if (data !== null && data !== undefined) {
             for (const s of data) {
+                const id = s.id
+                const instructorName = s.instructor_name_fk
                 const createdAt = s.created_at
                 const clear = s.clear
                 const engaging = s.engaging
@@ -42,11 +46,13 @@ async function getInstructorReviews(supabase: SupabaseClient<any, "public", any>
                     }
 
                     const review: instructorReview = {
-                        createdAt: createdAt,
+                        id: id,
+                        instructor_name_fk: instructorName,
+                        created_at: createdAt,
                         clear: clear,
                         engaging: engaging,
                         liked: liked,
-                        course: course,
+                        course_code_fk: course,
                         program: userData,
                         body: body
                     }
