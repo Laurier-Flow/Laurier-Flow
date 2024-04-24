@@ -1,5 +1,5 @@
 import React from "react";
-import { courseInfoDBResponse, getCourseData } from "./CourseInfo";
+import { getCourseData } from "./CourseInfo";
 import { SupabaseClient } from "@supabase/supabase-js";
 import axios from "axios";
 import * as cheerio from 'cheerio';
@@ -26,13 +26,11 @@ async function getPrerequisites(subjectCode: string, courseNumber: string) {
         const prerequisitesUrl = `https://loris.wlu.ca/register/ssb/courseSearchResults/getPrerequisites?term=202401&subjectCode=${subjectCode}&courseNumber=${courseNumber}`;
         const restrictionsUrl = `https://loris.wlu.ca/register/ssb/courseSearchResults/getRestrictions?term=202401&subjectCode=${subjectCode}&courseNumber=${courseNumber}`;
 
-        // Fetch both sets of data concurrently
         const [prerequisitesResponse, restrictionsResponse] = await Promise.all([
             axios.get(prerequisitesUrl),
             axios.get(restrictionsUrl)
         ]);
 
-        // Process prerequisites
         let $ = cheerio.load(prerequisitesResponse.data);
         let prerequisites: prerequisite[] = [];
         $('section[aria-labelledby="preReqs"] tbody tr').each((index, element) => {
@@ -48,20 +46,15 @@ async function getPrerequisites(subjectCode: string, courseNumber: string) {
             });
         });
 
-        // Process restrictions
         $ = cheerio.load(restrictionsResponse.data);
         let restrictions: any[] = [];
-        $('span').each(function () {
+        $('span').each(function (this: any) {
             restrictions.push({
                 text: $(this).text().trim(),
                 bold: $(this).hasClass('status-bold'),
             });
         });
 
-        // Here, both prerequisites and restrictions are fully populated
-        // Return them, pass them to another function, or log them as needed
-
-        // Return both in an object if you need to use them outside
         return { prerequisites, restrictions }
     } catch (error) {
         console.error('Error fetching data:', error);

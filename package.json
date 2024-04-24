@@ -16,6 +16,7 @@
     "@react-stately/data": "^3.11.2",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
+    "@types/cheerio": "^0.22.35",
     "autoprefixer": "10.4.15",
     "axios": "^1.6.5",
     "cheerio": "^1.0.0-rc.12",
