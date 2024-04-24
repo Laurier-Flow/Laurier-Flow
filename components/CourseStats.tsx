@@ -44,7 +44,7 @@ function CourseStats(
                         <div className="mb-2 flex justify-between items-center">
                             <h3 className="text-sm font-semibold text-gray-800 dark:text-white">Easy</h3>
                             <span className="text-sm text-gray-800 dark:text-white">
-                                {courseData[0].total_reviews !== 0 ? ((courseData[0].easy / courseData[0].total_reviews) * 20) + '%' : '0%'}
+                                {courseData[0].total_reviews !== 0 ? Math.round((courseData[0].easy / courseData[0].total_reviews) * 20) + '%' : '0%'}
                             </span>
                         </div>
                         <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-800" role="progressbar" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
@@ -56,7 +56,7 @@ function CourseStats(
                         <div className="mb-2 flex justify-between items-center">
                             <h3 className="text-sm font-semibold text-gray-800 dark:text-white pt-6">Useful</h3>
                             <span className="text-sm text-gray-800 dark:text-white pt-6">
-                                {courseData[0].total_reviews !== 0 ? ((courseData[0].useful / courseData[0].total_reviews) * 20) + '%' : '0%'}
+                                {courseData[0].total_reviews !== 0 ? Math.round((courseData[0].useful / courseData[0].total_reviews) * 20) + '%' : '0%'}
                             </span>
                         </div>
                         <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-800" role="progressbar" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
