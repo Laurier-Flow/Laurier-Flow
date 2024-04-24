@@ -58,7 +58,7 @@ async function CourseInfo({
       <div className="flex flex-col p-4 dark:bg-[url('/banner-sm.jpg')] bg-[url('/banner-sm-light.jpg')] md:dark:bg-[url('/banner-md.jpg')] md:bg-[url('/banner-md-light.jpg')] lg:dark:bg-[url('/banner.jpg')] lg:bg-[url('/banner-light.jpg')] md:flex-row md:justify-center">
         <div className="flex flex-1 pt-20 flex-row justify-between w-f max-w-6xl">
           <div className="flex flex-1 flex-col justify-end pl-4 text-background dark:text-foreground">
-            <h1 className='text-2xl font-bold md:text-5xl'>{courseData[0].course_code}</h1>
+            <h1 className='text-2xl font-bold md:text-5xl'>{courseName}</h1>
             <h2 className='text-xl md:text-3xl pt-2'>{courseData[0].course_title}</h2>
           </div>
           <div className="hidden md:inline w-1/2 translate-y-28">
