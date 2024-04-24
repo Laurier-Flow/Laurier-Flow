@@ -4,9 +4,9 @@ import Link from "next/link";
 export default function NotFound() {
     return (
         <BackgroundGradientAnimation gradientBackgroundStart='var(--gradient-start)' gradientBackgroundEnd='var(--gradient-end)' firstColor='var(--bubble)' secondColor='var(--bubble)' thirdColor='var(--bubble)' fourthColor='var(--bubble)' fifthColor='var(--bubble)' pointerColor='var(--bubble)'>
-            <div className='flex flex-col justify-center items-center fixed inset-0 z-[100] p-6 max-w-6xl w-full mx-auto gap-12'>
-                <h1 className="text-background dark:text-foreground text-6xl font-bold">Feeling lost?</h1>
-                <h2 className="text-background dark:text-foreground text-xl font-semibold">The page you're trying to reach doesn't exist</h2>
+            <div className='flex flex-col justify-center items-center absolute inset-0 z-[100] p-6 max-w-6xl w-full mx-auto gap-12'>
+                <h1 className="text-background dark:text-foreground text-4xl md:text-6xl font-bold">Feeling lost?</h1>
+                <h2 className="text-background dark:text-foreground text-lg md:text-xl font-semibold">The page you're trying to reach doesn't exist</h2>
                 <Link href="/">
                     <h2 className="text-background dark:text-foreground text-xl font-semibold underline underline-offset-4">Return Home</h2>
                 </Link>
