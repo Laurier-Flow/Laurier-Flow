@@ -43,7 +43,7 @@ interface sectionResponseDB {
   course_code_fk: string
 }
 
-async function fetchSectionData(sectionData: sectionResponseDB) {
+async function fetchSectionData(sectionData: sectionResponseDB, retryCount = 0, maxRetries = 5) {
   try {
     const [classDetailsResponse, enrollmentInfoResponse, facultyMeetingTimesResponse] = await Promise.all([
       axios.get('https://loris.wlu.ca/register/ssb/searchResults/getClassDetails?term=' + sectionData.term + '&courseReferenceNumber=' + sectionData.course_registration_number.toString()),
@@ -58,7 +58,14 @@ async function fetchSectionData(sectionData: sectionResponseDB) {
       facultyMeetingTimes: facultyMeetingTimesResponse.data
     };
   } catch (error) {
-    return fetchSectionData(sectionData)
+    if (retryCount < maxRetries) {
+      const delay = Math.pow(2, retryCount) * 100; // 100ms base delay
+      console.log(`Attempt ${retryCount + 1}: Retrying after ${delay} ms`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      return fetchSectionData(sectionData, retryCount + 1, maxRetries);
+    } else {
+      throw new Error(`Failed after ${maxRetries} retries: ${error}`);
+    }
   }
 }
 
@@ -74,7 +81,7 @@ export async function getCourseSections(nextTerm: string, currentTerm: string, p
     previousTerm: []
   }
 
-  const sectionDataRequests = sectionData?.map(fetchSectionData)
+  const sectionDataRequests = sectionData?.map(data => fetchSectionData(data))
 
   if (sectionDataRequests) {
     const sectionDataResponses = await Promise.all(sectionDataRequests);
@@ -160,7 +167,7 @@ async function CourseSchedule({
   ]);
 
   const termSections = await getCourseSections(nextTermData, currentTermData, previousTermData, 'course_code_fk', courseName, supabase, user);
-  
+
   const currentTermSections: section[] = termSections['currentTerm']
   const previousTermSections: section[] = termSections['previousTerm']
   const nextTermSections: section[] = termSections['nextTerm']
