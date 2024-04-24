@@ -45,29 +45,44 @@ interface sectionResponseDB {
 
 async function fetchSectionData(sectionData: sectionResponseDB, retryCount = 0, maxRetries = 5) {
   try {
-    const [classDetailsResponse, enrollmentInfoResponse, facultyMeetingTimesResponse] = await Promise.all([
-      axios.get('https://loris.wlu.ca/register/ssb/searchResults/getClassDetails?term=' + sectionData.term + '&courseReferenceNumber=' + sectionData.course_registration_number.toString()),
-      axios.get('https://loris.wlu.ca/register/ssb/searchResults/getEnrollmentInfo?term=' + sectionData.term + '&courseReferenceNumber=' + sectionData.course_registration_number.toString()),
-      axios.get('https://loris.wlu.ca/register/ssb/searchResults/getFacultyMeetingTimes?term=' + sectionData.term + '&courseReferenceNumber=' + sectionData.course_registration_number.toString())
+    const responses = await Promise.all([
+      axios.get(`https://loris.wlu.ca/register/ssb/searchResults/getClassDetails?term=${sectionData.term}&courseReferenceNumber=${sectionData.course_registration_number}`),
+      axios.get(`https://loris.wlu.ca/register/ssb/searchResults/getEnrollmentInfo?term=${sectionData.term}&courseReferenceNumber=${sectionData.course_registration_number}`),
+      axios.get(`https://loris.wlu.ca/register/ssb/searchResults/getFacultyMeetingTimes?term=${sectionData.term}&courseReferenceNumber=${sectionData.course_registration_number}`)
     ]);
 
+    const [classDetailsResponse, enrollmentInfoResponse, facultyMeetingTimesResponse] = responses;
+
+    // Check if any response is not what you expect (e.g., missing data)
+    if (!classDetailsResponse.data || !enrollmentInfoResponse.data || !facultyMeetingTimesResponse.data) {
+      throw new Error("One or more responses returned incomplete data.");
+    }
+
     return {
-      sectionData: sectionData,
+      sectionData,
       classDetails: classDetailsResponse.data,
       enrollmentInfo: enrollmentInfoResponse.data,
       facultyMeetingTimes: facultyMeetingTimesResponse.data
     };
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      console.error(`Fetch error: ${error.message}`);
+    } else {
+      console.error("An unknown error occurred.");
+    }
+    
     if (retryCount < maxRetries) {
       const delay = Math.pow(2, retryCount) * 100;
       console.log(`Attempt ${retryCount + 1}: Retrying after ${delay} ms`);
       await new Promise(resolve => setTimeout(resolve, delay));
       return fetchSectionData(sectionData, retryCount + 1, maxRetries);
     } else {
-      throw new Error(`Failed after ${maxRetries} retries: ${error}`);
+      console.error(`Failed after ${maxRetries} retries`);
+      throw error;
     }
   }
 }
+
 
 export async function getCourseSections(nextTerm: string, currentTerm: string, previousTerm: string, filterCol: string, colValue: string, supabase: SupabaseClient<any, "public", any>, user: User | null) {
   const { data: sectionData, error: sectionError } = await supabase
