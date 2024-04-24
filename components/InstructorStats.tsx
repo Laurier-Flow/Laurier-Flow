@@ -38,7 +38,7 @@ function InstructorStats({ instructorData, currentCourses }: { instructorData: i
                         <div className="mb-2 flex justify-between items-center">
                             <h3 className="text-sm font-semibold text-gray-800 dark:text-white">Clear</h3>
                             <span className="text-sm text-gray-800 dark:text-white">
-                                {instructorData[0].total_reviews !== 0 ? ((instructorData[0].clear / instructorData[0].total_reviews) * 20) + '%' : '0%'}
+                                {instructorData[0].total_reviews !== 0 ? Math.round((instructorData[0].clear / instructorData[0].total_reviews) * 20) + '%' : '0%'}
                             </span>
                         </div>
                         <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-800" role="progressbar" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
@@ -50,7 +50,7 @@ function InstructorStats({ instructorData, currentCourses }: { instructorData: i
                         <div className="mb-2 flex justify-between items-center">
                             <h3 className="text-sm font-semibold text-gray-800 dark:text-white pt-6">Engaging</h3>
                             <span className="text-sm text-gray-800 dark:text-white pt-6">
-                                {instructorData[0].total_reviews !== 0 ? ((instructorData[0].engaging / instructorData[0].total_reviews) * 20) + '%' : '0%'}
+                                {instructorData[0].total_reviews !== 0 ? Math.round((instructorData[0].engaging / instructorData[0].total_reviews) * 20) + '%' : '0%'}
                             </span>
                         </div>
                         <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-800" role="progressbar" aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>
