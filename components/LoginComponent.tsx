@@ -45,7 +45,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
     };
 
     return (!signup ? (
-        <div className={`hidden ${user ? (null) : ('md:flex')} md:flex-col bg-background p-8 border-slate-800 border backdrop-blur rounded-md lg:w-1/3`}>
+        <div className={`hidden ${user ? (null) : ('md:flex')} md:flex-col bg-background p-8 border-slate-800 border backdrop-blur rounded-md max-h-full overflow-auto w-1/2 lg:w-1/3`}>
             <form
                 className="flex flex-col gap-4 text-foreground bg-background"
                 onSubmit={handleLogin}
@@ -87,7 +87,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
             </form>
         </div>
     ) : (
-        <div className={`hidden ${user ? (null) : ('md:flex')} md:flex-col bg-stone-100 dark:bg-background p-8 border-slate-800 border backdrop-blur rounded-md lg:w-1/3`}>
+        <div className={`hidden ${user ? (null) : ('md:flex')} md:flex-col bg-stone-100 dark:bg-background p-8 border-slate-800 border backdrop-blur rounded-md max-h-full overflow-auto w-1/2 lg:w-1/3`}>
             <form
                 className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
                 onSubmit={handleSignUp}
