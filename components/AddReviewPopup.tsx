@@ -18,6 +18,11 @@ export default function AddReviewPopup({
     isInstructor: boolean
 }): React.ReactElement {
     const popupRef = useRef<HTMLDivElement | null>(null);
+    const [isVisible, setIsVisible] = useState(false)
+
+    useEffect(() => {
+        setIsVisible(true)
+    }, [])
 
     const handleClickOutside = (event: MouseEvent) => {
         if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
@@ -65,7 +70,7 @@ export default function AddReviewPopup({
     }
 
     return (
-        <div ref={popupRef} className="overflow-y-auto max-h-[90vh] border-2 border-secondary dark:border-secondary fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background dark:bg-background/80 backdrop-blur rounded-md max-w-xl w-11/12">
+        <div ref={popupRef} className={`transform transition-all duration-500 ${isVisible ? 'opacity-100 -translate-y-1/2' : 'opacity-0 -translate-y-2/3'} overflow-y-auto max-h-[90vh] border-2 dark:border-secondary fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background dark:bg-background/80 backdrop-blur rounded-md max-w-xl w-11/12`}>
             <form
                 className="animate-in flex-1 flex flex-col w-full justify-center dark:text-white"
                 action={() => submitNewReview(easy, useful, liked, instructor, text, courseName, user)}
