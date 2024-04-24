@@ -65,7 +65,7 @@ const TeamMember: React.FC<TeamMemberProps> = ({
             </svg>
           </a>
         </div>
-        <p className=" font-extrabold">{role}</p>
+        <p className=" font-bold">{role}</p>
         <p>
           Derrek designed the new UW Flow and occasionally writes frontend code
           - he is interested in the intersection of software and design.

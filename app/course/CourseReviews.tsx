@@ -1,12 +1,14 @@
-import Review from "@/components/Review";
+import { Review } from "@/components/Review";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export interface courseReview {
-    createdAt: string,
+    id: string
+    course_code_fk: string
+    created_at: string,
     easy: number,
     useful: number,
     liked: number,
-    instructor: string,
+    instructor_name_fk: string,
     program: string,
     body: string
 }
@@ -22,12 +24,14 @@ async function getCourseReviews(supabase: SupabaseClient<any, "public", any>, co
 
         if (data !== null && data !== undefined) {
             for (const s of data) {
+                const id = s.id
                 const createdAt = s.created_at
                 const easy = s.easy
                 const useful = s.useful
                 const liked = s.liked
                 const instructor = s.instructor_name_fk
                 const body = s.body
+                const course = s.course_code_fk
 
                 try {
                     const { data, error } = await supabase
@@ -42,11 +46,13 @@ async function getCourseReviews(supabase: SupabaseClient<any, "public", any>, co
                     }
 
                     const review = {
-                        createdAt: createdAt,
+                        id: id,
+                        course_code_fk: course,
+                        created_at: createdAt,
                         easy: easy,
                         useful: useful,
                         liked: liked,
-                        instructor: instructor,
+                        instructor_name_fk: instructor,
                         program: userData,
                         body: body
                     }
@@ -74,11 +80,21 @@ export default async function CourseReviews({
     courseName: string
 }) {
     const courseReviews: courseReview[] | undefined = await getCourseReviews(supabase, courseName);
+    let hasReviewsWithBody: boolean = false
+
+    if (courseReviews) {
+        for (const review of courseReviews) {
+            if (review.body && review.body != '') {
+                hasReviewsWithBody = true
+                break
+            }
+        }
+    }
 
     return (
         <div className="p-4">
             <h1 className="text-xl">Course Reviews</h1>
-            {courseReviews?.length != 0 ? (
+            {(courseReviews?.length != 0 && hasReviewsWithBody) ? (
                 courseReviews?.map((review: courseReview, index: any) => (
                     (((review.body) && (review.body != '')) ? (index === 0 ? (
                         <Review review={review} index={index} />
@@ -88,7 +104,7 @@ export default async function CourseReviews({
                         </div>
                     )
                     ) : null)
-                ))) : (<p className="mt-4 whitespace-nowrap text-md text-gray-800 dark:text-gray-200">No Reviews Yet</p>)}
+                ))) : (<p className="mt-4 whitespace-nowrap text-md text-gray-800 dark:text-gray-200">No Reviews With Body Yet</p>)}
         </div>
     );
 }
