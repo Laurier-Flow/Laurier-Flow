@@ -64,7 +64,6 @@ async function CoursePage({ params }: { params: { code: string } }) {
                         </div>
                     </div>
                 </div>
-                <FormWidget />
             </Suspense>
         </>
     );
