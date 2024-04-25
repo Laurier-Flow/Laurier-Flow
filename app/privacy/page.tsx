@@ -1,7 +1,6 @@
-import dynamic from "next/dynamic";
 import Header from "@/components/Header";
 import { fetchUser } from "@/utils/supabase/authActions";
-const FormWidget = dynamic(() => import("@/components/FormWidget"), {ssr: false});
+
 
 export default async function Privacy() {
   const user = await fetchUser();
@@ -99,7 +98,6 @@ export default async function Privacy() {
           </p>
         </div>
       </div>
-      <FormWidget />
     </>
   );
 }

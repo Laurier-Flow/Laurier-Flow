@@ -1,10 +1,8 @@
 import "@/app/globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import Header from "@/components/Header";
+import dynamic from "next/dynamic";
 import Footer from "@/components/Footer";
-import { CirclesWithBar } from "react-loader-spinner";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import { useEffect, useState } from "react";
+const FormWidget = dynamic(() => import("@/components/FormWidget"), {ssr: false});
 
 // export const metadata = {
 //   title: "Laurier Flow",
@@ -29,8 +27,9 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <FormWidget />
         </ThemeProvider>
-      </body> 
+      </body>
     </html>
   );
 }
