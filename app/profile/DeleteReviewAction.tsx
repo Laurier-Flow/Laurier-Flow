@@ -12,7 +12,7 @@ export const handleCourseReviewDelete = async (id: string) => {
         .delete()
         .eq('id', id)
 
-    console.log(error)
+    console.error(error)
 }
 
 export const handleInstructorReviewDelete = async (id: string) => {
@@ -24,5 +24,5 @@ export const handleInstructorReviewDelete = async (id: string) => {
         .delete()
         .eq('id', id)
 
-    console.log(error)
+    console.error(error)
 }

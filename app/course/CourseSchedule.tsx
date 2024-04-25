@@ -60,7 +60,7 @@ async function fetchSectionData(sectionData: sectionResponseDB, retryCount = 0, 
   } catch (error) {
     if (retryCount < maxRetries) {
       const delay = Math.pow(2, retryCount) * 100;
-      console.log(`Attempt ${retryCount + 1}: Retrying after ${delay} ms`);
+      console.error(`Attempt ${retryCount + 1}: Retrying after ${delay} ms`);
       await new Promise(resolve => setTimeout(resolve, delay));
       return fetchSectionData(sectionData, retryCount + 1, maxRetries);
     } else {
