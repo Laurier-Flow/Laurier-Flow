@@ -127,7 +127,7 @@ function ScheduleTab({
                             </div>
                         </div>
                     </div>
-                    {termSections.length ?
+                    {(termSections.length && ((professor && user) || !professor)) ?
                         <div className="pt-4 px-4">
                             <nav className="flex items-center space-x-1">
                                 <button onClick={handlePreviousPageClick} type="button" className="p-2.5 min-w-[40px] inline-flex justify-center items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10">
