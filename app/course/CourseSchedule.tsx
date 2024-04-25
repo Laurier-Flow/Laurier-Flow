@@ -47,7 +47,7 @@ async function fetchSectionData(sectionData: sectionResponseDB, retryCount = 0, 
   try {
     const [classDetailsResponse, enrollmentInfoResponse, facultyMeetingTimesResponse] = await Promise.all([
       axios.get('https://loris.wlu.ca/register/ssb/searchResults/getClassDetails?term=' + sectionData.term + '&courseReferenceNumber=' + sectionData.course_registration_number.toString()),
-      axios.get('https://loris.wlu.ca/register/ssb/searchResults/getEnrollmentInfo?term=' + sectionData.term + '&courseReferenceNumber=' + sectionData.course_registration_number.toString()),
+      axios.post('https://loris.wlu.ca/register/ssb/searchResults/getEnrollmentInfo?term=' + sectionData.term + '&courseReferenceNumber=' + sectionData.course_registration_number.toString()),
       axios.get('https://loris.wlu.ca/register/ssb/searchResults/getFacultyMeetingTimes?term=' + sectionData.term + '&courseReferenceNumber=' + sectionData.course_registration_number.toString())
     ]);
 
@@ -96,10 +96,17 @@ export async function getCourseSections(nextTerm: string, currentTerm: string, p
       const type = $('span').filter((index, element) => $(element).text().includes('Instructional Method:'))[0]?.next?.data?.trim()
 
       $ = cheerio.load(element.enrollmentInfo)
-      /** @ts-ignore */
-      const enrollment = $('span').filter((index, element) => $(element).text().includes('Enrolment Actual:'))[0]?.next?.next?.children[0].data.trim()
-      /** @ts-ignore */
-      const enrollmentMax = $('span').filter((index, element) => $(element).text().includes('Enrolment Maximum:'))[0]?.next?.next?.children[0].data.trim()
+
+      const enrollmentElement = $('span').filter((index, element) => $(element).text().includes('Enrolment Actual:'))[0];
+      let enrollment = null
+      let enrollmentMax = null
+      if (enrollmentElement && enrollmentElement.next && enrollmentElement.next.next && enrollmentElement.next.next.type === 'tag') {
+        enrollment = enrollmentElement.next.next.children[0].data?.trim();
+      }
+      const enrollmentMaxElement = $('span').filter((index, element) => $(element).text().includes('Enrolment Maximum:'))[0];
+      if (enrollmentMaxElement && enrollmentMaxElement.next && enrollmentMaxElement.next.next && enrollmentMaxElement.next.next.type === 'tag') {
+        enrollmentMax = enrollmentMaxElement.next.next.children[0].data?.trim();
+      }
 
       const beginTime = element.facultyMeetingTimes.fmt[0]?.meetingTime?.beginTime
       const endTime = element.facultyMeetingTimes.fmt[0]?.meetingTime?.endTime
