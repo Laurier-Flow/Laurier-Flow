@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { section } from "./CourseSchedule";
 import DaysDisplay from "./DaysDisplay";
 import React from "react";
@@ -23,7 +23,12 @@ function ScheduleTab({
     professor: boolean,
     user: User | null
 }) {
-    const [showAddReviewPopup, setShowAddReviewPopup] = useState<boolean>(false);
+    const [currentPage, setCurrentPage] = useState(1)
+    const [termSectionsVisible, setTermSectionVisible] = useState(termSections.slice(0, 11))
+
+    useEffect(() => {
+        setTermSectionVisible(termSections.slice(((currentPage - 1) * 10), ((currentPage - 1) * 10) + 10))
+    }, [currentPage])
 
     const {
         showLoginPopup,
@@ -32,14 +37,33 @@ function ScheduleTab({
         toggleSignUpPopup,
     } = usePopupManager();
 
-    useManageBodyScroll(showLoginPopup || showSignUpPopup || showAddReviewPopup);
+    useManageBodyScroll(showLoginPopup || showSignUpPopup);
+
+    const pages = Math.ceil(termSections.length / 10)
+    const pageButtons = []
+
+    for (let i = 1; i <= pages; i++) {
+        pageButtons.push(<button type="button" onClick={() => setCurrentPage(i)} className={`min-w-[40px] flex justify-center items-center text-gray-800 ${currentPage !== i ? ('hover:bg-gray-100') : (null)} py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-white ${currentPage !== i ? ('dark:hover:bg-white/10') : (null)} ${currentPage === i ? ('bg-secondary') : (null)}`}>{i}</button>)
+    }
+
+    const handlePreviousPageClick = () => {
+        if (currentPage !== 1) {
+            setCurrentPage(p => p - 1)
+        }
+    }
+
+    const handleNextPageClick = () => {
+        if (currentPage !== pages) {
+            setCurrentPage(p => p + 1)
+        }
+    }
 
     return (
         <>
             <div id="equal-width-elements-1" className={activeTab === tabNumber ? '' : 'hidden'} role="tabpanel" aria-labelledby="equal-width-elements-item-1">
                 <div className="flex flex-col">
                     <div className="-m-1.5 overflow-x-auto">
-                        <div className="p-1.5 min-w-full inline-block align-middle">
+                        <div className="p-1.5 min-w-full inline-block align-middle overflow-x-auto">
                             <div className="overflow-hidden">
                                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                     <thead>
@@ -65,7 +89,7 @@ function ScheduleTab({
                                                 Login to View
                                             </button>
                                         </td></tr>) : (
-                                            termSections.length ? (termSections.map((item: section, index) => (
+                                            termSectionsVisible.length ? (termSectionsVisible.map((item: section, index) => (
                                                 <tr key={index} >
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.crn}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">{item.type}</td>
@@ -103,6 +127,21 @@ function ScheduleTab({
                             </div>
                         </div>
                     </div>
+                    {termSections.length ?
+                        <div className="pt-4 px-4">
+                            <nav className="flex items-center space-x-1">
+                                <button onClick={handlePreviousPageClick} type="button" className="p-2.5 min-w-[40px] inline-flex justify-center items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10">
+                                    <span aria-hidden="true">«</span>
+                                    <span className="sr-only">Previous</span>
+                                </button>
+                                {pageButtons}
+                                <button onClick={handleNextPageClick} type="button" className="p-2.5 min-w-[40px] inline-flex justify-center items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10">
+                                    <span className="sr-only">Next</span>
+                                    <span aria-hidden="true">»</span>
+                                </button>
+                            </nav>
+                        </div> : null
+                    }
                 </div>
             </div>
             {showLoginPopup && !showSignUpPopup && (
