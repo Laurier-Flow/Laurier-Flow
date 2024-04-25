@@ -1,6 +1,7 @@
+import dynamic from "next/dynamic";
 import Header from "@/components/Header";
 import { fetchUser } from "@/utils/supabase/authActions";
-import FormWidget from "@/components/FormWidget";
+const FormWidget = dynamic(() => import("@/components/FormWidget"), {ssr: false});
 
 export default async function Privacy() {
   const user = await fetchUser();

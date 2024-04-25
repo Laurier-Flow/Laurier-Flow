@@ -9,7 +9,6 @@ import { Suspense } from "react";
 import CourseSchedule from "../CourseSchedule";
 import CourseRequisites from "../CourseRequisites";
 import Spinner from "@/components/Spinner";
-import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { fetchUser } from "@/utils/supabase/authActions";
 const AddReview = dynamic(() => import("../AddReview"), { ssr: false });
