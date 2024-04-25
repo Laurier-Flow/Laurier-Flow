@@ -11,7 +11,7 @@ export default function DeleteReviewPopup({onClose, reviewId, instructor}: {onCl
             handleCourseReviewDelete(reviewId)
         }
         onClose()
-        location.reload()
+        window.location.href = window.location.href.split('?')[0] + '?upd=' + new Date().getTime();
     }
 
     return (

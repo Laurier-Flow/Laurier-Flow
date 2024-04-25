@@ -1,5 +1,5 @@
-import { Review } from "@/components/Review";
 import { SupabaseClient } from "@supabase/supabase-js";
+import CourseReviewsDisplay from "./CourseReviewsDisplay";
 
 export interface courseReview {
     id: string
@@ -92,19 +92,6 @@ export default async function CourseReviews({
     }
 
     return (
-        <div className="p-4">
-            <h1 className="text-xl">Course Reviews</h1>
-            {(courseReviews?.length != 0 && hasReviewsWithBody) ? (
-                courseReviews?.map((review: courseReview, index: any) => (
-                    (((review.body) && (review.body != '')) ? (index === 0 ? (
-                        <Review review={review} index={index} />
-                    ) : (
-                        <div className="pt-4">
-                            <Review review={review} index={index} />
-                        </div>
-                    )
-                    ) : null)
-                ))) : (<p className="mt-4 whitespace-nowrap text-md text-gray-800 dark:text-gray-200">No Reviews With Body Yet</p>)}
-        </div>
+        <CourseReviewsDisplay courseReviews={courseReviews} hasReviewsWithBody={hasReviewsWithBody} />
     );
 }
