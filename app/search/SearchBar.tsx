@@ -134,6 +134,7 @@ export default function SearchBar() {
     <div className="relative z-[100] block box-border w-full text-base peer has-[:focus-visible]:peer">
       <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground z-[100]" />
       <Input
+	  	type="search"
         placeholder="Search for courses, subjects or professors"
         onChange={(e) => {
           console.log(e.target.value);
