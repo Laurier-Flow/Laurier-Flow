@@ -10,6 +10,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
     const [signup, setSignup] = useState(false)
     const [signUpError, setSignUpError] = useState<string>('')
     const [loginError, setLoginError] = useState<string>('')
+    const [confirmMessage, setConfirmMessage] = useState(false)
     const [selectedProgram, setSelectedProgram] = useState('');
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -55,6 +56,11 @@ export default function LoginComponent({ user }: { user: User | null }) {
                 {loginError &&
                     <p className="rounded-md p-2 mb-2 bg-red-500 text-white text-center">{loginError}</p>
                 }
+                {confirmMessage &&
+                    <div className="mt-2 bg-teal-500 text-sm text-white rounded-lg p-4" role="alert">
+                        <span className="font-bold">Success</span> Check your inbox for a verification link
+                    </div>
+                }
                 <input
                     className="rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
                     name="email"
@@ -82,7 +88,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
                 <hr className="mb-6 border-gray-300 dark:border-gray-800"></hr>
 
                 <div className="flex justify-center text-foreground">
-                    <h1>New to Laurier Flow? <span onClick={() => {setSignup(true); setLoginError('')}} className="cursor-pointer underline underline-offset-2 decoration-1">Sign Up</span></h1>
+                    <h1>New to Laurier Flow? <span onClick={() => { setSignup(true); setLoginError('') }} className="cursor-pointer underline underline-offset-2 decoration-1">Sign Up</span></h1>
                 </div>
             </form>
         </div>
@@ -160,7 +166,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
                     onClick={() => setSignup(false)}
                     className="flex justify-center text-foreground"
                 >
-                    <h1>Already have an account? <span onClick={() => {setSignup(false); setSignUpError('')}} className="cursor-pointer underline underline-offset-2 decoration-1">Log In</span></h1>
+                    <h1>Already have an account? <span onClick={() => { setSignup(false); setSignUpError('') }} className="cursor-pointer underline underline-offset-2 decoration-1">Log In</span></h1>
                 </div>
             </form>
         </div>
