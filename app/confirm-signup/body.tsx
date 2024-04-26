@@ -5,11 +5,11 @@ import { ShieldCheck } from "lucide-react";
 export default function Body() {
     const searchParams = useSearchParams()
     const confirmation_url = searchParams.get('confirmation_url')
-    /*
+    
     if (!confirmation_url) {
         redirect('/')
     }
-    */
+    
 
     return (
         <BackgroundGradientAnimation gradientBackgroundStart='var(--gradient-start)' gradientBackgroundEnd='var(--gradient-end)' firstColor='var(--bubble)' secondColor='var(--bubble)' thirdColor='var(--bubble)' fourthColor='var(--bubble)' fifthColor='var(--bubble)' pointerColor='var(--bubble)'>
