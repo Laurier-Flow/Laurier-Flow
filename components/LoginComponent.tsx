@@ -50,7 +50,8 @@ export default function LoginComponent({ user }: { user: User | null }) {
             if (result.success) {
                 setConfirmMessage(true)
             } else {
-                setSignUpError(result.message);
+                setSignUpError(result.message)
+                setConfirmMessage(false)
             }
         }
     };
