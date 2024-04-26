@@ -1,12 +1,18 @@
 import { BackgroundGradientAnimation } from "@/components/background-gradient-animation";
-import { redirect, useSearchParams } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { ShieldCheck } from "lucide-react";
+import { handleVerifyEmail } from "./ConfirmAuthAction";
 
 export default function Body() {
     const searchParams = useSearchParams()
-    const confirmation_url = searchParams.get('confirmation_url')
+    const token_hash = searchParams.get('token_hash')
 
-    if (!confirmation_url) {
+    if (!token_hash) {
+        redirect('/')
+    }
+
+    const handleVerifyClick = () => {
+        handleVerifyEmail(token_hash)
         redirect('/')
     }
 
@@ -19,12 +25,10 @@ export default function Body() {
                 <h2 className="text-lg md:text-2xl font-light text-background dark:text-foreground">
                     We need to confirm you're a Laurier student, click verify to complete the registration process.
                 </h2>
-                <a href={confirmation_url} className="w-full max-w-xs">
-                    <button type="button" className="animate-bounce flex flex-row items-center justify-center gap-2 w-full mt-8 py-4 px-6 text-lg font-semibold rounded-lg bg-secondary hover:bg-secondary-dark text-black dark:text-white transition-all duration-1000 ease-in-out">
-                        <ShieldCheck />
-                        <h1>Verify</h1>
-                    </button>
-                </a>
+                <button onClick={handleVerifyClick} type="button" className="animate-bounce flex flex-row items-center justify-center gap-2 w-full mt-8 py-4 px-6 text-lg font-semibold rounded-lg bg-secondary hover:bg-secondary-dark text-black dark:text-white transition-all duration-1000 ease-in-out">
+                    <ShieldCheck />
+                    <h1>Verify</h1>
+                </button>
             </div>
         </BackgroundGradientAnimation>
     )
