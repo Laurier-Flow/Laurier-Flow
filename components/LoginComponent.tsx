@@ -18,6 +18,8 @@ export default function LoginComponent({ user }: { user: User | null }) {
 
         const formData = new FormData(event.currentTarget);
 
+
+
         const result = await signIn(formData);
 
         if (result.success) {
@@ -32,12 +34,20 @@ export default function LoginComponent({ user }: { user: User | null }) {
 
         const formData = new FormData(event.currentTarget);
 
-        const result = await signUp(formData);
+        const emailRegex = /(@mylaurier\.ca|@wlu\.ca)$/i;
 
-        if (result.success) {
-            location.reload()
+        const email = formData.get("email")?.toString()
+
+        if (email && !emailRegex.test(email)) {
+            setSignUpError('Email needs to be of type mylaurier.ca or wlu.ca')
         } else {
-            setSignUpError(result.message);
+            const result = await signUp(formData);
+
+            if (result.success) {
+                setConfirmMessage(true)
+            } else {
+                setSignUpError(result.message);
+            }
         }
     };
 
@@ -54,11 +64,8 @@ export default function LoginComponent({ user }: { user: User | null }) {
             >
                 <label className="text-3xl font-bold mb-5 text-foreground">Log In</label>
                 {loginError &&
-                    <p className="rounded-md p-2 mb-2 bg-red-500 text-white text-center">{loginError}</p>
-                }
-                {confirmMessage &&
-                    <div className="mt-2 bg-teal-500 text-sm text-white rounded-lg p-4" role="alert">
-                        <span className="font-bold">Success</span> Check your inbox for a verification link
+                    <div className="my-2 bg-red-500 text-md text-white rounded-lg p-4" role="alert">
+                        {loginError}
                     </div>
                 }
                 <input
@@ -97,13 +104,18 @@ export default function LoginComponent({ user }: { user: User | null }) {
             <form
                 className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
                 onSubmit={handleSignUp}
-                onChange={() => setSignUpError('')}
+                onChange={() => { setSignUpError(''); setConfirmMessage(false) }}
             >
                 <label className="text-3xl font-bold mb-5 text-foreground">
                     Sign Up
                 </label>
                 {signUpError &&
                     <p className="rounded-md p-2 mb-2 bg-red-500 text-white text-center">{signUpError}</p>
+                }
+                {confirmMessage &&
+                    <div className="my-2 bg-teal-500 text-md text-white rounded-lg p-4" role="alert">
+                        <span className="font-bold">Success!</span> Check your inbox for a verification link then <span onClick={() => { setSignup(false); setSignUpError(''); setConfirmMessage(false) }} className="cursor-pointer underline underline-offset-2 decoration-1">login.</span> It may take a minute to arrive
+                    </div>
                 }
                 <div className="flex flex-row gap-4 mb-2">
                     <input
@@ -166,7 +178,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
                     onClick={() => setSignup(false)}
                     className="flex justify-center text-foreground"
                 >
-                    <h1>Already have an account? <span onClick={() => { setSignup(false); setSignUpError('') }} className="cursor-pointer underline underline-offset-2 decoration-1">Log In</span></h1>
+                    <h1>Already have an account? <span onClick={() => { setSignup(false); setSignUpError(''); setConfirmMessage(false) }} className="cursor-pointer underline underline-offset-2 decoration-1">Log In</span></h1>
                 </div>
             </form>
         </div>
