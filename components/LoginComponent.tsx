@@ -18,6 +18,8 @@ export default function LoginComponent({ user }: { user: User | null }) {
 
         const formData = new FormData(event.currentTarget);
 
+
+
         const result = await signIn(formData);
 
         if (result.success) {
@@ -32,12 +34,20 @@ export default function LoginComponent({ user }: { user: User | null }) {
 
         const formData = new FormData(event.currentTarget);
 
-        const result = await signUp(formData);
+        const emailRegex = /(@mylaurier\.ca|@wlu\.ca)$/i;
 
-        if (result.success) {
-            setConfirmMessage(true)
+        const email = formData.get("email")?.toString()
+
+        if (email && !emailRegex.test(email)) {
+            setSignUpError('Email needs to be of type mylaurier.ca or wlu.ca')
         } else {
-            setSignUpError(result.message);
+            const result = await signUp(formData);
+
+            if (result.success) {
+                setConfirmMessage(true)
+            } else {
+                setSignUpError(result.message);
+            }
         }
     };
 
@@ -104,7 +114,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
                 }
                 {confirmMessage &&
                     <div className="my-2 bg-teal-500 text-md text-white rounded-lg p-4" role="alert">
-                        <span className="font-bold">Success!</span> Check your inbox for a verification link then <span onClick={() => { setSignup(false); setSignUpError(''); setConfirmMessage(false) }} className="cursor-pointer underline underline-offset-2 decoration-1">login</span>
+                        <span className="font-bold">Success!</span> Check your inbox for a verification link then <span onClick={() => { setSignup(false); setSignUpError(''); setConfirmMessage(false) }} className="cursor-pointer underline underline-offset-2 decoration-1">login.</span> It may take a minute to arrive
                     </div>
                 }
                 <div className="flex flex-row gap-4 mb-2">
