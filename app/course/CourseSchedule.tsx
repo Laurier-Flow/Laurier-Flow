@@ -97,16 +97,8 @@ export async function getCourseSections(nextTerm: string, currentTerm: string, p
 
       $ = cheerio.load(element.enrollmentInfo)
 
-      const enrollmentElement = $('span').filter((index, element) => $(element).text().includes('Enrolment Actual:'))[0];
-      let enrollment = null
-      let enrollmentMax = null
-      if (enrollmentElement && enrollmentElement.next && enrollmentElement.next.next && enrollmentElement.next.next.type === 'tag') {
-        enrollment = enrollmentElement.next.next.children[0].data?.trim();
-      }
-      const enrollmentMaxElement = $('span').filter((index, element) => $(element).text().includes('Enrolment Maximum:'))[0];
-      if (enrollmentMaxElement && enrollmentMaxElement.next && enrollmentMaxElement.next.next && enrollmentMaxElement.next.next.type === 'tag') {
-        enrollmentMax = enrollmentMaxElement.next.next.children[0].data?.trim();
-      }
+      const enrollment = $('span:contains("Enrolment Actual:")').next().text();
+      const enrollmentMax = $('span:contains("Enrolment Maximum:")').next().text();
 
       const beginTime = element.facultyMeetingTimes.fmt[0]?.meetingTime?.beginTime
       const endTime = element.facultyMeetingTimes.fmt[0]?.meetingTime?.endTime
