@@ -1,5 +1,4 @@
 import { BackgroundGradientAnimation } from "@/components/background-gradient-animation";
-import Link from "next/link";
 
 export default function NotFound() {
     return (
