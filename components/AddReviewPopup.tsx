@@ -66,7 +66,7 @@ export default function AddReviewPopup({
             handleCourseReviewSubmit(easy, useful, liked, instructor === 'Other' ? null : instructor, text, courseName, user)
         }
         onClose()
-        location.reload()
+        window.location.href = window.location.href.split('?')[0] + '?upd=' + new Date().getTime();
     }
 
     return (

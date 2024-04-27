@@ -10,12 +10,15 @@ export default function LoginComponent({ user }: { user: User | null }) {
     const [signup, setSignup] = useState(false)
     const [signUpError, setSignUpError] = useState<string>('')
     const [loginError, setLoginError] = useState<string>('')
+    const [confirmMessage, setConfirmMessage] = useState(false)
     const [selectedProgram, setSelectedProgram] = useState('');
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
+
+
 
         const result = await signIn(formData);
 
@@ -31,12 +34,25 @@ export default function LoginComponent({ user }: { user: User | null }) {
 
         const formData = new FormData(event.currentTarget);
 
-        const result = await signUp(formData);
+        /*
+        const emailRegex = /(@mylaurier\.ca|@wlu\.ca)$/i;
 
-        if (result.success) {
-            location.reload()
+        const email = formData.get("email")?.toString()
+        */
+
+        //email && !emailRegex.test(email)
+
+        if (false) {
+            setSignUpError('Email needs to be of type mylaurier.ca or wlu.ca')
         } else {
-            setSignUpError(result.message);
+            const result = await signUp(formData);
+
+            if (result.success) {
+                setConfirmMessage(true)
+            } else {
+                setSignUpError(result.message)
+                setConfirmMessage(false)
+            }
         }
     };
 
@@ -53,17 +69,19 @@ export default function LoginComponent({ user }: { user: User | null }) {
             >
                 <label className="text-3xl font-bold mb-5 text-foreground">Log In</label>
                 {loginError &&
-                    <p className="rounded-md p-2 mb-2 bg-red-500 text-white text-center">{loginError}</p>
+                    <div className="my-2 bg-red-500 text-md text-white rounded-lg p-4" role="alert">
+                        {loginError}
+                    </div>
                 }
                 <input
-                    className="rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
+                    className="rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
                     name="email"
                     placeholder="Laurier Email"
                     required
                 />
 
                 <input
-                    className="rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
+                    className="rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
                     type="password"
                     name="password"
                     placeholder="Password"
@@ -82,7 +100,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
                 <hr className="mb-6 border-gray-300 dark:border-gray-800"></hr>
 
                 <div className="flex justify-center text-foreground">
-                    <h1>New to Laurier Flow? <span onClick={() => {setSignup(true); setLoginError('')}} className="cursor-pointer underline underline-offset-2 decoration-1">Sign Up</span></h1>
+                    <h1>New to Laurier Flow? <span onClick={() => { setSignup(true); setLoginError('') }} className="cursor-pointer underline underline-offset-2 decoration-1">Sign Up</span></h1>
                 </div>
             </form>
         </div>
@@ -91,7 +109,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
             <form
                 className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
                 onSubmit={handleSignUp}
-                onChange={() => setSignUpError('')}
+                onChange={() => { setSignUpError(''); setConfirmMessage(false) }}
             >
                 <label className="text-3xl font-bold mb-5 text-foreground">
                     Sign Up
@@ -99,22 +117,27 @@ export default function LoginComponent({ user }: { user: User | null }) {
                 {signUpError &&
                     <p className="rounded-md p-2 mb-2 bg-red-500 text-white text-center">{signUpError}</p>
                 }
+                {confirmMessage &&
+                    <div className="my-2 bg-teal-500 text-md text-white rounded-lg p-4" role="alert">
+                        <span className="font-bold">Success!</span> Check your inbox for a verification link then <span onClick={() => { setSignup(false); setSignUpError(''); setConfirmMessage(false) }} className="cursor-pointer underline underline-offset-2 decoration-1">login.</span> It may take a minute to arrive
+                    </div>
+                }
                 <div className="flex flex-row gap-4 mb-2">
                     <input
-                        className="w-1/2 rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
+                        className="w-1/2 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
                         name="first name"
                         placeholder="First Name"
                         required
                     />
                     <input
-                        className="w-1/2 rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
+                        className="w-1/2 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
                         name="last name"
                         placeholder="Last Name"
                         required
                     />
                 </div>
                 <select
-                    className="mb-2 rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 text-stone-600 dark:text-gray-400 placeholder-stone-400 dark:placeholder-gray-400"
+                    className="mb-2 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 text-stone-600 dark:text-gray-400 placeholder-stone-400 dark:placeholder-gray-400"
                     name="program"
                     value={selectedProgram}
                     onChange={handleProgramChange}
@@ -130,14 +153,14 @@ export default function LoginComponent({ user }: { user: User | null }) {
                     ))}
                 </select>
                 <input
-                    className="mb-2 rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
+                    className="mb-2 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
                     name="email"
                     placeholder="Email"
                     required
                 />
 
                 <input
-                    className="mb-4 rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
+                    className="mb-4 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
                     type="password"
                     name="password"
                     placeholder="Password"
@@ -160,7 +183,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
                     onClick={() => setSignup(false)}
                     className="flex justify-center text-foreground"
                 >
-                    <h1>Already have an account? <span onClick={() => {setSignup(false); setSignUpError('')}} className="cursor-pointer underline underline-offset-2 decoration-1">Log In</span></h1>
+                    <h1>Already have an account? <span onClick={() => { setSignup(false); setSignUpError(''); setConfirmMessage(false) }} className="cursor-pointer underline underline-offset-2 decoration-1">Log In</span></h1>
                 </div>
             </form>
         </div>

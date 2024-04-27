@@ -1,9 +1,7 @@
-// AuthActions.ts
 'use server';
 
 import { headers, cookies } from 'next/headers';
 import { createClient } from './server';
-import { User } from '@supabase/supabase-js';
 
 export const signIn = async (formData: FormData) => {
 
@@ -18,7 +16,7 @@ export const signIn = async (formData: FormData) => {
   });
 
   if (error) {
-    return { success: false, message: 'Could not authenticate user' };
+    return { success: false, message: error.message };
   }
 
   return { success: true, message: 'Login successful' };
@@ -50,7 +48,7 @@ export const signUp = async (formData: FormData) => {
 
   if (error) {
     console.log(error);
-    return { success: false, message: 'Could not authenticate user' };
+    return { success: false, message: error.message };
   }
 
   return { success: true, message: 'Check email to continue sign-in process' };

@@ -83,20 +83,20 @@ export default function SignUpPopup({
         }
         <div className="flex flex-row gap-4 mb-2">
           <input
-            className="w-1/2 rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
+            className="w-1/2 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
             name="first name"
             placeholder="First Name"
             required
           />
           <input
-            className="w-1/2 rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
+            className="w-1/2 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
             name="last name"
             placeholder="Last Name"
             required
           />
         </div>
         <select
-          className="mb-2 rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 text-stone-600 dark:text-gray-400 placeholder-stone-400 dark:placeholder-gray-400"
+          className="mb-2 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 text-stone-600 dark:text-gray-400 placeholder-stone-400 dark:placeholder-gray-400"
           name="program"
           value={selectedProgram}
           onChange={handleProgramChange}
@@ -112,14 +112,14 @@ export default function SignUpPopup({
           ))}
         </select>
         <input
-          className="mb-2 rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
+          className="mb-2 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
           name="email"
           placeholder="Email"
           required
         />
 
         <input
-          className="mb-4 rounded-md px-4 py-2 bg-stone-200 dark:bg-inherit border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
+          className="mb-4 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
           type="password"
           name="password"
           placeholder="Password"
