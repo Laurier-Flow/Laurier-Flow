@@ -8,6 +8,7 @@ type TeamMemberProps = {
   linkedinUrl: string;
   igUrl: string;
   githubUrl: string;
+  desc: string;
 };
 
 // Define the TeamMember component with props destructuring
@@ -18,6 +19,7 @@ const TeamMember: React.FC<TeamMemberProps> = ({
   linkedinUrl,
   igUrl,
   githubUrl,
+  desc,
 }) => {
   return (
     <div className="flex items-center p-4">
@@ -67,8 +69,7 @@ const TeamMember: React.FC<TeamMemberProps> = ({
         </div>
         <p className=" font-bold">{role}</p>
         <p>
-          Derrek designed the new UW Flow and occasionally writes frontend code
-          - he is interested in the intersection of software and design.
+          {desc}
         </p>
       </div>
     </div>
