@@ -1,46 +1,47 @@
-"use client";
+"use client"
 
-import React, { useEffect, useState } from "react";
-import { ThemeToggleButton } from "./ThemeToggleButton";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { User } from '@supabase/supabase-js';
+import React, { useEffect, useState } from "react"
+import { ThemeToggleButton } from "./ThemeToggleButton"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { User } from '@supabase/supabase-js'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import LoginPopup from "./LoginPopup";
-import SignUpPopup from "./SignUpPopup";
-import { fetchUser, signOut } from '@/utils/supabase/authActions';
-import SearchBar from "@/app/search/SearchBar";
+} from "@/components/ui/dropdown-menu"
+import LoginPopup from "./LoginPopup"
+import SignUpPopup from "./SignUpPopup"
+import { fetchUser, signOut } from '@/utils/supabase/authActions'
+import SearchBar from "@/app/search/SearchBar"
+import { UserNav } from "./UserProfileNav"
 
 export const useManageBodyScroll = (condition: boolean) => {
   useEffect(() => {
     if (condition) {
-      document.body.classList.add('overflow-hidden');
+      document.body.classList.add('overflow-hidden')
     } else {
-      document.body.classList.remove('overflow-hidden');
+      document.body.classList.remove('overflow-hidden')
     }
 
     return () => {
-      document.body.classList.remove('overflow-hidden');
-    };
-  }, [condition]);
-};
+      document.body.classList.remove('overflow-hidden')
+    }
+  }, [condition])
+}
 
 export const usePopupManager = () => {
-  const [showLoginPopup, setShowLoginPopup] = useState(false);
-  const [showSignUpPopup, setShowSignUpPopup] = useState(false);
+  const [showLoginPopup, setShowLoginPopup] = useState(false)
+  const [showSignUpPopup, setShowSignUpPopup] = useState(false)
 
   const toggleLoginPopup = () => {
-    setShowLoginPopup(!showLoginPopup);
-  };
+    setShowLoginPopup(!showLoginPopup)
+  }
 
   const toggleSignUpPopup = () => {
-    setShowSignUpPopup(!showSignUpPopup);
-  };
+    setShowSignUpPopup(!showSignUpPopup)
+  }
 
   return {
     showLoginPopup,
@@ -49,8 +50,8 @@ export const usePopupManager = () => {
     showSignUpPopup,
     setShowSignUpPopup,
     toggleSignUpPopup,
-  };
-};
+  }
+}
 
 export default function Header({ user }: { user: User | null }): React.ReactElement {
   const {
@@ -58,13 +59,13 @@ export default function Header({ user }: { user: User | null }): React.ReactElem
     toggleLoginPopup,
     showSignUpPopup,
     toggleSignUpPopup,
-  } = usePopupManager();
+  } = usePopupManager()
 
-  useManageBodyScroll(showLoginPopup || showSignUpPopup);
+  useManageBodyScroll(showLoginPopup || showSignUpPopup)
 
   const handleSignOut = async () => {
-    const result = await signOut();
-  };
+    const result = await signOut()
+  }
 
   return (
     <>
@@ -78,34 +79,25 @@ export default function Header({ user }: { user: User | null }): React.ReactElem
             </Link>
             <nav className="flex items-center gap-6 text-sm flex-1">
               <SearchBar />
-              {!user && (
+              {/* {!user && (
                 <button
                   onClick={toggleLoginPopup}
                   className="text-sm text-foreground hover:underline cursor-pointer"
                 >
                   Login
                 </button>
-              )}
+              )} */}
             </nav>
           </div>
           <div className="flex items-center justify-between space-x-2 md:justify-end">
             <ThemeToggleButton />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div className="flex items-center rounded-full">
-                  <Button variant="outline" className="relative">
-                    pfp
-                  </Button>
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="center">
-                <DropdownMenuItem>My Account</DropdownMenuItem>
-                {/* <DropdownMenuItem>Settings</DropdownMenuItem> */}
-                <DropdownMenuItem onClick={handleSignOut} className="bg-destructive text-destructive-foreground">
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {user ? (<UserNav user={user} />) : (<Button
+              onClick={toggleLoginPopup}
+              variant='outline'
+            >
+              Login
+            </Button>)}
+
           </div>
         </div>
       </header>
@@ -128,5 +120,5 @@ export default function Header({ user }: { user: User | null }): React.ReactElem
         </div>
       )}
     </>
-  );
+  )
 }
