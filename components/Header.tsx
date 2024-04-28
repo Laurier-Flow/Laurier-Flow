@@ -91,7 +91,8 @@ export default function Header({ user }: { user: User | null }): React.ReactElem
           </div>
           <div className="flex items-center justify-between space-x-2 md:justify-end">
             <ThemeToggleButton />
-              <UserNav user={user}></UserNav>
+            {user ? <UserNav user={user} /> : <button>bob</button>}
+              
           </div>
         </div>
       </header>
