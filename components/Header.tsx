@@ -14,7 +14,7 @@ import {
 import LoginPopup from "./LoginPopup"
 import SignUpPopup from "./SignUpPopup"
 import { fetchUser, signOut } from '@/utils/supabase/authActions'
-import SearchBar from "@/app/search/SearchBar"
+import SearchBar from "@/components/SearchBar"
 import { UserNav } from "./UserProfileNav"
 
 export const useManageBodyScroll = (condition: boolean) => {

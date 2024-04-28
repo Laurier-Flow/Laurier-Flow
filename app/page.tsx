@@ -1,13 +1,13 @@
-import SearchBar from './search/SearchBar'
+import SearchBar from '../components/SearchBar'
 import { BackgroundGradientAnimation } from '@/components/background-gradient-animation'
 import {
 	TypewriterEffect,
 } from '@/components/ui/typewriter-effect'
-import { fetchUser, signIn } from "@/utils/supabase/authActions";
-import LoginComponent from '@/components/LoginComponent';
+import { fetchUser, signIn } from "@/utils/supabase/authActions"
+import LoginComponent from '@/components/LoginComponent'
 
 export default async function Index(): Promise<React.ReactElement> {
-    const user = await fetchUser();
+	const user = await fetchUser()
 
 	const homepageTitleWordArray = [
 		{ text: 'Explore', className: 'text-2xl md:text-4xl text-background dark:text-foreground' },
