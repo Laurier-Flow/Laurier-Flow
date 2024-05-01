@@ -2,6 +2,15 @@ import Header from "@/components/Header";
 import TeamMember from "@/components/TeamMember";
 import { fetchUser } from "@/utils/supabase/authActions";
 import { PopupButton } from "@typeform/embed-react";
+import { Metadata } from "next";
+
+export const metadata : Metadata = {
+  title : "About",
+  description: "Learn more about Laurier Flow and the team behind it.",
+  
+
+}
+
 
 export default async function About() {
   const user = await fetchUser();
