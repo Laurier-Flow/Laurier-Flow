@@ -19,7 +19,7 @@ export default function HomeHeader({ user }: { user: User | null }) {
 
     return (
         <>
-            <div className='flex flex-row justify-between md:hidden p-6 z-[100]'>
+            <div className={`flex flex-row justify-between items-center md:max-w-6xl w-full mx-auto p-6 z-[100] ${user ? ('flex') : ('md:hidden')}`}>
                 <span className="font-bold z-[100] text-white">
                     Laurier Flow
                 </span>
