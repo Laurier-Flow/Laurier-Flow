@@ -20,7 +20,7 @@ export default function HomeHeader({ user }: { user: User | null }) {
     return (
         <>
             <div className='flex flex-row justify-between md:hidden p-6 z-[100]'>
-                <span className="font-bold z-[100]">
+                <span className="font-bold z-[100] text-white">
                     Laurier Flow
                 </span>
                 {user ? (<UserNav user={user} />) : (<Button
