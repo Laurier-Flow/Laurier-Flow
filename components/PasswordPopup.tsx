@@ -1,6 +1,5 @@
 import { handleResetPassword } from '@/utils/supabase/authActions';
 import { useRef, useEffect, useState } from 'react';
-import Link from 'next/link';
 import { X } from 'lucide-react';
 
 
