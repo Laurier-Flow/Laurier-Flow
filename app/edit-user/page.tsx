@@ -6,7 +6,12 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import UserDetails from "./user-details";
-import { getUserData } from "./edit-user-functons";
+import {
+  getUserData,
+  updateUserFirstName,
+  updateUserLastName,
+  updateUserProgram,
+} from "./edit-user-functons";
 
 export default async function EditUser() {
   const user = await fetchUser();
@@ -31,7 +36,13 @@ export default async function EditUser() {
             </div>
           </div>
         </div>
-        <UserDetails getUserDetailsFunction={getUserData} email={user.email!} />
+        <UserDetails
+          getUserDetailsFunction={getUserData}
+          email={user.email!}
+          updateUserFirstName={updateUserFirstName}
+          updateUserLastName={updateUserLastName}
+          updateUserProgram={updateUserProgram}
+        />
       </Suspense>
     </>
   );

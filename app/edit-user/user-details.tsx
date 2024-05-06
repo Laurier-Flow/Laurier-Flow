@@ -6,36 +6,122 @@ import { X } from "lucide-react";
 interface UserDetailsProps {
   getUserDetailsFunction: () => Promise<any>;
   email: string;
+  updateUserFirstName: (new_first_name: string) => Promise<any>;
+  updateUserLastName: (new_last_name: string) => Promise<any>;
+  updateUserProgram: (new_program: string) => Promise<any>;
 }
 
 const UserDetails: React.FC<UserDetailsProps> = ({
   getUserDetailsFunction,
   email,
+  updateUserFirstName,
+  updateUserLastName,
+  updateUserProgram,
 }) => {
-  const [newName, setNewName] = useState<string>();
+  const [newFirstName, setNewFirstName] = useState<string>();
+  const [newLastName, setNewLastName] = useState<string>();
+
   const [newProgram, setNewProgram] = useState<string>();
 
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
+  const [originalFirstName, setOriginalFirstName] = useState<string>();
+  const [originalLastName, setOriginalLastName] = useState<string>();
+  const [originalProgram, setOriginalProgram] = useState<string>();
+
+  const [errorMsg, setErrorMsg] = useState<string>("Error! ");
+  const [error, setError] = useState<boolean>(false);
+
+  const [update, setUpdate] = useState<boolean>(false);
+
   useEffect(() => {
     const getUserData = async () => {
       const data = await getUserDetailsFunction();
-      setNewName(data[0]["first_name"] + " " + data[0]["last_name"]);
+      setNewFirstName(data[0]["first_name"]);
+      setNewLastName(data[0]["last_name"]);
       setNewProgram(data[0]["program"]);
+      setOriginalFirstName(data[0]["first_name"]);
+      setOriginalLastName(data[0]["last_name"]);
+      setOriginalProgram(data[0]["program"]);
     };
     getUserData();
-  }, []);
+  }, [update]);
 
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewName(event.target.value);
+  const handleFirstNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setNewFirstName(event.target.value);
+  };
+
+  const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNewLastName(event.target.value);
   };
 
   const handleProgramChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewProgram(event.target.value);
   };
 
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    // Determine what changed and update it accordingly
+    if (
+      originalFirstName !== newFirstName &&
+      newFirstName !== undefined &&
+      newFirstName?.length > 0
+    ) {
+      updateUserFirstName(newFirstName)
+        .catch(() => {
+          setErrorMsg(
+            (errorMsg) =>
+              errorMsg +
+              "An unexpected error has occured when attempting to update your first name.\n"
+          );
+          setError(true);
+        })
+        .then(() => {
+          setError(false);
+          setUpdate(true);
+        });
+    }
+    if (
+      originalLastName !== newLastName &&
+      newLastName !== undefined &&
+      newLastName?.length > 0
+    ) {
+      updateUserLastName(newLastName)
+        .catch(() => {
+          setErrorMsg(
+            (errorMsg) =>
+              errorMsg +
+              "An unexpected error has occured when attempting to update your last name.\n"
+          );
+          setError(true);
+        })
+        .then(() => {
+          setError(false);
+          setUpdate(true);
+        });
+    }
+    if (
+      originalProgram !== newProgram &&
+      newProgram !== undefined &&
+      newProgram?.length > 0
+    ) {
+      updateUserProgram(newProgram)
+        .catch(() => {
+          setErrorMsg(
+            (errorMsg) =>
+              errorMsg +
+              "An unexpected error has occured when attempting to update your program.\n"
+          );
+          setError(true);
+        })
+        .then(() => {
+          setError(false);
+          setUpdate(true);
+        });
+    }
   };
 
   return (
@@ -62,13 +148,24 @@ const UserDetails: React.FC<UserDetailsProps> = ({
           <label
             className="block text-lg font-medium mb-2 dark:text-white mt-5"
             style={{ marginLeft: "5px" }}>
-            Name
+            First Name
           </label>
           <input
-            onChange={handleNameChange}
+            onChange={handleFirstNameChange}
             type="text"
             className="py-3 px-4 block w-full border-gray-200 rounded-lg text-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-            value={newName}
+            value={newFirstName}
+          />
+          <label
+            className="block text-lg font-medium mb-2 dark:text-white mt-5"
+            style={{ marginLeft: "5px" }}>
+            Last Name
+          </label>
+          <input
+            onChange={handleLastNameChange}
+            type="text"
+            className="py-3 px-4 block w-full border-gray-200 rounded-lg text-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+            value={newLastName}
           />
           <label
             className="block text-lg font-medium mb-2 dark:text-white mt-5"
