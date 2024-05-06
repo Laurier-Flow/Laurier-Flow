@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { fetchUser } from "@/utils/supabase/authActions";
+import { SupabaseClient, User } from "@supabase/supabase-js";
 
 export const updateUserFirstName = async (
   first_name: string
@@ -85,6 +86,70 @@ export const getUserData = async (): Promise<any> => {
 
   if (error) {
     return null;
+  }
+  return data;
+};
+
+export const deleteUserAccount = async (): Promise<any> => {
+  "use server";
+
+  const user = await fetchUser();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  await deleteUserCourseReviews(supabase, user?.id!);
+
+  await deleteUserInstructorReviews(supabase, user?.id!);
+
+  await deleteUserProfile(supabase, user?.id!);
+
+  // add user to profile_deleted
+  // make edge function to call deleteUser
+};
+
+// Helper functions
+
+const deleteUserCourseReviews = async (
+  supabase: SupabaseClient,
+  userID: string
+): Promise<boolean> => {
+  "use server";
+  const { data, error } = await supabase
+    .from("course_reviews")
+    .delete()
+    .eq("user_id_fk", userID);
+  if (error) {
+    return false;
+  }
+  return true;
+};
+
+const deleteUserInstructorReviews = async (
+  supabase: SupabaseClient,
+  userID: string
+): Promise<boolean> => {
+  "use server";
+  const { data, error } = await supabase
+    .from("instructor_reviews")
+    .delete()
+    .eq("user_id_fk", userID);
+  if (error) {
+    return false;
+  }
+  return true;
+};
+
+const deleteUserProfile = async (
+  supabase: SupabaseClient,
+  userID: string
+): Promise<any> => {
+  "use server";
+  const { data, error } = await supabase
+    .from("profiles")
+    .delete()
+    .eq("user_id", userID);
+  if (error) {
+    return error;
   }
   return data;
 };

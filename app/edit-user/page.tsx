@@ -11,6 +11,7 @@ import {
   updateUserFirstName,
   updateUserLastName,
   updateUserProgram,
+  deleteUserAccount,
 } from "./edit-user-functons";
 
 export default async function EditUser() {
@@ -42,6 +43,7 @@ export default async function EditUser() {
           updateUserFirstName={updateUserFirstName}
           updateUserLastName={updateUserLastName}
           updateUserProgram={updateUserProgram}
+          deleteUserAccount={deleteUserAccount}
         />
       </Suspense>
     </>

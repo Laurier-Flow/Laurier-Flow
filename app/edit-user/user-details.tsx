@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import { programOptions } from "@/components/SignUpPopup";
 
 interface UserDetailsProps {
   getUserDetailsFunction: () => Promise<any>;
@@ -9,6 +10,7 @@ interface UserDetailsProps {
   updateUserFirstName: (new_first_name: string) => Promise<any>;
   updateUserLastName: (new_last_name: string) => Promise<any>;
   updateUserProgram: (new_program: string) => Promise<any>;
+  deleteUserAccount: () => Promise<any>;
 }
 
 const UserDetails: React.FC<UserDetailsProps> = ({
@@ -17,6 +19,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
   updateUserFirstName,
   updateUserLastName,
   updateUserProgram,
+  deleteUserAccount,
 }) => {
   const [newFirstName, setNewFirstName] = useState<string>();
   const [newLastName, setNewLastName] = useState<string>();
@@ -57,7 +60,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
     setNewLastName(event.target.value);
   };
 
-  const handleProgramChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProgramChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setNewProgram(event.target.value);
   };
 
@@ -124,6 +127,18 @@ const UserDetails: React.FC<UserDetailsProps> = ({
     }
   };
 
+  const handleAccountDeletion = async () => {
+    await deleteUserAccount()
+      .catch((err) => {
+        setError(true);
+        setErrorMsg("Error in user account deletion!");
+        console.log(err);
+      })
+      .then((data) => {
+        console.log(data);
+      });
+  };
+
   return (
     <div>
       <form
@@ -172,13 +187,21 @@ const UserDetails: React.FC<UserDetailsProps> = ({
             style={{ marginLeft: "5px" }}>
             Program
           </label>
-          <input
-            onChange={handleProgramChange}
-            type="text"
-            id="input-label"
-            className="py-3 px-4 block w-full border-gray-200 rounded-lg text-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+          <select
+            className="mb-2 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 text-stone-600 dark:text-gray-400 placeholder-stone-400 dark:placeholder-gray-400"
+            name="program"
             value={newProgram}
-          />
+            onChange={handleProgramChange}
+            required>
+            <option value="" disabled>
+              Select your program
+            </option>
+            {programOptions.map((program) => (
+              <option className="" key={program} value={program}>
+                {program}
+              </option>
+            ))}
+          </select>
         </div>
 
         <button
@@ -199,6 +222,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
         className="flex flex-row items-center justify-center gap-2 w-full mt-4 mb-5 py-4 px-6 text-lg font-semibold rounded-lg bg-red-500 hover:bg-red-dark text-white dark:text-white">
         <h1>Delete Account</h1>
       </button>
+
       <div
         style={{ display: isVisible ? "block" : "none" }}
         className={`transform transition-all duration-500 opacity-100 -translate-y-1/2 overflow-y-auto max-h-[90vh] border-2 dark:border-secondary fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background dark:bg-background/80 backdrop-blur rounded-md max-w-md p-8 w-11/12`}>
@@ -212,19 +236,22 @@ const UserDetails: React.FC<UserDetailsProps> = ({
               }}
             />
           </label>
+
           <button
             type="submit"
             onClick={(e) => {
               e.preventDefault();
+              handleAccountDeletion();
             }}
             className="flex flex-row items-center justify-center gap-2 w-full mt-4 mb-5 py-4 px-6 text-lg font-semibold rounded-lg bg-red-500 hover:bg-red-dark text-white dark:text-white">
             <h1>Yes I want to delete my account</h1>
           </button>
+
           <button
             type="submit"
             onClick={(e) => {
               e.preventDefault();
-              setIsVisible(true);
+              setIsVisible(false);
             }}
             className="flex flex-row items-center justify-center gap-2 w-full mt-4 mb-5 py-4 px-6 text-lg font-semibold rounded-lg bg-teal-500 hover:bg-teal-dark text-white dark:text-white">
             <h1>NO WAY ITS A MISCLICK</h1>
