@@ -2,17 +2,17 @@ import Header from "@/components/Header";
 import Spinner from "@/components/Spinner";
 import { fetchUser } from "@/utils/supabase/authActions";
 import { Suspense } from "react";
-import UserReviews from "./UserReviews";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+import UserDetails from "./user-details";
+import { getUserData } from "./edit-user-functons";
 
-export default async function Profile() {
+export default async function EditUser() {
   const user = await fetchUser();
   if (!user) redirect("/");
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-
   return (
     <>
       <Header user={user} />
@@ -26,13 +26,12 @@ export default async function Profile() {
           <div className="flex flex-1 pt-20 flex-row justify-between w-f max-w-6xl">
             <div className="flex flex-1 flex-col justify-end pl-4">
               <h1 className="mb-2 text-2xl font-bold md:text-5xl text-white">
-                Profile
+                User Details
               </h1>
             </div>
           </div>
         </div>
-
-        <UserReviews user={user} supabase={supabase} />
+        <UserDetails getUserDetailsFunction={getUserData} email={user.email!} />
       </Suspense>
     </>
   );
