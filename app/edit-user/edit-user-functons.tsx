@@ -16,8 +16,8 @@ export const updateUser = async (
 
   const { data, error } = await supabase
     .from("course_reviews")
-    .select()
-    .eq("id", user?.id);
+    .select("*")
+    .eq("user_id", user?.id);
 
   if (error) {
     return false;
