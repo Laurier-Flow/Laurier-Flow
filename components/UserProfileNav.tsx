@@ -48,7 +48,9 @@ export function UserNav({ user }: { user: User }) {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup className="z-[200]">
+
             <Link href={"/profile"} className="z-[200]">
+
               <DropdownMenuItem className="hover:bg-accent z-[200] cursor-pointer">
                 Profile
               </DropdownMenuItem>
@@ -62,6 +64,7 @@ export function UserNav({ user }: { user: User }) {
                 Edit User Details
               </Link>
             </DropdownMenuItem>
+
           </DropdownMenuGroup>
 
           <DropdownMenuSeparator />
@@ -74,9 +77,8 @@ export function UserNav({ user }: { user: User }) {
           </DropdownMenuGroup>
 
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={handleSignOut}
-            className="hover:bg-destructive z-[200] cursor-pointer">
+
+          <DropdownMenuItem onClick={handleSignOut} className="hover:bg-destructive z-[200] cursor-pointer">
             Log out
           </DropdownMenuItem>
         </DropdownMenuContent>
