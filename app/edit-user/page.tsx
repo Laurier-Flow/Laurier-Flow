@@ -3,8 +3,6 @@ import Spinner from "@/components/Spinner";
 import { fetchUser } from "@/utils/supabase/authActions";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
-import { createClient } from "@/utils/supabase/server";
 import UserDetails from "./user-details";
 import {
   getUserData,
@@ -17,8 +15,6 @@ import {
 export default async function EditUser() {
   const user = await fetchUser();
   if (!user) redirect("/");
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
   return (
     <>
       <Header user={user} />
