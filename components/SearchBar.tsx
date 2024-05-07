@@ -85,7 +85,7 @@ export default function SearchBar() {
     const fetchResults = async (query: string) => {
       const supabase = createClient();
       const COURSE_LIMIT = 4;
-      const PROF_LIMIT = 2;
+      const PROF_LIMIT = 4;
 
       // Remove whitespace and add '%' between all chars for COURSE CODE
       const fuzzyCodeQuery = query.replace(/\s+/g, "").split("").join("%");
@@ -105,6 +105,7 @@ export default function SearchBar() {
             .from("instructors")
             .select()
             .ilike("instructor_name", `%${fuzzyPhraseQuery}%`)
+            .order("instructor_name")
             .limit(PROF_LIMIT),
         ]);
         setCourseResults(courseResults.data as CourseResult[]);
