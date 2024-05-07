@@ -22,13 +22,13 @@ const TeamMember: React.FC<TeamMemberProps> = ({
   desc,
 }) => {
   return (
-    <div className="flex items-center p-4">
+    <div className="flex items-start p-4">
       <img
         className="rounded-full w-32 h-32 m:w-48 m:h-48 object-cover"
         src={imageUrl}
         alt={`Team Member Profile of ${name}`}
       />
-      <div className="pl-4">
+      <div className="pl-8">
         <div className="flex items-center">
           <a href={linkedinUrl} className="">
             <div className="flex items-center">
@@ -67,8 +67,8 @@ const TeamMember: React.FC<TeamMemberProps> = ({
             </svg>
           </a>
         </div>
-        <p className=" font-bold">{role}</p>
-        <p>
+        <p className="pt-2 font-bold">{role}</p>
+        <p className="pt-2">
           {desc}
         </p>
       </div>
