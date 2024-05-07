@@ -136,6 +136,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
       })
       .then((data) => {
         console.log(data);
+        window.location.reload();
       });
   };
 

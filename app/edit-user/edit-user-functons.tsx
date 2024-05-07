@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { fetchUser } from "@/utils/supabase/authActions";
 import { SupabaseClient, User } from "@supabase/supabase-js";
+import { getAdminClient } from "@/utils/supabase/admin";
 
 export const updateUserFirstName = async (
   first_name: string
@@ -103,8 +104,7 @@ export const deleteUserAccount = async (): Promise<any> => {
 
   await deleteUserProfile(supabase, user?.id!);
 
-  // add user to profile_deleted
-  // make edge function to call deleteUser
+  await getAdminClient.deleteUser(user?.id!);
 };
 
 // Helper functions
