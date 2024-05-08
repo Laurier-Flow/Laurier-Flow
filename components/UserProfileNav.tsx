@@ -58,7 +58,7 @@ export function UserNav({ user }: { user: User }) {
           <DropdownMenuSeparator />
           <Link href={"/edit-user"} className="z-[200]">
             <DropdownMenuGroup className="z-[200]">
-              <DropdownMenuItem className="hover:bg-accent z-[200]">
+              <DropdownMenuItem className="hover:bg-accent z-[200] cursor-pointer">
                 Edit User Details
               </DropdownMenuItem>
             </DropdownMenuGroup>
@@ -67,7 +67,7 @@ export function UserNav({ user }: { user: User }) {
           <DropdownMenuSeparator />
           <Link href={"/change-password"} className="z-[200]">
             <DropdownMenuGroup className="z-[200]">
-              <DropdownMenuItem className="hover:bg-accent z-[200]">
+              <DropdownMenuItem className="hover:bg-accent z-[200] cursor-pointer">
                 Change Password
               </DropdownMenuItem>
             </DropdownMenuGroup>
