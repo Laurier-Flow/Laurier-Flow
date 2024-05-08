@@ -47,34 +47,31 @@ export function UserNav({ user }: { user: User }) {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuGroup className="z-[200]">
-
-            <Link href={"/profile"} className="z-[200]">
-
+          <Link href={"/profile"} className="z-[200]">
+            <DropdownMenuGroup className="z-[200]">
               <DropdownMenuItem className="hover:bg-accent z-[200] cursor-pointer">
                 User Reviews
               </DropdownMenuItem>
-            </Link>
-          </DropdownMenuGroup>
+            </DropdownMenuGroup>
+          </Link>
 
           <DropdownMenuSeparator />
-          <DropdownMenuGroup className="z-[200]">
-            <DropdownMenuItem className="hover:bg-accent z-[200]">
-              <Link href={"/edit-user"} className="z-[200]">
+          <Link href={"/edit-user"} className="z-[200]">
+            <DropdownMenuGroup className="z-[200]">
+              <DropdownMenuItem className="hover:bg-accent z-[200]">
                 Edit User Details
-              </Link>
-            </DropdownMenuItem>
-
-          </DropdownMenuGroup>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </Link>
 
           <DropdownMenuSeparator />
-          <DropdownMenuGroup className="z-[200]">
-            <DropdownMenuItem className="hover:bg-accent z-[200]">
-              <Link href={"/change-password"} className="z-[200]">
+          <Link href={"/change-password"} className="z-[200]">
+            <DropdownMenuGroup className="z-[200]">
+              <DropdownMenuItem className="hover:bg-accent z-[200]">
                 Change Password
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </Link>
 
           <DropdownMenuSeparator />
 
