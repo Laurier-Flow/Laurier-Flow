@@ -52,7 +52,7 @@ export function UserNav({ user }: { user: User }) {
             <Link href={"/profile"} className="z-[200]">
 
               <DropdownMenuItem className="hover:bg-accent z-[200] cursor-pointer">
-                Profile
+                User Reviews
               </DropdownMenuItem>
             </Link>
           </DropdownMenuGroup>
