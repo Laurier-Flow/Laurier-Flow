@@ -34,15 +34,12 @@ export default function LoginComponent({ user }: { user: User | null }) {
 
         const formData = new FormData(event.currentTarget);
 
-        /*
+        
         const emailRegex = /(@mylaurier\.ca|@wlu\.ca)$/i;
 
         const email = formData.get("email")?.toString()
-        */
 
-        //email && !emailRegex.test(email)
-
-        if (false) {
+        if (email && !emailRegex.test(email)) {
             setSignUpError('Email needs to be of type mylaurier.ca or wlu.ca')
         } else {
             const result = await signUp(formData);

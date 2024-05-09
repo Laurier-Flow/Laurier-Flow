@@ -72,7 +72,9 @@ async function CoursePage({params}: CoursePageProps) {
                     <div className="lg:hidden">
                         <CourseInfo supabase={supabase} courseName={courseCode} />
                     </div>
-                    <CourseSchedule supabase={supabase} courseName={courseCode} user={user} />
+                    <Suspense fallback={<div className="w-full h-full p-8"><Spinner /></div>}>
+                        <CourseSchedule supabase={supabase} courseName={courseCode} user={user} />
+                    </Suspense>
                     <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
                     <div className="lg:flex lg:flex-row-reverse lg:justify-around">
                         <CourseRequisites supabase={supabase} courseName={courseCode} />

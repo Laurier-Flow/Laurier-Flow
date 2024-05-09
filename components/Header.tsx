@@ -63,10 +63,6 @@ export default function Header({ user }: { user: User | null }): React.ReactElem
 
   useManageBodyScroll(showLoginPopup || showSignUpPopup)
 
-  const handleSignOut = async () => {
-    const result = await signOut()
-  }
-
   return (
     <>
       <header className="self-center sticky top-0 z-50 w-full border-b border-border/40 bg-white dark:bg-background/95 dark:backdrop-blur dark:supports-[backdrop-filter]:bg-background/60">

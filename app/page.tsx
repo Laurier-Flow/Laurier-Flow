@@ -6,6 +6,7 @@ import {
 import { fetchUser, signIn } from "@/utils/supabase/authActions"
 import LoginComponent from '@/components/LoginComponent'
 import { Metadata } from 'next'
+import HomeHeader from '@/components/HomeHeader'
 
 
 export const metadata : Metadata = {
@@ -31,6 +32,7 @@ export default async function Index(): Promise<React.ReactElement> {
 
 	return (
 		<BackgroundGradientAnimation gradientBackgroundStart='var(--gradient-start)' gradientBackgroundEnd='var(--gradient-end)' firstColor='var(--bubble)' secondColor='var(--bubble)' thirdColor='var(--bubble)' fourthColor='var(--bubble)' fifthColor='var(--bubble)' pointerColor='var(--bubble)'>
+			<HomeHeader user={user} />
 			<div className='flex flex-row justify-center items-center absolute inset-0 z-[100] p-6 max-w-6xl w-full mx-auto gap-12'>
 				<div className='flex flex-col w-full lg:w-2/3'>
 					<div className='p-1'>
