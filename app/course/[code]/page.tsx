@@ -49,7 +49,7 @@ export async function generateMetadata(
   ): Promise<Metadata> {
     let courseCode = decodeURIComponent(params.code.toUpperCase())
     return {
-        title: `${courseCode}`,
+        title: `${courseCode.split(' ').join('')}`,
         description: `Course Information & Reviews for ${courseCode}`
     }
   }
