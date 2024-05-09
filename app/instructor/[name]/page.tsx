@@ -23,7 +23,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
         let profName = decodeURIComponent(params.name.toUpperCase())
         return {
-                title: `${profName}`,
+                title: `${profName.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ')}`,
                 description: `Instructor Information & Reviews for ${profName}`
         }
 }
