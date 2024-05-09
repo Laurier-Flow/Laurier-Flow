@@ -6,6 +6,12 @@ import UserReviews from "./UserReviews";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+import { Metadata } from "next";
+
+export const metadata : Metadata = {
+    title: `Profile`,
+    description: `Manage your profile on Laurier Flow.`
+}
 
 export default async function Profile() {
   const user = await fetchUser();

@@ -5,7 +5,14 @@ import {
 } from '@/components/ui/typewriter-effect'
 import { fetchUser, signIn } from "@/utils/supabase/authActions"
 import LoginComponent from '@/components/LoginComponent'
+import { Metadata } from 'next'
 import HomeHeader from '@/components/HomeHeader'
+
+
+export const metadata : Metadata = {
+	title: `Laurier Flow`,
+	description: `The homepage for Laurier Flow.`
+}
 
 export default async function Index(): Promise<React.ReactElement> {
 	const user = await fetchUser()
