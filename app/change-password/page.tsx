@@ -9,6 +9,14 @@ import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import ChangePasswordForm from "./change-password-form";
 import { resetUserPassword } from "./reset-password-func";
+import { Metadata } from "next";
+
+export const metadata : Metadata = {
+  title: "Change Password",
+  description: "Change your password for your account on Laurier Flow",
+}
+
+
 
 export default async function ChangePassword() {
   const user = await fetchUser();
