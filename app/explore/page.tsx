@@ -9,6 +9,13 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { instructorInfoDBResponse } from "../instructor/InstructorInfo";
 import { fetchUser } from "@/utils/supabase/authActions";
 import Header from "@/components/Header";
+import { Metadata } from "next";
+
+export const metadata : Metadata = {
+    title : "Explore",
+    description: "Explore courses at Wilfrid Laurier University",
+}
+
 
 export interface courseInfoDBResponseExplore {
     course_code: string,
