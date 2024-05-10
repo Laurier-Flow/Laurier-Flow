@@ -8,6 +8,7 @@ import AddReview from "@/app/course/AddReview";
 import Spinner from "@/components/Spinner";
 import { fetchUser } from "@/utils/supabase/authActions";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 async function InstructorPage({ params }: { params: { name: string } }) {
         const cookieStore = cookies();
@@ -35,6 +36,7 @@ async function InstructorPage({ params }: { params: { name: string } }) {
                                         </div>
                                 </div>
                         </Suspense>
+                        <Footer />
                 </>
         );
 }

@@ -9,6 +9,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { instructorInfoDBResponse } from "../instructor/InstructorInfo";
 import { fetchUser } from "@/utils/supabase/authActions";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export interface courseInfoDBResponseExplore {
     course_code: string,
@@ -210,6 +211,7 @@ export default async function ExplorePage() {
             <Suspense fallback={<div className="w-full h-full"><Spinner /></div>}>
                 <Body currentTerm={currentTerm} nextTerm={nextTerm} courses={courses} instructors={instructors} />
             </Suspense>
+            <Footer />
         </>
     );
 }

@@ -11,6 +11,7 @@ import CourseRequisites from "../CourseRequisites";
 import Spinner from "@/components/Spinner";
 import Header from "@/components/Header";
 import { fetchUser } from "@/utils/supabase/authActions";
+import Footer from "@/components/Footer";
 const AddReview = dynamic(() => import("../AddReview"), { ssr: false });
 
 export interface days {
@@ -67,6 +68,7 @@ async function CoursePage({ params }: { params: { code: string } }) {
                     </div>
                 </div>
             </Suspense>
+            <Footer />
         </>
     );
 }

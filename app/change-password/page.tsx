@@ -9,6 +9,7 @@ import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import ChangePasswordForm from "./change-password-form";
 import { resetUserPassword } from "./reset-password-func";
+import Footer from "@/components/Footer";
 
 export default async function ChangePassword() {
   const user = await fetchUser();
@@ -39,6 +40,7 @@ export default async function ChangePassword() {
         user={user}
         resetUserPasswordFunction={resetUserPassword}
       />
+      <Footer />
     </>
   );
 }

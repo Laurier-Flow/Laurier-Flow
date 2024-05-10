@@ -6,6 +6,7 @@ import UserReviews from "./UserReviews";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+import Footer from "@/components/Footer";
 
 export default async function Profile() {
   const user = await fetchUser();
@@ -34,6 +35,7 @@ export default async function Profile() {
 
         <UserReviews user={user} supabase={supabase} />
       </Suspense>
+      <Footer />
     </>
   );
 }

@@ -11,6 +11,7 @@ import {
   updateUserProgram,
   deleteUserAccount,
 } from "./edit-user-functons";
+import Footer from "@/components/Footer";
 
 export default async function EditUser() {
   const user = await fetchUser();
@@ -42,6 +43,7 @@ export default async function EditUser() {
           deleteUserAccount={deleteUserAccount}
         />
       </Suspense>
+      <Footer />
     </>
   );
 }
