@@ -21,7 +21,7 @@ export default function HomeHeader({ user }: { user: User | null }) {
     return (
         <>
             <div className={`flex flex-row justify-between items-center md:max-w-6xl w-full mx-auto p-6 z-[100] ${user ? ('flex') : ('md:hidden')}`}>
-                <Image className="mr-4 z-[100]" src="/icon.png" width={75} height={75} alt="Laurier Flow" />
+                <Image className="mr-4 z-[100]" src="/icon.png" width={50} height={50} alt="Laurier Flow" />
                 {user ? (<UserNav user={user} />) : (<Button
                     onClick={toggleLoginPopup}
                     variant='outline'
