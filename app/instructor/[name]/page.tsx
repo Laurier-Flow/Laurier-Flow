@@ -9,6 +9,7 @@ import Spinner from "@/components/Spinner"
 import { fetchUser } from "@/utils/supabase/authActions"
 import { Metadata , ResolvingMetadata } from "next"
 import Header from "@/components/Header"
+import Footer from "@/components/Footer"
 
 type InstructorPageProps = {
         params: {

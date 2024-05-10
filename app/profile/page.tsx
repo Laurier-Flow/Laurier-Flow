@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { Metadata } from "next";
+import Footer from "@/components/Footer";
 
 export const metadata : Metadata = {
     title: `Profile`,
