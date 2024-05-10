@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import TeamMember from "@/components/TeamMember";
 import { fetchUser } from "@/utils/supabase/authActions";
@@ -98,6 +99,7 @@ export default async function About() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

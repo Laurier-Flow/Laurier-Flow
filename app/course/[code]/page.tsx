@@ -13,6 +13,7 @@ import Header from "@/components/Header";
 import { fetchUser } from "@/utils/supabase/authActions";
 import { Metadata , ResolvingMetadata } from "next"
 const AddReview = dynamic(() => import("../AddReview"), { ssr: false });
+import Footer from "@/components/Footer";
 
 type CoursePageProps = {
     params: {
@@ -87,6 +88,7 @@ async function CoursePage({params}: CoursePageProps) {
                     </div>
                 </div>
             </Suspense>
+            <Footer />
         </>
     );
 }

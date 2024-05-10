@@ -1,7 +1,6 @@
 import "@/app/globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import dynamic from "next/dynamic";
-import Footer from "@/components/Footer";
 import { Metadata } from "next"
 const FormWidget = dynamic(() => import("@/components/FormWidget"), {ssr: false});
 
@@ -31,7 +30,6 @@ export default function RootLayout({
           <main className="flex grow justify-start items-center flex-col">
             {children}
           </main>
-          <Footer />
           <FormWidget />
         </ThemeProvider>
       </body>

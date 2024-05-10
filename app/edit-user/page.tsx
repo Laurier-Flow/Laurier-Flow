@@ -11,6 +11,7 @@ import {
   updateUserProgram,
   deleteUserAccount,
 } from "./edit-user-functons";
+import Footer from "@/components/Footer";
 
 
 import { Metadata } from "next";
@@ -52,6 +53,7 @@ export default async function EditUser() {
           deleteUserAccount={deleteUserAccount}
         />
       </Suspense>
+      <Footer />
     </>
   );
 }

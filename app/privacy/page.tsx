@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { fetchUser } from "@/utils/supabase/authActions";
 import { Metadata } from "next"
@@ -104,6 +105,7 @@ export default async function Privacy() {
           </p>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
