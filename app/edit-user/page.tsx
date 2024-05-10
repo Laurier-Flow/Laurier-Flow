@@ -13,6 +13,16 @@ import {
 } from "./edit-user-functons";
 import Footer from "@/components/Footer";
 
+
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  title: "Edit User",
+  description: "Edit user details",
+};
+
+
 export default async function EditUser() {
   const user = await fetchUser();
   if (!user) redirect("/");

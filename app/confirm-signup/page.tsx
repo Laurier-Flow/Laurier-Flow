@@ -1,17 +1,13 @@
-'use client'
+import { Metadata } from "next"
+import ConfirmSignup from "./ConfirmSignUpComponent"
 
-import Spinner from "@/components/Spinner"
-import { Suspense } from "react"
-import Body from "./body"
-import HomeFooter from "@/components/HomeFooter"
+export const metadata: Metadata = {
+    title: "Confirm Signup",
+    description: "Confirm your signup to Laurier Flow."
+}
 
-export default function ConfirmSignup() {
+export default function ConfirmSignupPage() {
     return (
-        <>
-            <Suspense fallback={<div className="w-full h-full"><Spinner /></div>}>
-                <Body />
-            </Suspense>
-            <HomeFooter />
-        </>
+        <ConfirmSignup />
     )
 }
