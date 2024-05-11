@@ -81,21 +81,21 @@ const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
         <li className="w-full focus-within:z-10">
           <a
             onClick={handleProfileTabClick}
-            className={`inline-block w-full p-4 text-gray-700 ${profileTabSelected ? `bg-gray-300` : `bg-white`} border-r border-gray-200 dark:border-gray-700 rounded-l-lg focus:ring-4 focus:ring-blue-300 active focus:outline-none dark:bg-gray-700 dark:text-white`}>
+            className={`inline-block w-full p-4 ${profileTabSelected ? `bg-gray-300 dark:bg-gray-700 dark:text-white` : `bg-white dark:bg-gray-100 dark:text-black`} border-r border-gray-200 rounded-l-lg focus:ring-4 focus:ring-blue-300 active focus:outline-none`}>
             Profile
           </a>
         </li>
         <li className="w-full focus-within:z-10">
           <a
             onClick={handleMyScheduleTabClick}
-            className={`inline-block w-full p-4 ${myScheduleTabSelected ? `bg-gray-300` : `bg-white`} border-r border-gray-200 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700`}>
+            className={`inline-block w-full p-4 ${myScheduleTabSelected ? `bg-gray-300 dark:bg-gray-700 dark:text-white` : `bg-white dark:bg-gray-100 dark:text-black`} border-r border-gray-200  hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none`}>
             My Schedule
           </a>
         </li>
         <li className="w-full focus-within:z-10">
           <a
             onClick={handleEditUserDetailsTabSelected}
-            className={`inline-block w-full p-4 ${editUserDetailsTabSelected ? `bg-gray-300` : `bg-white`} border-s-0 border-gray-200 dark:border-gray-700 rounded-r-lg hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700`}>
+            className={`inline-block w-full p-4 ${editUserDetailsTabSelected ? `bg-gray-300 dark:bg-gray-700 dark:text-white` : `bg-white dark:bg-gray-100 dark:text-black`} border-s-0 border-gray-200  rounded-r-lg hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300`}>
             User Details
           </a>
         </li>
