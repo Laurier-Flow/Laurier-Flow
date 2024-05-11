@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { programOptions } from "@/components/SignUpPopup";
+import { useManageBodyScroll } from "@/components/Header";
 
 interface UserDetailsProps {
   getUserDetailsFunction: () => Promise<any>;
@@ -38,6 +39,15 @@ const UserDetails: React.FC<UserDetailsProps> = ({
   const [update, setUpdate] = useState<boolean>(false);
 
   const [sizeOfInputFields, setSizeOfInputFields] = useState<number>(50);
+
+  const [showDeleteProfilePopup, setShowDeleteProfilePopup] = useState<boolean>(false);
+
+  useManageBodyScroll(showDeleteProfilePopup);
+
+  const toggleDeleteReviewPopup = () => {
+    setShowDeleteProfilePopup(!showDeleteProfilePopup);
+    setIsVisible(!isVisible)
+  };
 
   useEffect(() => {
     const getUserData = async () => {
@@ -162,75 +172,54 @@ const UserDetails: React.FC<UserDetailsProps> = ({
   };
 
   return (
-    <div>
-      <div
-        style={{
-          opacity: isVisible ? "0.1" : "1.0",
-        }}>
+    <div className="card">
+      <div>
         {update ? (
           error ? (
             <div
-              className="mt-2 bg-red-500 text-sm text-white rounded-lg p-4"
+              className="mt-8 bg-red-500 dark:bg-red-800 text-sm text-white rounded-lg p-4"
               role="alert">
-              <span className="font-bold">Error!</span> {errorMsg}
+              <span className="font-bold">An error occurred in changing your information</span> {errorMsg}
             </div>
           ) : (
             <div
-              className="mt-2 bg-teal-500 text-sm text-white rounded-lg p-4"
+              className="mt-8 bg-teal-500 text-sm text-white rounded-lg p-4"
               role="alert">
               <span className="font-bold">Success!</span> Your information has
-              been updated!
+              been updated
             </div>
           )
         ) : null}
 
         <form onSubmit={handleFormSubmit}>
-          <div className="container mx:auto mt-5">
-            <label
-              className="block text-lg font-medium mb-2 dark:text-white mt-5"
-              style={{ marginLeft: "5px" }}>
+          <div className="p-4 mt-4">
+            <label className="text-lg font-medium dark:text-white">
               Email
             </label>
-            <input
-              readOnly
-              type="email"
-              id="input-label"
-              size={sizeOfInputFields}
-              className="py-3 px-4 block w-full border-gray-200 rounded-lg text-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-              value={email}
-              onClick={() => {
-                alert("You cannot change your email address!");
-              }}
-            />
-            <label
-              className="block text-lg font-medium mb-2 dark:text-white mt-5"
-              style={{ marginLeft: "5px" }}>
+            <input type="text" className="mt-2 py-3 px-4 block w-full border-gray-200 rounded-lg text-md focus:border-blue-500 focus:ring-blue-500 disabled:opacity-100 disabled:pointer-events-none dark:bg-gray-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder={email} disabled={true} />
+            <h1 className="text-lg font-medium dark:text-white mt-8">
               First Name
-            </label>
+            </h1>
             <input
               onChange={handleFirstNameChange}
               type="text"
-              className="py-3 px-4 block w-full border-gray-200 rounded-lg text-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+              className="mt-4 py-3 px-4 block w-full border-gray-200 rounded-lg text-md focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-900 dark:border-gray-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
               value={newFirstName}
             />
-            <label
-              className="block text-lg font-medium mb-2 dark:text-white mt-5"
-              style={{ marginLeft: "5px" }}>
+            <h1 className="block text-lg font-medium mb-2 dark:text-white mt-8">
               Last Name
-            </label>
+            </h1>
             <input
               onChange={handleLastNameChange}
               type="text"
-              className="py-3 px-4 block w-full border-gray-200 rounded-lg text-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+              className="mt-2 py-3 px-4 block w-full border-gray-200 rounded-lg text-md focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
               value={newLastName}
             />
-            <label
-              className="block text-lg font-medium mb-2 dark:text-white mt-5"
-              style={{ marginLeft: "5px" }}>
+            <h1 className="block text-lg font-medium mb-2 dark:text-white mt-8">
               Program
-            </label>
+            </h1>
             <select
-              className="mb-2 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 text-stone-600 dark:text-gray-400 placeholder-stone-400 dark:placeholder-gray-400"
+              className="mb-2 rounded-md px-4 py-2 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 text-stone-600 dark:text-gray-400 placeholder-stone-400 dark:placeholder-gray-400 w-full"
               name="program"
               value={newProgram}
               onChange={handleProgramChange}
@@ -246,61 +235,68 @@ const UserDetails: React.FC<UserDetailsProps> = ({
             </select>
           </div>
 
-          <button
-            type="submit"
-            className="flex flex-row items-center justify-center gap-2 w-full mt-8 py-4 px-6 text-lg font-semibold rounded-lg bg-secondary hover:bg-secondary-dark text-black dark:text-white">
-            <h1>Save Changes</h1>
-          </button>
+          <div className="p-4">
+            <button type="submit" className="mt-6 w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-secondary text-black dark:text-white disabled:opacity-50 disabled:pointer-events-none">
+              Save Changes
+            </button>
+          </div>
         </form>
 
-        <hr className="mt-5" style={{ border: "2px solid gray" }} />
+        <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
 
-        <button
-          type="submit"
-          onClick={(e) => {
-            e.preventDefault();
-            setIsVisible(true);
-          }}
-          className="flex flex-row items-center justify-center gap-2 w-full mt-4 mb-5 py-4 px-6 text-lg font-semibold rounded-lg bg-red-500 hover:bg-red-dark text-white dark:text-white">
-          <h1>Delete Account</h1>
-        </button>
-      </div>
-
-      <div
-        style={{ display: isVisible ? "block" : "none" }}
-        className={`transform transition-all duration-500 opacity-100 -translate-y-1/2 overflow-y-auto max-h-[90vh] border-2 dark:border-secondary fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background dark:bg-background/80 backdrop-blur rounded-md max-w-md p-8 w-11/12`}>
-        <form className="flex flex-col gap-4 text-foreground">
-          <label className="flex flex-row items-center justify-between text-3xl font-bold mb-5 text-foreground">
-            <h1>Are you sure?</h1>
-            <X
-              className="cursor-pointer"
-              onClick={() => {
-                setIsVisible(false);
-              }}
-            />
-          </label>
-
+        <div className="p-4">
           <button
             type="submit"
             onClick={(e) => {
               e.preventDefault();
-              handleAccountDeletion();
+              toggleDeleteReviewPopup();
             }}
-            className="flex flex-row items-center justify-center gap-2 w-full mt-4 mb-5 py-4 px-6 text-lg font-semibold rounded-lg bg-red-500 hover:bg-red-dark text-white dark:text-white">
-            <h1>Yes I want to delete my account</h1>
+            className="flex flex-row items-center justify-center gap-2 w-full mb-5 py-3 px-6 text-md font-semibold rounded-lg bg-red-500 dark:bg-red-800 text-white dark:text-white">
+            <h1>Delete Account</h1>
           </button>
-
-          <button
-            type="submit"
-            onClick={(e) => {
-              e.preventDefault();
-              setIsVisible(false);
-            }}
-            className="flex flex-row items-center justify-center gap-2 w-full mt-4 mb-5 py-4 px-6 text-lg font-semibold rounded-lg bg-teal-500 hover:bg-teal-dark text-white dark:text-white">
-            <h1>NO WAY ITS A MISCLICK</h1>
-          </button>
-        </form>
+        </div>
       </div>
+
+      {showDeleteProfilePopup ? (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className={`transform transition-all duration-500 ${isVisible ? 'opacity-100 -translate-y-1/2' : 'opacity-0 -translate-y-2/3'} overflow-y-auto max-h-[90vh] border-2 dark:border-red-800 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-background/80 backdrop-blur rounded-md max-w-md p-8 w-11/12`}>
+            <form className="flex flex-col gap-4 text-foreground">
+              <label className="flex flex-row items-center justify-between text-3xl font-bold mb-2 text-foreground">
+                <h1>Delete Account</h1>
+                <X
+                  className="cursor-pointer"
+                  onClick={() => {
+                    toggleDeleteReviewPopup();
+                  }}
+                />
+              </label>
+              <h2 className="text-md">Are you sure you want to delete your account? This action cannot be undone and will remove all reviews and user data.</h2>
+              <hr className="mt-4 mb-2 border-gray-300 dark:border-gray-800"></hr>
+              <div className="flex flex-row gap-6">
+                <button
+                  type="submit"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleAccountDeletion();
+                  }}
+                  className="flex flex-row items-center justify-center gap-2 w-full mt-4 mb-5 py-3 px-6 text-md font-semibold rounded-lg bg-red-500 dark:bg-red-800 text-white dark:text-white">
+                  <h1>Yes</h1>
+                </button>
+
+                <button
+                  type="submit"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleDeleteReviewPopup();
+                  }}
+                  className="flex flex-row items-center justify-center gap-2 w-full mt-4 mb-5 py-3 px-6 text-md font-semibold rounded-lg bg-gray-800 dark:bg-gray-600 text-white dark:text-white">
+                  <h1>No</h1>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : (null)}
     </div>
   );
 };

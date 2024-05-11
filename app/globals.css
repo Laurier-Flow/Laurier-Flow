@@ -27,6 +27,7 @@
     --gradient-start: rgb(38, 6, 61);
     --gradient-end: rgb(42, 7, 68);
     --bubble: 101,5,141;
+    --footer: 275 82.1% 13.1%;
   }
 
   .dark {
@@ -52,6 +53,7 @@
     --gradient-start: rgb(2,6,23);
     --gradient-end: rgb(3,7,18);
     --bubble: 65,18,124;
+    --footer: 229 84.0% 4.9%;
   }
 
   .component-absolute-center {

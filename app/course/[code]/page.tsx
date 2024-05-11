@@ -11,7 +11,15 @@ import CourseRequisites from "../CourseRequisites";
 import Spinner from "@/components/Spinner";
 import Header from "@/components/Header";
 import { fetchUser } from "@/utils/supabase/authActions";
+import { Metadata , ResolvingMetadata } from "next"
 const AddReview = dynamic(() => import("../AddReview"), { ssr: false });
+import Footer from "@/components/Footer";
+
+type CoursePageProps = {
+    params: {
+        code: string;
+    };
+};
 
 export interface days {
     monday: boolean;
@@ -35,7 +43,20 @@ export interface section {
     days: days | null;
 }
 
-async function CoursePage({ params }: { params: { code: string } }) {
+
+export async function generateMetadata(
+    { params }: CoursePageProps,
+    parent: ResolvingMetadata
+  ): Promise<Metadata> {
+    let courseCode = decodeURIComponent(params.code.toUpperCase())
+    return {
+        title: `${courseCode.split(' ').join('')}`,
+        description: `Course Information & Reviews for ${courseCode}`
+    }
+  }
+
+
+async function CoursePage({params}: CoursePageProps) {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     let courseCode = decodeURIComponent(params.code.toUpperCase())
@@ -67,6 +88,7 @@ async function CoursePage({ params }: { params: { code: string } }) {
                     </div>
                 </div>
             </Suspense>
+            <Footer />
         </>
     );
 }

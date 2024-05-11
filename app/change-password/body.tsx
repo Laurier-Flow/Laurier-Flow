@@ -1,31 +1,19 @@
+"use server";
+
 import Header from "@/components/Header";
 import Spinner from "@/components/Spinner";
 import { fetchUser } from "@/utils/supabase/authActions";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import UserDetails from "./user-details";
-import {
-  getUserData,
-  updateUserFirstName,
-  updateUserLastName,
-  updateUserProgram,
-  deleteUserAccount,
-} from "./edit-user-functons";
+import ChangePasswordForm from "./change-password-form";
+import { resetUserPassword } from "./reset-password-func";
 import Footer from "@/components/Footer";
 
 
-import { Metadata } from "next";
-
-
-export const metadata: Metadata = {
-  title: "Edit User",
-  description: "Edit user details",
-};
-
-
-export default async function EditUser() {
+export default async function ChangePassword() {
   const user = await fetchUser();
   if (!user) redirect("/");
+
   return (
     <>
       <Header user={user} />
@@ -39,20 +27,16 @@ export default async function EditUser() {
           <div className="flex flex-1 pt-20 flex-row justify-between w-f max-w-6xl">
             <div className="flex flex-1 flex-col justify-end pl-4">
               <h1 className="mb-2 text-2xl font-bold md:text-5xl text-white">
-                User Details
+                Change Password
               </h1>
             </div>
           </div>
         </div>
-        <UserDetails
-          getUserDetailsFunction={getUserData}
-          email={user.email!}
-          updateUserFirstName={updateUserFirstName}
-          updateUserLastName={updateUserLastName}
-          updateUserProgram={updateUserProgram}
-          deleteUserAccount={deleteUserAccount}
-        />
       </Suspense>
+      <ChangePasswordForm
+        user={user}
+        resetUserPasswordFunction={resetUserPassword}
+      />
       <Footer />
     </>
   );
