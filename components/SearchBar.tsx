@@ -32,13 +32,12 @@ const slugify = (link: string) => {
 
 const CourseResultListItem = ({ params }: { params: CourseResult }) => {
 	const courseLink = '/course/' + slugify(params.course_code)
-
 	return (
 		<Link
 			href={courseLink}
 			className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'
 		>
-			<span className='text-secondary font-bold'>{params.course_code}</span> —{' '}
+			<span className='text-secondary font-bold'>{params.course_code}</span>{' '}
 			{params.course_title}
 		</Link>
 	)
@@ -49,9 +48,8 @@ const ProfResultListItem = ({ params }: { params: ProfResult }) => {
 
 	return (
 		<Link href={profLink}>
-			<div className='flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800'>
-				<div></div>
-				<div>{params.instructor_name}</div>
+			<div className='flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'>
+				<span className='text-secondary font-bold'>{params.instructor_name}</span>
 			</div>
 		</Link>
 	)
