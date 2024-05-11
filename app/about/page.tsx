@@ -5,13 +5,10 @@ import { fetchUser } from "@/utils/supabase/authActions";
 import { PopupButton } from "@typeform/embed-react";
 import { Metadata } from "next";
 
-export const metadata : Metadata = {
-  title : "About",
+export const metadata: Metadata = {
+  title: "About",
   description: "Learn more about Laurier Flow and the team behind it.",
-  
-
-}
-
+};
 
 export default async function About() {
   const user = await fetchUser();
@@ -94,7 +91,7 @@ export default async function About() {
               linkedinUrl="https://www.linkedin.com/in/qureshishahrukh/"
               igUrl="https://www.instagram.com/shahruk._h"
               githubUrl="https://github.com/ShaleeQureshi"
-              desc="Shahrukh played a crucial role in developing and refining user profile management and is actively enhancing the platform by integrating course scheduling features. Known for his exceptional work ethic, Shahrukh has established himself as one of the hardest-working individuals in any setting. A passionate basketball fan, he brings the same dedication and focus to the court as he does to his professional and academic endeavors. His commitment to excellence is a hallmark of both his career and personal life, making him a standout member of our team."
+              desc="Shahrukh played a crucial role in developing and refining user profile management and is actively enhancing the platform by integrating course scheduling and GPA calculation features. Known for his exceptional work ethic, Shahrukh has established himself as one of the hardest-working individuals in any setting. A passionate basketball fan, he brings the same dedication and focus to the court as he does to his professional and academic endeavors. His commitment to excellence is a hallmark of both his career and personal life, making him a standout member of our team."
             />
           </div>
         </div>
