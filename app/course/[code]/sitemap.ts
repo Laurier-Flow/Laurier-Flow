@@ -6,14 +6,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const supabase = createClient();
     // iterate over all courses and return an array of objects
     const courses = await supabase.from("courses").select("course_code");
-    const courseCodes = courses.data?.map((course) => course.course_code);
+    const courseCodes = courses.data?.map((courseCode) => courseCode);
     if (!courseCodes) {
         return [{
-            url: "https://laurierflow.ca/course/BU%20111",
+            url: "https://laurierflow.ca/course/BU 111",
         }]
     }
     return courseCodes.map((code) => ({
-        url: `https://laurierflow.ca/course/${code.replaceAll(/\s/g, "%20")}`,
+        url: `https://laurierflow.ca/course/${code}`,
         lastModified: new Date().toISOString(),
         changeFrequency: 'weekly',
         priority: 0.9
