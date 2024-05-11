@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import PageContent from "./pageContent";
+import Footer from "@/components/Footer";
 
 export default async function Profile() {
   const user = await fetchUser();
@@ -28,6 +29,7 @@ export default async function Profile() {
           user={user}
         />
       </Suspense>
+      <Footer />
     </>
   );
 }

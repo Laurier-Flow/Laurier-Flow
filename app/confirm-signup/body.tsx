@@ -21,8 +21,10 @@ export default function Body() {
 
     const handleVerifyClick = async () => {
         const error = await handleVerifyEmail(token_hash)
-        setErrorMessage(error)
-        setShowErrorPopup(true)
+        if (error) {
+            setErrorMessage(error)
+            setShowErrorPopup(true)
+        }
     }
 
     return (
@@ -45,7 +47,7 @@ export default function Body() {
                     <h2 className="text-lg md:text-2xl font-light text-background dark:text-foreground">
                         We need to confirm you're a Laurier student, click verify to complete the registration process.
                     </h2>
-                    <button onClick={handleVerifyClick} type="button" className="animate-bounce flex flex-row items-center justify-center gap-2 w-full mt-8 py-4 px-6 text-lg font-semibold rounded-lg bg-secondary hover:bg-secondary-dark text-black dark:text-white transition-all duration-1000 ease-in-out">
+                    <button onClick={handleVerifyClick} type="button" className="flex flex-row items-center justify-center gap-2 w-full mt-8 py-4 px-6 text-lg font-semibold rounded-lg bg-secondary hover:bg-secondary-dark text-black dark:text-white transition-all duration-1000 ease-in-out">
                         <ShieldCheck />
                         <h1>Verify</h1>
                     </button>
