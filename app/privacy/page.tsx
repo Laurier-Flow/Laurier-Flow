@@ -1,6 +1,13 @@
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { fetchUser } from "@/utils/supabase/authActions";
+import { Metadata } from "next"
 
+
+export const metadata : Metadata ={ 
+  title : "Privacy Policy",
+  description: "The Laurier Flow Privacy Policy"
+}
 
 export default async function Privacy() {
   const user = await fetchUser();
@@ -98,6 +105,7 @@ export default async function Privacy() {
           </p>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

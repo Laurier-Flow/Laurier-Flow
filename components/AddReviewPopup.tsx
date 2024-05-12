@@ -51,6 +51,7 @@ export default function AddReviewPopup({
     const [liked, setLiked] = useState(1);
     const [instructor, setInstructor] = useState(instructorArray[0] || 'Other')
     const [text, setText] = useState("");
+    const [error, setError] = useState<string | null>(null)
 
     const handleTextChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         const newText = event.target.value
@@ -60,13 +61,19 @@ export default function AddReviewPopup({
     }
 
     const submitNewReview = async (easy: number, useful: number, liked: number, instructor: string, text: string, courseName: string, user: User | null) => {
+        let error = null
         if (isInstructor) {
-            handleInstructorReviewSubmit(easy, useful, liked, instructor === 'Other' ? null : instructor, text, courseName, user)
+            error = await handleInstructorReviewSubmit(easy, useful, liked, instructor === 'Other' ? null : instructor, text, courseName, user)
         } else {
-            handleCourseReviewSubmit(easy, useful, liked, instructor === 'Other' ? null : instructor, text, courseName, user)
+            error = await handleCourseReviewSubmit(easy, useful, liked, instructor === 'Other' ? null : instructor, text, courseName, user)
         }
-        onClose()
-        window.location.href = window.location.href.split('?')[0] + '?upd=' + new Date().getTime();
+
+        if (!error) {
+            onClose()
+            window.location.href = window.location.href.split('?')[0] + '?upd=' + new Date().getTime();
+        } else {
+            setError(error.message)
+        }
     }
 
     return (
@@ -74,6 +81,7 @@ export default function AddReviewPopup({
             <form
                 className="animate-in flex-1 flex flex-col w-full justify-center dark:text-white"
                 action={() => submitNewReview(easy, useful, liked, instructor, text, courseName, user)}
+                onChange={() => setError(null)}
             >
                 <div className='p-2 flex justify-between'>
                     <label className="text-xl font-bold pl-2 mt-1">
@@ -86,6 +94,9 @@ export default function AddReviewPopup({
                 <hr className="md:inline border-gray-300 dark:border-gray-800"></hr>
                 <div className='p-4 flex flex-col justify-between'>
                     <div className="flex flex-col flex-1 text-xl font-medium">
+                        {error ? (<div className="mb-6 bg-red-500 text-sm text-white rounded-lg p-4" role="alert">
+                            {error}
+                        </div>) : (null)}
                         <label htmlFor="hs-select-label" className="block text-sm font-medium mb-2 dark:text-white">Which {isInstructor ? ('course') : ('instructor')} did you have?</label>
                         <select value={instructor}
                             onChange={(e) => setInstructor(e.target.value)} id="hs-select-label" className="bg-stone-200 py-2 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-amber-300 focus:ring-amber-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600">
@@ -99,27 +110,27 @@ export default function AddReviewPopup({
                             <div className='pb-4 self-center sm:self-start sm:pb-0'>
                                 <label className='text-sm'>{isInstructor ? ('Clear') : ('Easy')}</label>
                                 <div className="flex items-center py-2">
-                                    <button onMouseLeave={() => setEasyHover(easy)} onMouseOver={() => setEasyHover(1)} onClick={() => setEasy(1)} type="button" className={`${(easy > 0) || (easyHover > 0) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
+                                    <button onMouseLeave={() => setEasyHover(easy)} onMouseOver={() => setEasyHover(1)} onClick={() => {setEasy(1); setError(null)}} type="button" className={`${(easy > 0) || (easyHover > 0) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
                                         <svg className="w-6 h-6 flex-shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                                         </svg>
                                     </button>
-                                    <button onMouseLeave={() => setEasyHover(easy)} onMouseOver={() => setEasyHover(2)} onClick={() => setEasy(2)} type="button" className={`${(easy > 1) || (easyHover > 1) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
+                                    <button onMouseLeave={() => setEasyHover(easy)} onMouseOver={() => setEasyHover(2)} onClick={() => {setEasy(2); setError(null)}} type="button" className={`${(easy > 1) || (easyHover > 1) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
                                         <svg className="w-6 h-6 flex-shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                                         </svg>
                                     </button>
-                                    <button onMouseLeave={() => setEasyHover(easy)} onMouseOver={() => setEasyHover(3)} onClick={() => setEasy(3)} type="button" className={`${(easy > 2) || (easyHover > 2) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
+                                    <button onMouseLeave={() => setEasyHover(easy)} onMouseOver={() => setEasyHover(3)} onClick={() => {setEasy(3); setError(null)}} type="button" className={`${(easy > 2) || (easyHover > 2) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
                                         <svg className="w-6 h-6 flex-shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                                         </svg>
                                     </button>
-                                    <button onMouseLeave={() => setEasyHover(easy)} onMouseOver={() => setEasyHover(4)} onClick={() => setEasy(4)} type="button" className={`${(easy > 3) || (easyHover > 3) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
+                                    <button onMouseLeave={() => setEasyHover(easy)} onMouseOver={() => setEasyHover(4)} onClick={() => {setEasy(4); setError(null)}} type="button" className={`${(easy > 3) || (easyHover > 3) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
                                         <svg className="w-6 h-6 flex-shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                                         </svg>
                                     </button>
-                                    <button onMouseLeave={() => setEasyHover(easy)} onMouseOver={() => setEasyHover(5)} onClick={() => setEasy(5)} type="button" className={`${(easy > 4) || (easyHover > 4) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
+                                    <button onMouseLeave={() => setEasyHover(easy)} onMouseOver={() => setEasyHover(5)} onClick={() => {setEasy(5); setError(null)}} type="button" className={`${(easy > 4) || (easyHover > 4) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
                                         <svg className="w-6 h-6 flex-shrink-0 size-5 " xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                                         </svg>
@@ -132,27 +143,27 @@ export default function AddReviewPopup({
                             <div className='self-center sm:self-start py-4 sm:py-0 sm:px-8 sm:border-x dark:border-gray-700'>
                                 <label className='text-sm'>{isInstructor ? ('Engaging') : ('Useful')}</label>
                                 <div className="flex items-center pt-2 py-2">
-                                    <button onMouseLeave={() => setUsefulHover(useful)} onMouseOver={() => setUsefulHover(1)} onClick={() => setUseful(1)} type="button" className={`${(useful > 0) || (usefulHover > 0) ? 'text-secondary dark:text-secondary' : 'dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
+                                    <button onMouseLeave={() => setUsefulHover(useful)} onMouseOver={() => setUsefulHover(1)} onClick={() => {setUseful(1); setError(null)}} type="button" className={`${(useful > 0) || (usefulHover > 0) ? 'text-secondary dark:text-secondary' : 'dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
                                         <svg className="w-6 h-6 flex-shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                                         </svg>
                                     </button>
-                                    <button onMouseLeave={() => setUsefulHover(useful)} onMouseOver={() => setUsefulHover(2)} onClick={() => setUseful(2)} type="button" className={`${(useful > 1) || (usefulHover > 1) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
+                                    <button onMouseLeave={() => setUsefulHover(useful)} onMouseOver={() => setUsefulHover(2)} onClick={() => {setUseful(2); setError(null)}} type="button" className={`${(useful > 1) || (usefulHover > 1) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
                                         <svg className="w-6 h-6 flex-shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                                         </svg>
                                     </button>
-                                    <button onMouseLeave={() => setUsefulHover(useful)} onMouseOver={() => setUsefulHover(3)} onClick={() => setUseful(3)} type="button" className={`${(useful > 2) || (usefulHover > 2) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
+                                    <button onMouseLeave={() => setUsefulHover(useful)} onMouseOver={() => setUsefulHover(3)} onClick={() => {setUseful(3); setError(null)}} type="button" className={`${(useful > 2) || (usefulHover > 2) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
                                         <svg className="w-6 h-6 flex-shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                                         </svg>
                                     </button>
-                                    <button onMouseLeave={() => setUsefulHover(useful)} onMouseOver={() => setUsefulHover(4)} onClick={() => setUseful(4)} type="button" className={`${(useful > 3) || (usefulHover > 3) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
+                                    <button onMouseLeave={() => setUsefulHover(useful)} onMouseOver={() => setUsefulHover(4)} onClick={() => {setUseful(4); setError(null)}} type="button" className={`${(useful > 3) || (usefulHover > 3) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
                                         <svg className="w-6 h-6 flex-shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                                         </svg>
                                     </button>
-                                    <button onMouseLeave={() => setUsefulHover(useful)} onMouseOver={() => setUsefulHover(5)} onClick={() => setUseful(5)} type="button" className={`${(useful > 4) || (usefulHover > 4) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
+                                    <button onMouseLeave={() => setUsefulHover(useful)} onMouseOver={() => setUsefulHover(5)} onClick={() => {setUseful(5); setError(null)}} type="button" className={`${(useful > 4) || (usefulHover > 4) ? 'text-secondary dark:text-secondary' : 'text-stone-300 dark:text-gray-600'} size-5 inline-flex justify-center items-center text-2xl rounded-full text-gray-300 hover:text-secondary disabled:opacity-50 disabled:pointer-events-none dark:text-gray-600 dark:hover:text-secondary`}>
                                         <svg className="w-6 h-6 flex-shrink-0 size-5 " xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
                                         </svg>
