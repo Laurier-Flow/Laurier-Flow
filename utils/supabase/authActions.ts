@@ -2,6 +2,7 @@
 
 import { headers, cookies } from 'next/headers';
 import { createClient } from './server';
+import { redirect } from 'next/dist/server/api-utils';
 
 export const signIn = async (formData: FormData) => {
 
@@ -78,4 +79,21 @@ export const signOut = async () => {
     console.error('Error signing out:', error);
     return { success: false, message: 'Error signing out' };
   }
+};
+
+export const handleResetPassword = async (window_location: string, formData: FormData) => {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  const email = formData.get('email') as string;
+
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window_location}/change-password`
+  });
+
+  if (error) {
+    return { success: false, message: error.message }
+  }
+
+  return { success: true, message: 'Please check your email' };
 };

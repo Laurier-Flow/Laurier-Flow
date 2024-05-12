@@ -35,9 +35,11 @@ function ScheduleTab({
         toggleLoginPopup,
         showSignUpPopup,
         toggleSignUpPopup,
+        showPasswordPopup,
+        togglePasswordPopup
     } = usePopupManager();
 
-    useManageBodyScroll(showLoginPopup || showSignUpPopup);
+    useManageBodyScroll(showLoginPopup || showSignUpPopup || showPasswordPopup);
 
     const pages = Math.ceil(termSections.length / 10)
     const pageButtons = []
@@ -150,6 +152,7 @@ function ScheduleTab({
                         searchParams={{ message: '' }}
                         onClose={toggleLoginPopup}
                         toggleSignUp={toggleSignUpPopup}
+                        togglePasswordReset={togglePasswordPopup}
                     />
                 </div>
             )}

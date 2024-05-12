@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import LoginPopup from "./LoginPopup"
 import SignUpPopup from "./SignUpPopup"
+import PasswordPopup from "./PasswordPopup"
 import { fetchUser, signOut } from '@/utils/supabase/authActions'
 import SearchBar from "@/components/SearchBar"
 import { UserNav } from "./UserProfileNav"
@@ -35,6 +36,7 @@ export const useManageBodyScroll = (condition: boolean) => {
 export const usePopupManager = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false)
   const [showSignUpPopup, setShowSignUpPopup] = useState(false)
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false)
 
   const toggleLoginPopup = () => {
     setShowLoginPopup(!showLoginPopup)
@@ -44,6 +46,10 @@ export const usePopupManager = () => {
     setShowSignUpPopup(!showSignUpPopup)
   }
 
+  const togglePasswordPopup = () => {
+    setShowPasswordPopup(!showPasswordPopup)
+  }
+
   return {
     showLoginPopup,
     setShowLoginPopup,
@@ -51,6 +57,9 @@ export const usePopupManager = () => {
     showSignUpPopup,
     setShowSignUpPopup,
     toggleSignUpPopup,
+    showPasswordPopup,
+    setShowPasswordPopup,
+    togglePasswordPopup,
   }
 }
 
@@ -60,6 +69,8 @@ export default function Header({ user }: { user: User | null }): React.ReactElem
     toggleLoginPopup,
     showSignUpPopup,
     toggleSignUpPopup,
+    showPasswordPopup,
+    togglePasswordPopup,
   } = usePopupManager()
 
   useManageBodyScroll(showLoginPopup || showSignUpPopup)
@@ -96,20 +107,30 @@ export default function Header({ user }: { user: User | null }): React.ReactElem
           </div>
         </div>
       </header>
-      {showLoginPopup && !showSignUpPopup && (
+      {showLoginPopup && !showSignUpPopup && !showPasswordPopup && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
           <LoginPopup
             searchParams={{ message: '' }}
             onClose={toggleLoginPopup}
             toggleSignUp={toggleSignUpPopup}
+            togglePasswordReset={togglePasswordPopup}
           />
         </div>
       )}
-      {showSignUpPopup && !showLoginPopup && (
+      {showSignUpPopup && !showLoginPopup && !showPasswordPopup && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
           <SignUpPopup
             searchParams={{ message: '' }}
             onClose={toggleSignUpPopup}
+            toggleLogIn={toggleLoginPopup}
+          />
+        </div>
+      )}
+      {showPasswordPopup && !showLoginPopup && !showLoginPopup && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <PasswordPopup
+            searchParams={{ message: '' }}
+            onClose={togglePasswordPopup}
             toggleLogIn={toggleLoginPopup}
           />
         </div>

@@ -14,6 +14,8 @@ export default function HomeHeader({ user }: { user: User | null }) {
         toggleLoginPopup,
         showSignUpPopup,
         toggleSignUpPopup,
+        showPasswordPopup,
+        togglePasswordPopup
     } = usePopupManager()
 
     useManageBodyScroll(showLoginPopup || showSignUpPopup)
@@ -36,6 +38,7 @@ export default function HomeHeader({ user }: { user: User | null }) {
                         searchParams={{ message: '' }}
                         onClose={toggleLoginPopup}
                         toggleSignUp={toggleSignUpPopup}
+                        togglePasswordReset={togglePasswordPopup}
                     />
                 </div>
             )}

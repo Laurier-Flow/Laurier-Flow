@@ -25,6 +25,8 @@ export default function ReviewButton({
         toggleLoginPopup,
         showSignUpPopup,
         toggleSignUpPopup,
+        setShowPasswordPopup,
+        togglePasswordPopup
     } = usePopupManager();
 
     useManageBodyScroll(showLoginPopup || showSignUpPopup || showAddReviewPopup);
@@ -76,6 +78,7 @@ export default function ReviewButton({
                         searchParams={{ message: '' }}
                         onClose={toggleLoginPopup}
                         toggleSignUp={toggleSignUpPopup}
+                        togglePasswordReset={togglePasswordPopup}
                     />
                 </div>
             )}
