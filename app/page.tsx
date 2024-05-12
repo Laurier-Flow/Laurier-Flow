@@ -12,7 +12,7 @@ import HomeFooter from '@/components/HomeFooter'
 
 export const metadata : Metadata = {
 	title: `Laurier Flow`,
-	description: `The homepage for Laurier Flow.`
+	description: `Plan your courses. Read about your professors. Get the most out of your experience at Wilfrid Laurier University.`
 }
 
 export default async function Index(): Promise<React.ReactElement> {
