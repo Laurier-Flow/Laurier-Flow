@@ -17,3 +17,4 @@ export default function ChangePassword() {
             <Body />
         </Suspense>
     )
+}
