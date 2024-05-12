@@ -18,6 +18,17 @@ interface Schedule {
     type: string,
     grade: string
   ) => Promise<any>;
+  updateClassFunction: (
+    term: string,
+    course: string,
+    instructor: string,
+    location: string,
+    time: string,
+    date: string,
+    type: string,
+    grade: string,
+    id: number
+  ) => Promise<any>;
 }
 
 interface UserClasses {
@@ -45,6 +56,7 @@ interface SortingInterface {
 const Schedule: React.FC<Schedule> = ({
   deleteClassFunction,
   addClassFunction,
+  updateClassFunction,
 }) => {
   const [userPreExistingSchedule, setUserPreExistingSchedule] =
     useState<UserTerm[]>();
@@ -67,6 +79,17 @@ const Schedule: React.FC<Schedule> = ({
 
   const [error, setError] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>();
+
+  const [editSchedule, setEditSchedule] = useState<boolean>(false);
+  const [editClass, setEditClass] = useState<string>();
+  const [editInstructor, setEditInstructor] = useState<string>();
+  const [editLocation, setEditLocation] = useState<string>();
+  const [editTime, setEditTime] = useState<string>();
+  const [editDate, setEditDate] = useState<string>();
+  const [editType, setEditType] = useState<string>();
+  const [editGrade, setEditGrade] = useState<string>();
+  const [editId, setEditId] = useState<number>();
+  const [editTerm, setEditTerm] = useState<string>();
 
   useEffect(() => {
     const getData = async () => {
@@ -144,7 +167,13 @@ const Schedule: React.FC<Schedule> = ({
   }, [update]);
 
   const handleAddTermClick = () => {
-    setAddNewTerm(true);
+    if (newTermName) {
+      setError(false);
+      setAddNewTerm(true);
+    } else {
+      setError(true);
+      setErrorMsg("Please ensure a term name is added when adding a new term");
+    }
   };
 
   const handleAddClassClick = () => {
@@ -246,6 +275,96 @@ const Schedule: React.FC<Schedule> = ({
     setNewTermName(event.target.value);
   };
 
+  const handleStartEditSchedule = (userClass: UserClasses) => {
+    setEditClass(userClass.class);
+    setEditInstructor(userClass.instructor);
+    setEditLocation(userClass.location);
+    setEditTime(userClass.time);
+    setEditDate(userClass.date);
+    setEditType(userClass.type);
+    setEditGrade(userClass.grade);
+    setEditId(userClass.id);
+    setEditTerm(userClass.term);
+    setEditSchedule(true);
+  };
+
+  const handleCancelEditSchedule = () => {
+    setError(false);
+    setEditSchedule(false);
+  };
+
+  const handleEditClass = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditClass(event.target.value);
+  };
+
+  const handleEditInstructor = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditInstructor(event.target.value);
+  };
+
+  const handleEditLocation = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditLocation(event.target.value);
+  };
+
+  const handleEditTime = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditTime(event.target.value);
+  };
+
+  const handleEditDate = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedOptions = Array.from(
+      event.target.selectedOptions,
+      (option) => option.value
+    );
+    var str = "";
+    selectedOptions.forEach((day: string) => {
+      str += day + ",";
+    });
+    str = str.substring(0, str.length - 1);
+    setEditDate(str);
+    console.log(str);
+  };
+
+  const handleEditType = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditType(event.target.value);
+  };
+
+  const handleEditGrade = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditGrade(event.target.value);
+  };
+
+  const handleSaveEditChanges = async () => {
+    // Make sure none of the entries are null
+    if (
+      editClass &&
+      editInstructor &&
+      editInstructor &&
+      editLocation &&
+      editTime &&
+      editDate &&
+      editType
+    ) {
+      const res = await updateClassFunction(
+        editTerm!,
+        editClass!,
+        editInstructor!,
+        editLocation!,
+        editTime!,
+        editDate!,
+        editType!,
+        editGrade!,
+        editId!
+      );
+      console.log(res);
+      setError(false);
+      setUpdate(true);
+      setEditSchedule(false);
+    } else {
+      setError(true);
+      setErrorMsg(
+        "Please ensure all fields (aside from Grade if not necessary) are filled out when editing your schedule"
+      );
+    }
+  };
+
   const resetNewFields = () => {
     setNewClass("");
     setNewInstructor("");
@@ -257,7 +376,7 @@ const Schedule: React.FC<Schedule> = ({
   };
 
   return (
-    <div className="mb-8">
+    <div className="mb-8 h-full">
       {error ? (
         <div
           className="mt-2 bg-red-500 text-sm text-white rounded-lg p-4"
@@ -326,7 +445,142 @@ const Schedule: React.FC<Schedule> = ({
                           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                             {term.classes.map(
                               (userClass: UserClasses, index: number) => {
-                                return (
+                                return editSchedule &&
+                                  editId === userClass.id ? (
+                                  <tr>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="class_name"
+                                        className="mt-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        value={editClass}
+                                        onChange={handleEditClass}
+                                        required={true}
+                                      />
+                                    </td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="instructor_name"
+                                        className="mt-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        value={editInstructor}
+                                        onChange={handleEditInstructor}
+                                        required
+                                      />
+                                    </td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="location_name"
+                                        className="mt-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        value={editLocation}
+                                        onChange={handleEditLocation}
+                                        required
+                                      />
+                                    </td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="new_time"
+                                        className="mt-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="8:30 AM - 9:30 AM"
+                                        value={editTime}
+                                        onChange={handleEditTime}
+                                        required
+                                      />
+                                    </td>
+                                    <td>
+                                      <form className="max-w-sm mx-auto">
+                                        <select
+                                          multiple
+                                          onChange={handleEditDate}
+                                          id="dates_multiple"
+                                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                          <option
+                                            value="Monday"
+                                            selected={editDate?.includes(
+                                              "Monday"
+                                            )}>
+                                            Monday
+                                          </option>
+                                          <option
+                                            value="Tuesday"
+                                            selected={editDate?.includes(
+                                              "Tuesday"
+                                            )}>
+                                            Tuesday
+                                          </option>
+                                          <option
+                                            value="Wednesday"
+                                            selected={editDate?.includes(
+                                              "Wednesday"
+                                            )}>
+                                            Wednesday
+                                          </option>
+                                          <option
+                                            value="Thursday"
+                                            selected={editDate?.includes(
+                                              "Thursday"
+                                            )}>
+                                            Thursday
+                                          </option>
+                                          <option
+                                            value="Friday"
+                                            selected={editDate?.includes(
+                                              "Friday"
+                                            )}>
+                                            Friday
+                                          </option>
+                                          <option
+                                            value="Saturday"
+                                            selected={editDate?.includes(
+                                              "Saturday"
+                                            )}>
+                                            Saturday
+                                          </option>
+                                          <option
+                                            value="Sunday"
+                                            selected={editDate?.includes(
+                                              "Sunday"
+                                            )}>
+                                            Sunday
+                                          </option>
+                                        </select>
+                                      </form>
+                                    </td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="new_type"
+                                        className="mt-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        value={editType}
+                                        onChange={handleEditType}
+                                        required
+                                      />
+                                    </td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        id="new_grade"
+                                        className="mt-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        value={editGrade}
+                                        onChange={handleEditGrade}
+                                        required
+                                      />
+                                    </td>
+                                    <td>
+                                      <button
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          handleCancelEditSchedule();
+                                        }}
+                                        type="button"
+                                        className="ml-6 mt-4 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                        Cancel Edit
+                                      </button>
+                                    </td>
+                                  </tr>
+                                ) : (
                                   <tr>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
                                       {userClass.class}
@@ -364,6 +618,17 @@ const Schedule: React.FC<Schedule> = ({
                                         type="button"
                                         className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
                                         Delete
+                                      </button>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                                      <button
+                                        onClick={async (e) => {
+                                          e.preventDefault();
+                                          handleStartEditSchedule(userClass);
+                                        }}
+                                        type="button"
+                                        className="text-sm font-semibold rounded-lg border border-transparent bg-secondary text-black px-5 py-2.5 me-2 mb-2 dark:text-white disabled:opacity-50 disabled:pointer-events-none">
+                                        Edit
                                       </button>
                                     </td>
                                   </tr>
@@ -472,14 +737,24 @@ const Schedule: React.FC<Schedule> = ({
                                   e.preventDefault();
                                   handleSubmitChangesClick(term.term);
                                 }}
-                                className="mt-2 mb-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                className="text-sm font-semibold rounded-lg border border-transparent bg-secondary text-black px-5 py-2.5 me-2 mb-2 dark:text-white disabled:opacity-50 disabled:pointer-events-none mt-2">
+                                {" "}
                                 Submit Changes
+                              </button>
+                            ) : editSchedule ? (
+                              <button
+                                type="button"
+                                onClick={handleSaveEditChanges}
+                                className="text-sm mt-2 font-semibold rounded-lg border border-transparent bg-secondary text-black px-5 py-2.5 me-2 mb-2 dark:text-white disabled:opacity-50 disabled:pointer-events-none">
+                                {" "}
+                                Save Changes
                               </button>
                             ) : (
                               <button
                                 type="button"
                                 onClick={handleAddClassClick}
-                                className="mt-2 mb-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                className="text-sm mt-2 font-semibold rounded-lg border border-transparent bg-secondary text-black px-5 py-2.5 me-2 mb-2 dark:text-white disabled:opacity-50 disabled:pointer-events-none">
+                                {" "}
                                 Add Course
                               </button>
                             )}
@@ -660,7 +935,8 @@ const Schedule: React.FC<Schedule> = ({
                               e.preventDefault();
                               handleSubmitChangesClick(newTermName);
                             }}
-                            className="mt-2 mb-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                            className="text-sm font-semibold rounded-lg border border-transparent bg-secondary text-black px-5 py-2.5 me-2 mb-2 dark:text-white disabled:opacity-50 disabled:pointer-events-none mt-2">
+                            {" "}
                             Submit Changes
                           </button>
                         </tbody>
@@ -684,7 +960,8 @@ const Schedule: React.FC<Schedule> = ({
               <button
                 type="button"
                 onClick={handleAddTermClick}
-                className="mt-2 mb-2 w-full focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                className="text-sm mt-2 font-semibold rounded-lg border border-transparent bg-secondary text-black px-5 py-2.5 me-2 mb-2 dark:text-white disabled:opacity-50 disabled:pointer-events-none">
+                {" "}
                 Add Term
               </button>
             </div>
