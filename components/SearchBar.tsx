@@ -61,7 +61,7 @@ const ExploreResultListItem = ({ faculty }: { faculty: string }) => {
 	const facultyCode = disciplineCodes[faculty]
 
 	return (
-		<Link href={{ pathname: '/explore', query: { faculty: facultyCode } }} className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'>
+		<Link href={{ pathname: '/explore', query: { subject: facultyCode } }} className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'>
 			<Telescope />
 			<span className='font-bold pl-3'>Search for all <span className='text-secondary'>{faculty}</span> courses</span>
 		</Link>
