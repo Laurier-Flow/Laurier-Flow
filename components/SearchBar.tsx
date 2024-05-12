@@ -5,8 +5,10 @@ import { createClient } from '@/utils/supabase/client'
 import { Input } from '@/components/ui/input'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { facultyCoursePrefix } from '@/utils/lib/facultyCoursePrefix'
 import { disciplineCodes } from '@/utils/lib/disciplineCodes'
 import { Search } from 'lucide-react'
+import { redirectToExploreAll } from '@/utils/lib/clientSideRedirects'
 
 type CourseResult = {
 	course_code: string
@@ -52,10 +54,29 @@ const ProfResultListItem = ({ params }: { params: ProfResult }) => {
 	)
 }
 
+const ExploreResultListItem = ({ faculty }: { faculty: string }) => {
+	const facultyCode = disciplineCodes[faculty]
+
+	return (
+		<Link href={{ pathname: '/explore', query: { faculty: facultyCode } }} className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'>
+			<span>Search for all {faculty} courses</span>
+		</Link>
+	)
+
+}
+
 export default function SearchBar() {
 	const [searchQuery, setSearchQuery] = useState<string>('')
 	const [courseResults, setCourseResults] = useState<CourseResult[]>([])
 	const [profResults, setProfResults] = useState<ProfResult[]>([])
+	const [exploreResults, setExploreResults] = useState<string[]>([])
+
+	const handleSubmit = (e : React.KeyboardEvent<HTMLInputElement>) => {
+		e.preventDefault();
+		if (e.key === 'Enter') {
+			redirectToExploreAll();
+		}
+	}
 
 	useEffect(() => {
 		/**
@@ -115,10 +136,19 @@ export default function SearchBar() {
 			// If string is empty then simply set the result arrays to be empty and avoid fetch calls
 			setCourseResults([])
 			setProfResults([])
+			setExploreResults([])
 		} else {
 			// console.log(sanitizedString)
 			fetchResults(sanitizedString)
 		}
+
+		if (sanitizedString.length == 2 || sanitizedString.length == 4) {
+			const faculty = facultyCoursePrefix[sanitizedString.toUpperCase()]
+			if (faculty) {
+				setExploreResults([faculty])
+			}
+		}
+
 	}, [searchQuery])
 
 	const barStyleOpen =
@@ -135,11 +165,14 @@ export default function SearchBar() {
 			<Search className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground z-[100]' />
 			<Input
 				type='search'
-				placeholder='Search for courses, subjects or professors'
+				placeholder='Search for courses, professors or faculties'
+				name='q'
 				onChange={(e) => {
-					console.log(e.target.value)
+					e.preventDefault()
 					setSearchQuery(e.target.value)
+
 				}}
+				onKeyDown={(e) => handleSubmit(e)}
 				className={
 					courseResults.length !== 0 || profResults.length !== 0
 						? barStyleOpen
@@ -157,8 +190,11 @@ export default function SearchBar() {
 					{courseResults.map((course) => (
 						<CourseResultListItem params={course} />
 					))}
-					{profResults.map((prof) => (
+					{/* {profResults.map((prof) => (
 						<ProfResultListItem params={prof} />
+					))} */}
+					{exploreResults.map((faculty) => (
+						<ExploreResultListItem faculty={faculty} />
 					))}
 				</div>
 			</div>
