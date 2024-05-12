@@ -5,8 +5,11 @@ import { createClient } from '@/utils/supabase/client'
 import { Input } from '@/components/ui/input'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { disciplineCodes } from '@/app/course/disciplineCodes'
+import { facultyCoursePrefix } from '@/utils/lib/facultyCoursePrefix'
+import { disciplineCodes } from '@/utils/lib/disciplineCodes'
 import { Search } from 'lucide-react'
+import { redirectToExploreAll } from '@/utils/lib/clientSideRedirects'
+import { Telescope, BookOpenText, UserRound } from 'lucide-react'
 
 type CourseResult = {
 	course_code: string
@@ -37,7 +40,8 @@ const CourseResultListItem = ({ params }: { params: CourseResult }) => {
 			href={courseLink}
 			className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'
 		>
-			<span><span className='text-secondary font-bold'>{params.course_code}</span> - {params.course_title}</span>
+			<BookOpenText />
+			<span className='pl-3'><span className='text-secondary font-bold'>{params.course_code}</span> - <span className='font-bold'>{params.course_title}</span></span>
 		</Link>
 	)
 }
@@ -47,15 +51,35 @@ const ProfResultListItem = ({ params }: { params: ProfResult }) => {
 
 	return (
 		<Link href={profLink} className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'>
-			<span>{params.instructor_name}</span>
+			<UserRound />
+			<span className='text-secondary font-bold pl-3'>{params.instructor_name}</span>
 		</Link>
 	)
+}
+
+const ExploreResultListItem = ({ faculty }: { faculty: string }) => {
+	const facultyCode = disciplineCodes[faculty]
+
+	return (
+		<Link href={{ pathname: '/explore', query: { subject: facultyCode } }} className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'>
+			<Telescope />
+			<span className='font-bold pl-3'>Search for all <span className='text-secondary'>{faculty}</span> courses</span>
+		</Link>
+	)
+
 }
 
 export default function SearchBar() {
 	const [searchQuery, setSearchQuery] = useState<string>('')
 	const [courseResults, setCourseResults] = useState<CourseResult[]>([])
 	const [profResults, setProfResults] = useState<ProfResult[]>([])
+	const [exploreResults, setExploreResults] = useState<string[]>([])
+
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+		redirectToExploreAll()
+
+	}
 
 	useEffect(() => {
 		/**
@@ -80,7 +104,7 @@ export default function SearchBar() {
 		const fetchResults = async (query: string) => {
 			const supabase = createClient()
 			const COURSE_LIMIT = 4
-			const PROF_LIMIT = 4
+			const PROF_LIMIT = 2
 
 			// Remove whitespace and add '%' between all chars for COURSE CODE
 			const fuzzyCodeQuery = query.replace(/\s+/g, '').split('').join('%')
@@ -115,10 +139,19 @@ export default function SearchBar() {
 			// If string is empty then simply set the result arrays to be empty and avoid fetch calls
 			setCourseResults([])
 			setProfResults([])
+			setExploreResults([])
 		} else {
 			// console.log(sanitizedString)
 			fetchResults(sanitizedString)
 		}
+
+		if (sanitizedString.length == 2 || sanitizedString.length == 4) {
+			const faculty = facultyCoursePrefix[sanitizedString.toUpperCase()]
+			if (faculty) {
+				setExploreResults([faculty])
+			}
+		}
+
 	}, [searchQuery])
 
 	const barStyleOpen =
@@ -131,37 +164,46 @@ export default function SearchBar() {
 		'flex absolute bg-background text-foreground w-full text-base rounded-b-md border-input border-[2px] peer-focus-visible:border-secondary border-t-0 rounded-t-transparent shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50'
 
 	return (
-		<div className='relative z-[100] block box-border w-full text-base peer has-[:focus-visible]:peer'>
-			<Search className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground z-[100]' />
-			<Input
-				type='search'
-				placeholder='Search for courses, subjects or professors'
-				onChange={(e) => {
-					console.log(e.target.value)
-					setSearchQuery(e.target.value)
-				}}
-				className={
-					courseResults.length !== 0 || profResults.length !== 0
-						? barStyleOpen
-						: barStyleClosed
-				}
-			/>
-			<div
-				className={
-					courseResults.length !== 0 || profResults.length !== 0
-						? resultsStyleOpen
-						: resultsStyleClosed
-				}
-			>
-				<div className='bg-background rounded-lg text-foreground divide-y divide-{secondary} text-base w-full z-[100] '>
-					{courseResults.map((course) => (
-						<CourseResultListItem params={course} />
-					))}
-					{profResults.map((prof) => (
-						<ProfResultListItem params={prof} />
-					))}
+		<form onSubmit={(e) => handleSubmit(e)} className='w-full'>
+			<div className='relative z-[100] block box-border w-full text-base peer has-[:focus-visible]:peer'>
+				<Search className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground z-[100]' />
+				<Input
+					type='search'
+					placeholder='Search for courses, professors or faculties'
+					name='q'
+					onInput={(e) => {
+						e.preventDefault()
+						setSearchQuery(e.currentTarget.value)
+
+					}}
+					className={
+						courseResults.length !== 0 || profResults.length !== 0
+							? barStyleOpen
+							: barStyleClosed
+					}
+				/>
+				<div
+					className={
+						courseResults.length !== 0 || profResults.length !== 0
+							? resultsStyleOpen
+							: resultsStyleClosed
+					}
+				>
+
+					<div className='bg-background rounded-lg text-foreground divide-y divide-{secondary} text-base w-full z-[100] '>
+						{courseResults.map((course) => (
+							<CourseResultListItem params={course} />
+						))}
+						{profResults.map((prof) => (
+							<ProfResultListItem params={prof} />
+						))}
+						{exploreResults.map((faculty) => (
+							<ExploreResultListItem faculty={faculty} />
+						))}
+					</div>
 				</div>
 			</div>
-		</div>
+		</form>
+
 	)
 }
