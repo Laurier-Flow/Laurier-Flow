@@ -48,7 +48,7 @@ const ProfResultListItem = ({ params }: { params: ProfResult }) => {
 	const profLink = '/instructor/' + slugify(params.instructor_name)
 
 	return (
-		<Link href={profLink} className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'>
+		<Link href={profLink} className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md h-4'>
 			<span>{params.instructor_name}</span>
 		</Link>
 	)
@@ -71,11 +71,10 @@ export default function SearchBar() {
 	const [profResults, setProfResults] = useState<ProfResult[]>([])
 	const [exploreResults, setExploreResults] = useState<string[]>([])
 
-	const handleSubmit = (e : React.KeyboardEvent<HTMLInputElement>) => {
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		if (e.key === 'Enter') {
-			redirectToExploreAll();
-		}
+		redirectToExploreAll();
+
 	}
 
 	useEffect(() => {
@@ -161,18 +160,18 @@ export default function SearchBar() {
 		'flex absolute bg-background text-foreground w-full text-base rounded-b-md border-input border-[2px] peer-focus-visible:border-secondary border-t-0 rounded-t-transparent shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50'
 
 	return (
+		<form onSubmit={(e) => handleSubmit(e)}>
 		<div className='relative z-[100] block box-border w-full text-base peer has-[:focus-visible]:peer'>
 			<Search className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground z-[100]' />
 			<Input
 				type='search'
 				placeholder='Search for courses, professors or faculties'
 				name='q'
-				onChange={(e) => {
+				onInput={(e) => {
 					e.preventDefault()
-					setSearchQuery(e.target.value)
+					setSearchQuery(e.currentTarget.value)
 
 				}}
-				onKeyDown={(e) => handleSubmit(e)}
 				className={
 					courseResults.length !== 0 || profResults.length !== 0
 						? barStyleOpen
@@ -186,6 +185,7 @@ export default function SearchBar() {
 						: resultsStyleClosed
 				}
 			>
+			
 				<div className='bg-background rounded-lg text-foreground divide-y divide-{secondary} text-base w-full z-[100] '>
 					{courseResults.map((course) => (
 						<CourseResultListItem params={course} />
@@ -199,5 +199,7 @@ export default function SearchBar() {
 				</div>
 			</div>
 		</div>
+	</form>
+
 	)
 }
