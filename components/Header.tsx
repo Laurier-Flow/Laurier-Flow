@@ -17,6 +17,7 @@ import PasswordPopup from "./PasswordPopup"
 import { fetchUser, signOut } from '@/utils/supabase/authActions'
 import SearchBar from "@/components/SearchBar"
 import { UserNav } from "./UserProfileNav"
+import Image from "next/image"
 
 export const useManageBodyScroll = (condition: boolean) => {
   useEffect(() => {
@@ -74,19 +75,13 @@ export default function Header({ user }: { user: User | null }): React.ReactElem
 
   useManageBodyScroll(showLoginPopup || showSignUpPopup)
 
-  const handleSignOut = async () => {
-    const result = await signOut()
-  }
-
   return (
     <>
       <header className="self-center sticky top-0 z-50 w-full border-b border-border/40 bg-white dark:bg-background/95 dark:backdrop-blur dark:supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 lg:max-w-6xl items-center">
-          <div className="mr-4 flex flex-1">
-            <Link href="/" className="hidden sm:flex mr-6 items-center space-x-2">
-              <span className="font-bold">
-                Laurier Flow
-              </span>
+          <div className="mr-4 flex flex-1 gap-2">
+            <Link href="/">
+              <Image className="mr-4" src="/icon.png" width={50} height={50} alt="Laurier Flow" />
             </Link>
             <nav className="flex items-center gap-6 text-sm flex-1">
               <SearchBar />

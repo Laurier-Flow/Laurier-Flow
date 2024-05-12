@@ -1,7 +1,14 @@
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import TeamMember from "@/components/TeamMember";
 import { fetchUser } from "@/utils/supabase/authActions";
 import { PopupButton } from "@typeform/embed-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About",
+  description: "Learn more about Laurier Flow and the team behind it.",
+};
 
 export default async function About() {
   const user = await fetchUser();
@@ -40,7 +47,7 @@ export default async function About() {
             month choose great courses and avoid not so great ones.
           </p>
           <h2 className="text-xl pt-8 font-semibold">Meet Our Founders</h2>
-          <div>
+          <div className="pt-4">
             <TeamMember
               name="Faizaan Qureshi"
               role="Lead Software Engineer - Computer Science (UW) + Business Administration (BBA)"
@@ -48,7 +55,7 @@ export default async function About() {
               linkedinUrl="https://www.linkedin.com/in/faizaan-qureshi/"
               igUrl="https://www.instagram.com/faizaanqureshi_"
               githubUrl="https://github.com/faizaanqureshi"
-              desc="xxxxx"
+              desc="Known for his visionary approach, Faizaan has not only architected the robust backend infrastructure but also played a key role in developing significant frontend components, including the entire Explore page, Courses, and Professors pages. He crafted the homepage, styled key authentication modals, and engineered database functions and triggers. He also acted as the project’s product manager. He adeptly handles daily standups and efficiently manages tasks using Jira. Outside of his technical and managerial roles, Faizaan enjoys coding, traveling, basketball, and maintaining a fit lifestyle, constantly pushing the boundaries of innovation and team leadership."
             />
             <TeamMember
               name="Muhammad Mujtaba"
@@ -57,7 +64,7 @@ export default async function About() {
               linkedinUrl="https://www.linkedin.com/in/mhmmd-m/"
               igUrl="https://www.instagram.com/_.mh.mm.d._"
               githubUrl="https://github.com/mhmmd-03"
-              desc="xxxxx"
+              desc="Specializing in critical functionalities, Muhammad has adeptly developed the search bar, navigations, and elements of the homepage design, showcasing his ability to enhance user interaction and site efficiency. His expertise also extends into cloud computing, where he excels in deploying scalable and robust cloud solutions. An avid sports enthusiast, Muhammad passionately supports local teams like the Toronto Raptors and the Maple Leafs, reflecting his team-oriented mindset and community spirit."
             />
             <TeamMember
               name="Abdullah Shahid"
@@ -66,7 +73,7 @@ export default async function About() {
               linkedinUrl="https://www.linkedin.com/in/abdullahshahid247/"
               igUrl="https://www.instagram.com/abdshd.247"
               githubUrl="https://github.com/abdshd"
-              desc="xxxxx"
+              desc="Abdullah has focused his expertise primarily on developing robust authentication flows and other essential components of the project. His technical prowess ensures secure and efficient user experiences. Alongside his academic and professional pursuits, Abdullah is passionate about maintaining his fitness, regularly hitting the gym, and engaging in martial arts such as jiu jitsu and wrestling."
             />
             <TeamMember
               name="Soham Nagi"
@@ -75,7 +82,7 @@ export default async function About() {
               linkedinUrl="https://www.linkedin.com/in/sohamnagi/"
               igUrl="https://www.instagram.com/soham.nagi"
               githubUrl="https://github.com/SohamNagi"
-              desc="xxxxx"
+              desc="Soham's role has been pivotal in enhancing the user experience, having developed key features such as feedback components, the About page, and the Privacy Policy. Soham's keen eye for detail doesn't stop at development; he is also deeply involved in thorough testing and UI/UX feedback and planning, ensuring that every user interaction is both intuitive and pleasing. Known for his charm, Soham is recognized as one of the handsomest brown boys around. Outside of his professional life, he is an enthusiastic soccer player and an ardent fan of Real Madrid, channeling the same passion and precision he has for frontend engineering into every game he plays or watches."
             />
             <TeamMember
               name="Shahrukh Qureshi"
@@ -84,11 +91,12 @@ export default async function About() {
               linkedinUrl="https://www.linkedin.com/in/qureshishahrukh/"
               igUrl="https://www.instagram.com/shahruk._h"
               githubUrl="https://github.com/ShaleeQureshi"
-              desc="xxxxx"
+              desc="Shahrukh played a crucial role in developing and refining user profile management and is actively enhancing the platform by integrating course scheduling and GPA calculation features. Known for his exceptional work ethic, Shahrukh has established himself as one of the hardest-working individuals in any setting. A passionate basketball fan, he brings the same dedication and focus to the court as he does to his professional and academic endeavors. His commitment to excellence is a hallmark of both his career and personal life, making him a standout member of our team."
             />
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
