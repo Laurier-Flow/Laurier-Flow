@@ -50,7 +50,7 @@ const ProfResultListItem = ({ params }: { params: ProfResult }) => {
 	const profLink = '/instructor/' + slugify(params.instructor_name)
 
 	return (
-		<Link href={profLink} className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md h-4'>
+		<Link href={profLink} className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'>
 			<UserRound />
 			<span className='text-secondary font-bold pl-3'>{params.instructor_name}</span>
 		</Link>
@@ -104,7 +104,7 @@ export default function SearchBar() {
 		const fetchResults = async (query: string) => {
 			const supabase = createClient()
 			const COURSE_LIMIT = 4
-			const PROF_LIMIT = 4
+			const PROF_LIMIT = 2
 
 			// Remove whitespace and add '%' between all chars for COURSE CODE
 			const fuzzyCodeQuery = query.replace(/\s+/g, '').split('').join('%')
@@ -127,6 +127,7 @@ export default function SearchBar() {
 						.order('instructor_name')
 						.limit(PROF_LIMIT)
 				])
+				console.log(courseResults.data)
 				setCourseResults(courseResults.data as CourseResult[])
 				setProfResults(profResults.data as ProfResult[])
 			} catch (error) {
