@@ -119,6 +119,7 @@ export default function SearchBar() {
 						.or(
 							`course_code.ilike.%${fuzzyCodeQuery}%,course_title.ilike.%${fuzzyPhraseQuery}%`
 						) // Wack Syntax bc double .ilike() calls don't chain together properly
+						.order('course_code')
 						.limit(COURSE_LIMIT),
 					supabase
 						.from('instructors')
@@ -127,7 +128,6 @@ export default function SearchBar() {
 						.order('instructor_name')
 						.limit(PROF_LIMIT)
 				])
-				console.log(courseResults.data)
 				setCourseResults(courseResults.data as CourseResult[])
 				setProfResults(profResults.data as ProfResult[])
 			} catch (error) {
@@ -165,7 +165,7 @@ export default function SearchBar() {
 		'flex absolute bg-background text-foreground w-full text-base rounded-b-md border-input border-[2px] peer-focus-visible:border-secondary border-t-0 rounded-t-transparent shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50'
 
 	return (
-		<form onSubmit={(e) => handleSubmit(e)}>
+		<form onSubmit={(e) => handleSubmit(e)} className='w-full'>
 			<div className='relative z-[100] block box-border w-full text-base peer has-[:focus-visible]:peer'>
 				<Search className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground z-[100]' />
 				<Input
