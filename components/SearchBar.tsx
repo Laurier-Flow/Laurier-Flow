@@ -5,7 +5,7 @@ import { createClient } from '@/utils/supabase/client'
 import { Input } from '@/components/ui/input'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { disciplineCodes } from '@/app/course/disciplineCodes'
+import { disciplineCodes } from '@/utils/lib/disciplineCodes'
 import { Search } from 'lucide-react'
 
 type CourseResult = {

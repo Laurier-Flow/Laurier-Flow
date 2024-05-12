@@ -1,10 +1,10 @@
-import React from "react";
-import { getCourseData } from "./CourseInfo";
-import { SupabaseClient } from "@supabase/supabase-js";
-import axios from "axios";
-import * as cheerio from 'cheerio';
-import { disciplineCodes } from "./disciplineCodes";
-import { Link } from "@nextui-org/react";
+import React from "react"
+import { getCourseData } from "./CourseInfo"
+import { SupabaseClient } from "@supabase/supabase-js"
+import axios from "axios"
+import * as cheerio from 'cheerio'
+import { disciplineCodes } from '@/utils/lib/disciplineCodes'
+import { Link } from "@nextui-org/react"
 
 export interface prerequisite {
     andOr: string,
@@ -23,18 +23,18 @@ export interface restriction {
 
 async function getPrerequisites(subjectCode: string, courseNumber: string) {
     try {
-        const prerequisitesUrl = `https://loris.wlu.ca/register/ssb/courseSearchResults/getPrerequisites?term=202401&subjectCode=${subjectCode}&courseNumber=${courseNumber}`;
-        const restrictionsUrl = `https://loris.wlu.ca/register/ssb/courseSearchResults/getRestrictions?term=202401&subjectCode=${subjectCode}&courseNumber=${courseNumber}`;
+        const prerequisitesUrl = `https://loris.wlu.ca/register/ssb/courseSearchResults/getPrerequisites?term=202401&subjectCode=${subjectCode}&courseNumber=${courseNumber}`
+        const restrictionsUrl = `https://loris.wlu.ca/register/ssb/courseSearchResults/getRestrictions?term=202401&subjectCode=${subjectCode}&courseNumber=${courseNumber}`
 
         const [prerequisitesResponse, restrictionsResponse] = await Promise.all([
             axios.get(prerequisitesUrl),
             axios.get(restrictionsUrl)
-        ]);
+        ])
 
-        let $ = cheerio.load(prerequisitesResponse.data);
-        let prerequisites: prerequisite[] = [];
+        let $ = cheerio.load(prerequisitesResponse.data)
+        let prerequisites: prerequisite[] = []
         $('section[aria-labelledby="preReqs"] tbody tr').each((index, element) => {
-            const columns = $(element).find('td');
+            const columns = $(element).find('td')
             prerequisites.push({
                 andOr: $(columns[0]).text().trim().toLowerCase(),
                 leftParentheses: $(columns[1]).text().trim(),
@@ -43,22 +43,22 @@ async function getPrerequisites(subjectCode: string, courseNumber: string) {
                 courseNumber: $(columns[5]).text().trim(),
                 level: $(columns[6]).text().trim(),
                 grade: $(columns[7]).text().trim(),
-            });
-        });
+            })
+        })
 
-        $ = cheerio.load(restrictionsResponse.data);
-        let restrictions: any[] = [];
+        $ = cheerio.load(restrictionsResponse.data)
+        let restrictions: any[] = []
         $('span').each(function (this: any) {
             restrictions.push({
                 text: $(this).text().trim(),
                 bold: $(this).hasClass('status-bold'),
-            });
-        });
+            })
+        })
 
         return { prerequisites, restrictions }
     } catch (error) {
-        console.error('Error fetching data:', error);
-        return { prerequisites: [], restrictions: [] };
+        console.error('Error fetching data:', error)
+        return { prerequisites: [], restrictions: [] }
     }
 }
 
@@ -77,15 +77,15 @@ async function getLeadsTo(courseName: string, supabase: SupabaseClient<any, "pub
 
 async function CourseRequisites({ supabase, courseName }: { supabase: SupabaseClient<any, "public", any>, courseName: string }) {
     const parts = courseName.split(' ')
-    const subjectCode = parts[0];
-    const courseNumber = parts[1];
+    const subjectCode = parts[0]
+    const courseNumber = parts[1]
     const [requisites, leadsTo, courseData] = await Promise.all([
         getPrerequisites(subjectCode, courseNumber),
         getLeadsTo(courseName, supabase),
         getCourseData(supabase, courseName)
-    ]);
-    const prerequisites: prerequisite[] = requisites.prerequisites;
-    const restrictions: restriction[] = requisites.restrictions;
+    ])
+    const prerequisites: prerequisite[] = requisites.prerequisites
+    const restrictions: restriction[] = requisites.restrictions
 
     return (
         <div className="flex flex-col p-4 lg:border-l lg:border-gray-300 lg:dark:border-gray-800 lg:pl-8 lg:w-1/3">
@@ -149,4 +149,4 @@ async function CourseRequisites({ supabase, courseName }: { supabase: SupabaseCl
     )
 }
 
-export default CourseRequisites;
+export default CourseRequisites
