@@ -9,6 +9,7 @@ import { facultyCoursePrefix } from '@/utils/lib/facultyCoursePrefix'
 import { disciplineCodes } from '@/utils/lib/disciplineCodes'
 import { Search } from 'lucide-react'
 import { redirectToExploreAll } from '@/utils/lib/clientSideRedirects'
+import { Telescope, BookOpenText, UserRound } from 'lucide-react'
 
 type CourseResult = {
 	course_code: string
@@ -39,7 +40,8 @@ const CourseResultListItem = ({ params }: { params: CourseResult }) => {
 			href={courseLink}
 			className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'
 		>
-			<span><span className='text-secondary font-bold'>{params.course_code}</span> - {params.course_title}</span>
+			<BookOpenText />
+			<span className='pl-3'><span className='text-secondary font-bold'>{params.course_code}</span> - <span className='font-bold'>{params.course_title}</span></span>
 		</Link>
 	)
 }
@@ -49,7 +51,8 @@ const ProfResultListItem = ({ params }: { params: ProfResult }) => {
 
 	return (
 		<Link href={profLink} className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md h-4'>
-			<span>{params.instructor_name}</span>
+			<UserRound />
+			<span className='text-secondary font-bold pl-3'>{params.instructor_name}</span>
 		</Link>
 	)
 }
@@ -59,7 +62,8 @@ const ExploreResultListItem = ({ faculty }: { faculty: string }) => {
 
 	return (
 		<Link href={{ pathname: '/explore', query: { faculty: facultyCode } }} className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'>
-			<span>Search for all {faculty} courses</span>
+			<Telescope />
+			<span className='font-bold pl-3'>Search for all <span className='text-secondary'>{faculty}</span> courses</span>
 		</Link>
 	)
 
@@ -72,8 +76,8 @@ export default function SearchBar() {
 	const [exploreResults, setExploreResults] = useState<string[]>([])
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		redirectToExploreAll();
+		e.preventDefault()
+		redirectToExploreAll()
 
 	}
 
@@ -161,45 +165,45 @@ export default function SearchBar() {
 
 	return (
 		<form onSubmit={(e) => handleSubmit(e)}>
-		<div className='relative z-[100] block box-border w-full text-base peer has-[:focus-visible]:peer'>
-			<Search className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground z-[100]' />
-			<Input
-				type='search'
-				placeholder='Search for courses, professors or faculties'
-				name='q'
-				onInput={(e) => {
-					e.preventDefault()
-					setSearchQuery(e.currentTarget.value)
+			<div className='relative z-[100] block box-border w-full text-base peer has-[:focus-visible]:peer'>
+				<Search className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground z-[100]' />
+				<Input
+					type='search'
+					placeholder='Search for courses, professors or faculties'
+					name='q'
+					onInput={(e) => {
+						e.preventDefault()
+						setSearchQuery(e.currentTarget.value)
 
-				}}
-				className={
-					courseResults.length !== 0 || profResults.length !== 0
-						? barStyleOpen
-						: barStyleClosed
-				}
-			/>
-			<div
-				className={
-					courseResults.length !== 0 || profResults.length !== 0
-						? resultsStyleOpen
-						: resultsStyleClosed
-				}
-			>
-			
-				<div className='bg-background rounded-lg text-foreground divide-y divide-{secondary} text-base w-full z-[100] '>
-					{courseResults.map((course) => (
-						<CourseResultListItem params={course} />
-					))}
-					{/* {profResults.map((prof) => (
-						<ProfResultListItem params={prof} />
-					))} */}
-					{exploreResults.map((faculty) => (
-						<ExploreResultListItem faculty={faculty} />
-					))}
+					}}
+					className={
+						courseResults.length !== 0 || profResults.length !== 0
+							? barStyleOpen
+							: barStyleClosed
+					}
+				/>
+				<div
+					className={
+						courseResults.length !== 0 || profResults.length !== 0
+							? resultsStyleOpen
+							: resultsStyleClosed
+					}
+				>
+
+					<div className='bg-background rounded-lg text-foreground divide-y divide-{secondary} text-base w-full z-[100] '>
+						{courseResults.map((course) => (
+							<CourseResultListItem params={course} />
+						))}
+						{profResults.map((prof) => (
+							<ProfResultListItem params={prof} />
+						))}
+						{exploreResults.map((faculty) => (
+							<ExploreResultListItem faculty={faculty} />
+						))}
+					</div>
 				</div>
 			</div>
-		</div>
-	</form>
+		</form>
 
 	)
 }
