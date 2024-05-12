@@ -10,6 +10,7 @@ import {
   deleteUserAccount,
   deleteSpecificClassFromSchedule,
   addClassesToSchedule,
+  updateUserClass,
 } from "./user-data-functions";
 import { getUserReviewsInterface } from "./UserReviews";
 import { User } from "@supabase/supabase-js";
@@ -31,6 +32,8 @@ const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
   const [userLastName, setUserLastName] = useState<string>();
   const [userProgram, setUserProgram] = useState<string>();
 
+  const [screenWidth, setScreenWidth] = useState<number>();
+
   useEffect(() => {
     const getData = async () => {
       const data = await getUserData();
@@ -38,6 +41,7 @@ const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
       setUserLastName(data[0]["last_name"]);
       setUserProgram(data[0]["program"]);
     };
+    setScreenWidth(window.screen.width);
     getData();
   }, []);
 
@@ -76,13 +80,15 @@ const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
         </div>
       </div>
       <ul
-        style={{ width: "50%" }}
-        className="mt-5 mb-5 text-md text-center text-gray-500 rounded-lg shadow sm:flex justify-center">
+        style={{
+          width: "50vw",
+        }}
+        className="mt-5 mb-5 text-center text-base text-gray-500 rounded-lg shadow flex justify-center">
         <li className="w-full focus-within:z-10">
           <a
             onClick={handleProfileTabClick}
             className={`inline-block w-full p-4 ${profileTabSelected ? `bg-gray-300 dark:bg-gray-700 dark:text-white` : `bg-white dark:bg-gray-100 dark:text-black`} border-r border-gray-200 rounded-l-lg focus:ring-4 focus:ring-blue-300 active focus:outline-none`}>
-            Profile
+            My Profile
           </a>
         </li>
         <li className="w-full focus-within:z-10">
@@ -106,6 +112,7 @@ const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
         <Schedule
           deleteClassFunction={deleteSpecificClassFromSchedule}
           addClassFunction={addClassesToSchedule}
+          updateClassFunction={updateUserClass}
         />
       ) : null}
       {editUserDetailsTabSelected ? (

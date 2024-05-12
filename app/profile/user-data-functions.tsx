@@ -167,6 +167,45 @@ export const addClassesToSchedule = async (
   return data;
 };
 
+export const updateUserClass = async (
+  term: string,
+  course: string,
+  instructor: string,
+  location: string,
+  time: string,
+  date: string,
+  type: string,
+  grade: string,
+  id: number
+): Promise<any> => {
+  "use server";
+
+  const user = await fetchUser();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  const { data, error } = await supabase
+    .from("user_schedule")
+    .update({
+      user_id_fk: user?.id,
+      term: term,
+      class: course,
+      location: location,
+      time: time,
+      date: date,
+      type: type,
+      grade: grade,
+      instructor: instructor,
+    })
+    .eq("id", id);
+
+  if (error) {
+    return error;
+  }
+
+  return data;
+};
+
 // Delete functions
 
 export const deleteUserAccount = async (): Promise<any> => {
