@@ -13,6 +13,7 @@ export default function PasswordPopup({
     toggleLogIn: () => void;
   }): React.ReactElement {
         const [resetError, setResetError] = useState<String>('')
+        const [successMessage, setSuccessMessage] = useState<String>('')
   
         const popupRef = useRef<HTMLDivElement | null>(null);
   
@@ -44,7 +45,10 @@ export default function PasswordPopup({
         const result = await handleResetPassword(window.location.origin, formData);
 
         if (result.success) {
+            setResetError('');
+            setSuccessMessage(result.message);
         } else {
+            setSuccessMessage('');
             setResetError(result.message);
         }
     };
@@ -67,6 +71,9 @@ export default function PasswordPopup({
                   </label>
                   {resetError && 
                       <p className="rounded-md p-2 mb-2 bg-red-500 text-white text-center">{resetError}</p>
+                  }
+                  {successMessage && 
+                      <p className="rounded-md p-2 mb-2 bg-green-500 text-white text-center">{successMessage}</p>
                   }
                   <input
                       className="rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"

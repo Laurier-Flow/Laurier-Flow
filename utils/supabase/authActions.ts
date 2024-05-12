@@ -95,5 +95,5 @@ export const handleResetPassword = async (window_location: string, formData: For
     return { success: false, message: error.message }
   }
 
-  return { success: true, message: 'Check your email' };
+  return { success: true, message: 'Please check your email' };
 };
