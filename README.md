@@ -1,93 +1,122 @@
-<a href="https://laurierflow.ca/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://drive.google.com/file/d/15rApSKbslcxtIecXiYfKICGwIW2dXhIL/view?usp=sharing">
-  <h1 align="center">Laurier Flow</h1>
-</a>
+<!DOCTYPE html>
+<html lang="en">
 
-<p align="center">
- Explore thousands of course and professor reviews from Laurier students
-</p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laurier Flow - Course Planning Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
-</p>
-<br/>
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
 
-## Features
+        h1,
+        h2,
+        h3 {
+            color: #333;
+            text-align: center;
+        }
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Middleware
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+        p {
+            color: #666;
+        }
 
-## Demo
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+        }
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+        .features {
+            margin-top: 30px;
+        }
 
-## Deploy to Vercel
+        .features ul {
+            list-style-type: none;
+            padding: 0;
+        }
 
-Vercel deployment will guide you through creating a Supabase account and project.
+        .features ul li {
+            margin-bottom: 10px;
+        }
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+        .demo-link {
+            text-align: center;
+            margin-top: 30px;
+        }
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This%20starter%20configures%20Supabase%20Auth%20to%20use%20cookies%2C%20making%20the%20user's%20session%20available%20throughout%20the%20entire%20Next.js%20app%20-%20Client%20Components%2C%20Server%20Components%2C%20Route%20Handlers%2C%20Server%20Actions%20and%20Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png&integration-ids=oac_VqOgBHqhEoFTPzGkPd7L0iH6)
+        .deploy-button {
+            text-align: center;
+            margin-top: 30px;
+        }
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
+        .feedback-section {
+            text-align: center;
+            margin-top: 30px;
+        }
 
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
+        .feedback-section a {
+            margin-right: 10px;
+        }
+    </style>
+</head>
 
-## Clone and run locally
+<body>
+    <div class="container">
+        <a href="https://laurierflow.ca/">
+            <img alt="Laurier Flow Landing Page" src="https://drive.google.com/uc?export=view&id=15rApSKbslcxtIecXiYfKICGwIW2dXhIL">
+            <h1>Laurier Flow</h1>
+        </a>
 
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
+        <p align="center">Explore thousands of course and professor reviews from Laurier students</p>
 
-2. Create a Next.js app using the Supabase Starter template npx command
+        <div class="features">
+            <h2>Features</h2>
+            <ul>
+                <li>Works across the entire <a href="https://nextjs.org">Next.js</a> stack</li>
+                <ul>
+                    <li>App Router</li>
+                    <li>Pages Router</li>
+                    <li>Middleware</li>
+                    <li>Client</li>
+                    <li>Server</li>
+                    <li>It just works!</li>
+                </ul>
+                <li>supabase-ssr. A package to configure Supabase Auth to use cookies</li>
+                <li>Styling with <a href="https://tailwindcss.com">Tailwind CSS</a></li>
+                <li>Optional deployment with Supabase Vercel Integration and Vercel deploy</li>
+                <ul>
+                    <li>Environment variables automatically assigned to Vercel project</li>
+                </ul>
+            </ul>
+        </div>
 
-   ```bash
-   npx create-next-app -e with-supabase
-   ```
+        <div class="demo-link">
+            <p>View a fully working demo at <a href="https://demo-nextjs-with-supabase.vercel.app/">demo-nextjs-with-supabase.vercel.app</a></p>
+        </div>
 
-3. Use `cd` to change into the app's directory
+        <div class="deploy-button">
+            <p><a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This%20starter%20configures%20Supabase%20Auth%20to%20use%20cookies%2C%20making%20the%20user's%20session%20available%20throughout%20the%20entire%20Next.js%20app%20-%20Client%20Components%2C%20Server%20Components%2C%20Route%20Handlers%2C%20Server%20Actions%20and%20Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png&integration-ids=oac_VqOgBHqhEoFTPzGkPd7L0iH6"><img src="https://vercel.com/button" alt="Deploy with Vercel"></a></p>
+            <p>The above button will guide you through deploying the project to Vercel</p>
+        </div>
 
-   ```bash
-   cd name-of-new-app
-   ```
+        <div class="feedback-section">
+            <p><a href="https://github.com/supabase/supabase/issues/new/choose">Feedback and issues</a></p>
+        </div>
 
-4. Rename `.env.local.example` to `.env.local` and update the following:
+        <hr>
 
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=[INSERT SUPABASE PROJECT API ANON KEY]
-   ```
+        <p align="center"><strong>Note:</strong> Laurier Flow is not affiliated with Wilfrid Laurier University. All reviews and opinions shared on this platform are the sole responsibility of the contributors.</p>
+    </div>
+</body>
 
-   Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` can be found in [your Supabase project's API settings](https://app.supabase.com/project/_/settings/api)
-
-5. You can now run the Next.js local development server:
-
-   ```bash
-   npm run dev
-   ```
-
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
-
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
-
-## Feedback and issues
-
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
-
-## More Supabase examples
-
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+</html>
