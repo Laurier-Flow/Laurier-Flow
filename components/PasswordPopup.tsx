@@ -1,6 +1,7 @@
 import { handleResetPassword } from '@/utils/supabase/authActions';
 import { useRef, useEffect, useState } from 'react';
 import { X } from 'lucide-react';
+import Link from 'next/link';
 
 
 export default function PasswordPopup({
@@ -70,13 +71,13 @@ export default function PasswordPopup({
                         <X className='cursor-pointer' onClick={() => onClose()} />
                   </label>
                   {resetError && 
-                      <p className="rounded-md p-2 mb-2 bg-red-500 text-white text-center">{resetError}</p>
+                      <p className="rounded-md p-2 mb-4 bg-red-500 text-white text-center">{resetError}</p>
                   }
                   {successMessage && 
-                      <p className="rounded-md p-2 mb-2 bg-green-500 text-white text-center">{successMessage}</p>
+                      <p className="rounded-md p-2 mb-4 bg-green-500 text-white text-center">{successMessage}</p>
                   }
                   <input
-                      className="rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
+                      className="mb-4 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
                       name="email"
                       placeholder="Email"
                       required
@@ -88,6 +89,10 @@ export default function PasswordPopup({
                   >
                     Reset Password
                   </button>
+
+                  <div className="flex justify-center text-gray-500 text-sm mb-4">
+                    <h1>Read our <Link href="/privacy" className='underline underline-offset-2'>Privacy Policy</Link></h1>
+                  </div>
 
                   <hr className="mb-6 border-gray-300 dark:border-gray-800"></hr>
                   
