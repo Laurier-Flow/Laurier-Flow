@@ -40,13 +40,14 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 
   const [sizeOfInputFields, setSizeOfInputFields] = useState<number>(50);
 
-  const [showDeleteProfilePopup, setShowDeleteProfilePopup] = useState<boolean>(false);
+  const [showDeleteProfilePopup, setShowDeleteProfilePopup] =
+    useState<boolean>(false);
 
   useManageBodyScroll(showDeleteProfilePopup);
 
   const toggleDeleteReviewPopup = () => {
     setShowDeleteProfilePopup(!showDeleteProfilePopup);
-    setIsVisible(!isVisible)
+    setIsVisible(!isVisible);
   };
 
   useEffect(() => {
@@ -179,7 +180,10 @@ const UserDetails: React.FC<UserDetailsProps> = ({
             <div
               className="mt-8 bg-red-500 dark:bg-red-800 text-sm text-white rounded-lg p-4"
               role="alert">
-              <span className="font-bold">An error occurred in changing your information</span> {errorMsg}
+              <span className="font-bold">
+                An error occurred in changing your information
+              </span>{" "}
+              {errorMsg}
             </div>
           ) : (
             <div
@@ -193,10 +197,13 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 
         <form onSubmit={handleFormSubmit}>
           <div className="p-4 mt-4">
-            <label className="text-lg font-medium dark:text-white">
-              Email
-            </label>
-            <input type="text" className="mt-2 py-3 px-4 block w-full border-gray-200 rounded-lg text-md focus:border-blue-500 focus:ring-blue-500 disabled:opacity-100 disabled:pointer-events-none dark:bg-gray-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder={email} disabled={true} />
+            <label className="text-lg font-medium dark:text-white">Email</label>
+            <input
+              type="text"
+              className="mt-2 py-3 px-4 block w-full border-gray-200 rounded-lg text-md focus:border-blue-500 focus:ring-blue-500 disabled:opacity-100 disabled:pointer-events-none dark:bg-gray-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+              placeholder={email}
+              disabled={true}
+            />
             <h1 className="text-lg font-medium dark:text-white mt-8">
               First Name
             </h1>
@@ -236,7 +243,9 @@ const UserDetails: React.FC<UserDetailsProps> = ({
           </div>
 
           <div className="p-4">
-            <button type="submit" className="mt-6 w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-secondary text-black dark:text-white disabled:opacity-50 disabled:pointer-events-none">
+            <button
+              type="submit"
+              className="mt-6 w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-secondary text-black dark:text-white disabled:opacity-50 disabled:pointer-events-none">
               Save Changes
             </button>
           </div>
@@ -259,7 +268,8 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 
       {showDeleteProfilePopup ? (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 flex items-center justify-center z-50">
-          <div className={`transform transition-all duration-500 ${isVisible ? 'opacity-100 -translate-y-1/2' : 'opacity-0 -translate-y-2/3'} overflow-y-auto max-h-[90vh] border-2 dark:border-red-800 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-background/80 backdrop-blur rounded-md max-w-md p-8 w-11/12`}>
+          <div
+            className={`transform transition-all duration-500 ${isVisible ? "opacity-100 -translate-y-1/2" : "opacity-0 -translate-y-2/3"} overflow-y-auto max-h-[90vh] border-2 dark:border-red-800 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-background/80 backdrop-blur rounded-md max-w-md p-8 w-11/12`}>
             <form className="flex flex-col gap-4 text-foreground">
               <label className="flex flex-row items-center justify-between text-3xl font-bold mb-2 text-foreground">
                 <h1>Delete Account</h1>
@@ -270,7 +280,10 @@ const UserDetails: React.FC<UserDetailsProps> = ({
                   }}
                 />
               </label>
-              <h2 className="text-md">Are you sure you want to delete your account? This action cannot be undone and will remove all reviews and user data.</h2>
+              <h2 className="text-md">
+                Are you sure you want to delete your account? This action cannot
+                be undone and will remove all reviews and user data.
+              </h2>
               <hr className="mt-4 mb-2 border-gray-300 dark:border-gray-800"></hr>
               <div className="flex flex-row gap-6">
                 <button
@@ -296,7 +309,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
             </form>
           </div>
         </div>
-      ) : (null)}
+      ) : null}
     </div>
   );
 };

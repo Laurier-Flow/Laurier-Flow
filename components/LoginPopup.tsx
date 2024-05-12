@@ -7,11 +7,13 @@ import { X } from 'lucide-react';
 export default function LoginPopup({
   searchParams,
   onClose,
-  toggleSignUp
+  toggleSignUp,
+  togglePasswordReset,
 }: {
   searchParams: { message: string };
   onClose: () => void;
   toggleSignUp: () => void;
+  togglePasswordReset: () => void;
 }): React.ReactElement {
   const [loginError, setLoginError] = useState<string>('')
   const [isVisible, setIsVisible] = useState(false)
@@ -43,6 +45,10 @@ export default function LoginPopup({
 
   const handleSignUpClick = () => {
     toggleSignUp();
+    onClose();
+  }
+  const handlePasswordResetClick = () => {
+    togglePasswordReset();
     onClose();
   }
 
@@ -89,7 +95,10 @@ export default function LoginPopup({
           placeholder="Password"
           required
         />
-        <div className="flex justify-end text-foreground cursor-pointer">
+        <div
+          onClick={handlePasswordResetClick}
+          className="flex justify-end text-foreground cursor-pointer"
+        >
           Forgot password?
         </div>
         <button className="bg-secondary rounded-md px-4 py-2 dark:text-foreground">

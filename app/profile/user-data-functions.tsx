@@ -90,6 +90,124 @@ export const getUserData = async (): Promise<any> => {
   return data;
 };
 
+export const getUserSchedule = async (): Promise<any> => {
+  "use server";
+
+  const user = await fetchUser();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  const { data, error } = await supabase
+    .from("user_schedule")
+    .select()
+    .eq("user_id_fk", user?.id);
+
+  if (error) {
+    return null;
+  }
+
+  return data;
+};
+
+export const getUserScheduleForTerm = async (term: string): Promise<any> => {
+  "use server";
+
+  const user = await fetchUser();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  const { data, error } = await supabase
+    .from("user_schedule")
+    .select()
+    .eq("user_id_fk", user?.id)
+    .eq("term", term);
+
+  if (error) {
+    return null;
+  }
+
+  return data;
+};
+
+export const addClassesToSchedule = async (
+  term: string,
+  course: string,
+  instructor: string,
+  location: string,
+  time: string,
+  date: string,
+  type: string,
+  grade: string
+): Promise<any> => {
+  "use server";
+
+  const user = await fetchUser();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  const { data, error } = await supabase
+    .from("user_schedule")
+    .upsert({
+      user_id_fk: user?.id,
+      term: term,
+      class: course,
+      location: location,
+      time: time,
+      date: date,
+      type: type,
+      grade: grade,
+      instructor: instructor,
+    })
+    .select();
+
+  if (error) {
+    return error;
+  }
+
+  return data;
+};
+
+export const updateUserClass = async (
+  term: string,
+  course: string,
+  instructor: string,
+  location: string,
+  time: string,
+  date: string,
+  type: string,
+  grade: string,
+  id: number
+): Promise<any> => {
+  "use server";
+
+  const user = await fetchUser();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  const { data, error } = await supabase
+    .from("user_schedule")
+    .update({
+      user_id_fk: user?.id,
+      term: term,
+      class: course,
+      location: location,
+      time: time,
+      date: date,
+      type: type,
+      grade: grade,
+      instructor: instructor,
+    })
+    .eq("id", id);
+
+  if (error) {
+    return error;
+  }
+
+  return data;
+};
+
+// Delete functions
+
 export const deleteUserAccount = async (): Promise<any> => {
   "use server";
 
@@ -104,8 +222,6 @@ export const deleteUserAccount = async (): Promise<any> => {
   const res = await deleteUserProfile(supabase, user?.id!);
   return res;
 };
-
-// Helper functions
 
 const deleteUserCourseReviews = async (
   supabase: SupabaseClient,
@@ -149,5 +265,26 @@ const deleteUserProfile = async (
   if (error) {
     return error;
   }
+  return data;
+};
+
+export const deleteSpecificClassFromSchedule = async (
+  id: number
+): Promise<any> => {
+  "use server";
+
+  const user = await fetchUser();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  const { data, error } = await supabase
+    .from("user_schedule")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    return error;
+  }
+
   return data;
 };
