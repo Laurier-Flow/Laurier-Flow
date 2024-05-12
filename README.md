@@ -1,122 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
+# Laurier Flow
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laurier Flow - Course Planning Website</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+Laurier Flow is a course planning website designed specifically for Wilfrid Laurier University students. Whether you're a new student trying to navigate course offerings or a seasoned Laurier attendee looking for professor reviews, Laurier Flow has you covered.
 
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
+## Features
 
-        h1,
-        h2,
-        h3 {
-            color: #333;
-            text-align: center;
-        }
+- **Course Listings**: Browse through a comprehensive list of courses offered at Laurier. Filter by department, level, and term.
+- **Professor Reviews**: Get uncensored and unfiltered reviews of professors. Share your experiences to help fellow students make informed decisions.
+- **Prerequisites**: Find out what prerequisites are required for specific courses.
+- **User Reviews**: Leave reviews for courses and professors. Let others know about your positive or negative experiences.
 
-        p {
-            color: #666;
-        }
+## Mission Statement
 
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 20px auto;
-        }
+Our mission at Laurier Flow is simple: **empower Laurier students**. We believe that by sharing honest feedback, we can create a community that helps each other succeed. Whether you've had an amazing professor or a not-so-great one, your insights matter. Together, we can make course selection easier for the more than 20,000 students who rely on Laurier Flow every month.
 
-        .features {
-            margin-top: 30px;
-        }
+## Contributing
 
-        .features ul {
-            list-style-type: none;
-            padding: 0;
-        }
+We welcome contributions from Laurier students and the wider community. If you'd like to improve Laurier Flow, feel free to submit a pull request or open an issue on our GitHub repository.
 
-        .features ul li {
-            margin-bottom: 10px;
-        }
+---
 
-        .demo-link {
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .deploy-button {
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .feedback-section {
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .feedback-section a {
-            margin-right: 10px;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <a href="https://laurierflow.ca/">
-            <img alt="Laurier Flow Landing Page" src="https://drive.google.com/uc?export=view&id=15rApSKbslcxtIecXiYfKICGwIW2dXhIL">
-            <h1>Laurier Flow</h1>
-        </a>
-
-        <p align="center">Explore thousands of course and professor reviews from Laurier students</p>
-
-        <div class="features">
-            <h2>Features</h2>
-            <ul>
-                <li>Works across the entire <a href="https://nextjs.org">Next.js</a> stack</li>
-                <ul>
-                    <li>App Router</li>
-                    <li>Pages Router</li>
-                    <li>Middleware</li>
-                    <li>Client</li>
-                    <li>Server</li>
-                    <li>It just works!</li>
-                </ul>
-                <li>supabase-ssr. A package to configure Supabase Auth to use cookies</li>
-                <li>Styling with <a href="https://tailwindcss.com">Tailwind CSS</a></li>
-                <li>Optional deployment with Supabase Vercel Integration and Vercel deploy</li>
-                <ul>
-                    <li>Environment variables automatically assigned to Vercel project</li>
-                </ul>
-            </ul>
-        </div>
-
-        <div class="demo-link">
-            <p>View a fully working demo at <a href="https://demo-nextjs-with-supabase.vercel.app/">demo-nextjs-with-supabase.vercel.app</a></p>
-        </div>
-
-        <div class="deploy-button">
-            <p><a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This%20starter%20configures%20Supabase%20Auth%20to%20use%20cookies%2C%20making%20the%20user's%20session%20available%20throughout%20the%20entire%20Next.js%20app%20-%20Client%20Components%2C%20Server%20Components%2C%20Route%20Handlers%2C%20Server%20Actions%20and%20Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png&integration-ids=oac_VqOgBHqhEoFTPzGkPd7L0iH6"><img src="https://vercel.com/button" alt="Deploy with Vercel"></a></p>
-            <p>The above button will guide you through deploying the project to Vercel</p>
-        </div>
-
-        <div class="feedback-section">
-            <p><a href="https://github.com/supabase/supabase/issues/new/choose">Feedback and issues</a></p>
-        </div>
-
-        <hr>
-
-        <p align="center"><strong>Note:</strong> Laurier Flow is not affiliated with Wilfrid Laurier University. All reviews and opinions shared on this platform are the sole responsibility of the contributors.</p>
-    </div>
-</body>
-
-</html>
+**Disclaimer**: Laurier Flow is an independent platform created by students for students. It is not affiliated with Wilfrid Laurier University. All reviews and opinions expressed on this platform are those of individual users and do not represent the university.
