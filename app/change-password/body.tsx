@@ -1,3 +1,5 @@
+'use client'
+
 import { BackgroundGradientAnimation } from "@/components/background-gradient-animation";
 import { redirect, useSearchParams } from "next/navigation";
 import { ShieldCheck } from "lucide-react";
