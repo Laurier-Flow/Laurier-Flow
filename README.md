@@ -14,8 +14,7 @@ Laurier Flow is a course planning website designed specifically for Wilfrid Laur
 Our mission at Laurier Flow is simple: **empower Laurier students**. We believe that by sharing honest feedback, we can create a community that helps each other succeed. Whether you've had an amazing professor or a not-so-great one, your insights matter. Together, we can make course selection easier for the more than 20,000 students who rely on Laurier Flow every month.
 
 ## Contributing
-
-We welcome contributions from Laurier students and the wider community. If you'd like to improve Laurier Flow, feel free to submit a pull request or open an issue on our GitHub repository.
+In the spirit of Free and Open Source Software (FOSS), we welcome contributions from Laurier students and the wider community. If you'd like to improve Laurier Flow, feel free to submit a pull request, open an issue or request a feature on our GitHub repository.
 
 ---
 
