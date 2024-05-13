@@ -7,9 +7,8 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { facultyCoursePrefix } from '@/utils/lib/facultyCoursePrefix'
 import { disciplineCodes } from '@/utils/lib/disciplineCodes'
-import { Search } from 'lucide-react'
 import { redirectToExploreAll } from '@/utils/lib/clientSideRedirects'
-import { Telescope, BookOpenText, UserRound } from 'lucide-react'
+import { Search, Telescope, BookOpenText, UserRound } from 'lucide-react'
 
 type CourseResult = {
 	course_code: string
@@ -41,7 +40,10 @@ const CourseResultListItem = ({ params }: { params: CourseResult }) => {
 			className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'
 		>
 			<BookOpenText />
-			<span className='pl-3'><span className='text-secondary font-bold'>{params.course_code}</span> - <span className='font-bold'>{params.course_title}</span></span>
+			<span className='pl-3'>
+				<span className='text-secondary font-bold'>{params.course_code}</span> -{' '}
+				<span className='font-bold'>{params.course_title}</span>
+			</span>
 		</Link>
 	)
 }
@@ -50,9 +52,14 @@ const ProfResultListItem = ({ params }: { params: ProfResult }) => {
 	const profLink = '/instructor/' + slugify(params.instructor_name)
 
 	return (
-		<Link href={profLink} className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'>
+		<Link
+			href={profLink}
+			className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'
+		>
 			<UserRound />
-			<span className='text-secondary font-bold pl-3'>{params.instructor_name}</span>
+			<span className='text-secondary font-bold pl-3'>
+				{params.instructor_name}
+			</span>
 		</Link>
 	)
 }
@@ -61,12 +68,16 @@ const ExploreResultListItem = ({ faculty }: { faculty: string }) => {
 	const facultyCode = disciplineCodes[faculty]
 
 	return (
-		<Link href={{ pathname: '/explore', query: { subject: facultyCode } }} className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'>
+		<Link
+			href={{ pathname: '/explore', query: { subject: facultyCode } }}
+			className='w-full flex flex-row p-2 pl-3 bg-transparent hover:bg-stone-200 dark:hover:bg-stone-800 last:rounded-b-md'
+		>
 			<Telescope />
-			<span className='font-bold pl-3'>Search for all <span className='text-secondary'>{faculty}</span> courses</span>
+			<span className='font-bold pl-3'>
+				Search for all <span className='text-secondary'>{faculty}</span> courses
+			</span>
 		</Link>
 	)
-
 }
 
 export default function SearchBar() {
@@ -145,7 +156,6 @@ export default function SearchBar() {
 				setExploreResults([faculty])
 			}
 		}
-
 	}, [searchQuery])
 
 	const barStyleOpen =
@@ -167,7 +177,6 @@ export default function SearchBar() {
 				onInput={(e) => {
 					e.preventDefault()
 					setSearchQuery(e.currentTarget.value)
-
 				}}
 				className={
 					courseResults.length !== 0 || profResults.length !== 0
@@ -182,7 +191,6 @@ export default function SearchBar() {
 						: resultsStyleClosed
 				}
 			>
-
 				<div className='bg-background rounded-lg text-foreground divide-y divide-{secondary} text-base w-full z-[100] '>
 					{courseResults.map((course) => (
 						<CourseResultListItem params={course} />
@@ -196,6 +204,5 @@ export default function SearchBar() {
 				</div>
 			</div>
 		</div>
-
 	)
 }
