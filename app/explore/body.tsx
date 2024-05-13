@@ -5,7 +5,7 @@ import { SetStateAction, useEffect, useMemo, useRef, useState } from 'react'
 import {
 	courseInfoDBResponseExplore,
 	instructorInfoDBResponseExplore
-} from './page'
+} from './Explore'
 import Link from 'next/link'
 
 type SortableCourseFields = keyof courseInfoDBResponseExplore
@@ -335,7 +335,7 @@ export default function Body({
 			if (subject !== 'all') {
 				let codeLength = subject.length
 				let codes = []
-				instructor.coursesTaught.forEach((course) => {
+				instructor.coursesTaught.forEach((course: string) => {
 					let extractedCode = course.substring(0, codeLength)
 					if (extractedCode == subject) codes.push(extractedCode)
 				})
@@ -564,8 +564,8 @@ export default function Body({
 [&::-moz-range-thumb]:duration-150
 [&::-moz-range-thumb]:ease-in-out
 [&::-moz-range-track]:h-2
-
 [&::-moz-range-track]:w-full
+
 [&::-moz-range-track]:rounded-full
 [&::-moz-range-track]:bg-gray-100
 [&::-webkit-slider-runnable-track]:h-2
@@ -575,17 +575,18 @@ export default function Body({
 [&::-webkit-slider-runnable-track]:dark:bg-gray-700
 [&::-webkit-slider-thumb]:-mt-0.5
 [&::-webkit-slider-thumb]:h-2.5
-
 [&::-webkit-slider-thumb]:w-2.5
+
 [&::-webkit-slider-thumb]:appearance-none
 [&::-webkit-slider-thumb]:rounded-full
 [&::-webkit-slider-thumb]:bg-white
-[&::-webkit-slider-thumb]:shadow-[0_0_0_4px_rgba(37,99,235,1)]
-
+[&::-webkit-slider-thumb]:shadow-[0_0_0_4px_rgba(252,211,77,1)]
 [&::-webkit-slider-thumb]:transition-all
+
 [&::-webkit-slider-thumb]:duration-150
 [&::-webkit-slider-thumb]:ease-in-out
-[&::-webkit-slider-thumb]:dark:bg-slate-700'
+[&::-webkit-slider-thumb]:dark:bg-white
+[&::-webkit-slider-thumb]:dark:shadow-secondary'
 						id='steps-range-slider-usage'
 						min='0'
 						max='9'
@@ -596,7 +597,7 @@ export default function Body({
 					<button
 						onClick={resetFilter}
 						type='button'
-						className='mt-12 gap-x-2 rounded-lg border border-transparent bg-amber-300 px-4 py-3 text-sm font-semibold hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50 dark:bg-primary dark:text-white dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600'
+						className='mt-12 gap-x-2 rounded-lg border border-transparent bg-amber-300 px-4 py-3 text-sm font-semibold disabled:pointer-events-none disabled:opacity-50 dark:bg-secondary dark:text-white dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600'
 					>
 						Reset Filter
 					</button>
@@ -663,11 +664,11 @@ export default function Body({
 													>
 														Course Code{' '}
 														{courseSortField === 'course_code' &&
-														courseOrder === 'desc'
+															courseOrder === 'desc'
 															? '˅'
 															: null}{' '}
 														{courseSortField === 'course_code' &&
-														courseOrder === 'asc'
+															courseOrder === 'asc'
 															? '˄'
 															: null}
 													</th>
@@ -680,11 +681,11 @@ export default function Body({
 													>
 														Course Name{' '}
 														{courseSortField === 'course_title' &&
-														courseOrder === 'desc'
+															courseOrder === 'desc'
 															? '˅'
 															: null}{' '}
 														{courseSortField === 'course_title' &&
-														courseOrder === 'asc'
+															courseOrder === 'asc'
 															? '˄'
 															: null}
 													</th>
@@ -697,11 +698,11 @@ export default function Body({
 													>
 														Ratings{' '}
 														{courseSortField === 'total_reviews' &&
-														courseOrder === 'desc'
+															courseOrder === 'desc'
 															? '˅'
 															: null}{' '}
 														{courseSortField === 'total_reviews' &&
-														courseOrder === 'asc'
+															courseOrder === 'asc'
 															? '˄'
 															: null}
 													</th>
@@ -714,11 +715,11 @@ export default function Body({
 													>
 														Useful{' '}
 														{courseSortField === 'useful' &&
-														courseOrder === 'desc'
+															courseOrder === 'desc'
 															? '˅'
 															: null}{' '}
 														{courseSortField === 'useful' &&
-														courseOrder === 'asc'
+															courseOrder === 'asc'
 															? '˄'
 															: null}
 													</th>
@@ -731,7 +732,7 @@ export default function Body({
 													>
 														Easy{' '}
 														{courseSortField === 'easy' &&
-														courseOrder === 'desc'
+															courseOrder === 'desc'
 															? '˅'
 															: null}{' '}
 														{courseSortField === 'easy' && courseOrder === 'asc'
@@ -747,11 +748,11 @@ export default function Body({
 													>
 														Liked{' '}
 														{courseSortField === 'liked' &&
-														courseOrder === 'desc'
+															courseOrder === 'desc'
 															? '˅'
 															: null}{' '}
 														{courseSortField === 'liked' &&
-														courseOrder === 'asc'
+															courseOrder === 'asc'
 															? '˄'
 															: null}
 													</th>
@@ -833,11 +834,11 @@ export default function Body({
 													>
 														Instructor Name{' '}
 														{instructorSortField === 'instructor_name' &&
-														instructorOrder === 'desc'
+															instructorOrder === 'desc'
 															? '˅'
 															: null}{' '}
 														{instructorSortField === 'instructor_name' &&
-														instructorOrder === 'asc'
+															instructorOrder === 'asc'
 															? '˄'
 															: null}
 													</th>
@@ -850,11 +851,11 @@ export default function Body({
 													>
 														Ratings{' '}
 														{instructorSortField === 'total_reviews' &&
-														instructorOrder === 'desc'
+															instructorOrder === 'desc'
 															? '˅'
 															: null}{' '}
 														{instructorSortField === 'total_reviews' &&
-														instructorOrder === 'asc'
+															instructorOrder === 'asc'
 															? '˄'
 															: null}
 													</th>
@@ -867,11 +868,11 @@ export default function Body({
 													>
 														Clear{' '}
 														{instructorSortField === 'clear' &&
-														instructorOrder === 'desc'
+															instructorOrder === 'desc'
 															? '˅'
 															: null}{' '}
 														{instructorSortField === 'clear' &&
-														instructorOrder === 'asc'
+															instructorOrder === 'asc'
 															? '˄'
 															: null}
 													</th>
@@ -884,11 +885,11 @@ export default function Body({
 													>
 														Engaging{' '}
 														{instructorSortField === 'engaging' &&
-														instructorOrder === 'desc'
+															instructorOrder === 'desc'
 															? '˅'
 															: null}{' '}
 														{instructorSortField === 'engaging' &&
-														instructorOrder === 'asc'
+															instructorOrder === 'asc'
 															? '˄'
 															: null}
 													</th>
@@ -901,11 +902,11 @@ export default function Body({
 													>
 														Liked{' '}
 														{instructorSortField === 'liked' &&
-														instructorOrder === 'desc'
+															instructorOrder === 'desc'
 															? '˅'
 															: null}{' '}
 														{instructorSortField === 'liked' &&
-														instructorOrder === 'asc'
+															instructorOrder === 'asc'
 															? '˄'
 															: null}
 													</th>
@@ -936,7 +937,7 @@ export default function Body({
 															</td>
 															<td className='whitespace-nowrap px-6 py-4 text-sm text-gray-800 dark:text-gray-200'>
 																{instructor.engaging ||
-																instructor.engaging === 0
+																	instructor.engaging === 0
 																	? instructor.engaging + '%'
 																	: 'N/A'}
 															</td>
@@ -954,6 +955,13 @@ export default function Body({
 											style={{ height: '20px' }}
 										></div>
 									</div>
+									<h1
+										className={`flex-1 p-6 ${filteredInstructors.length !== 0 ? 'hidden' : null}`}
+									>
+										No instructors found matching your criteria. Try adjusting your
+										instructor filters to broaden your search. Consider using less
+										specific terms.
+									</h1>
 								</div>
 							</div>
 							<h1
