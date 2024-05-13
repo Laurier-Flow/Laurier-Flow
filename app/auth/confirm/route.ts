@@ -4,31 +4,31 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
 
 export async function GET(request: NextRequest) {
-    const { searchParams } = new URL(request.url)
-    const token_hash = searchParams.get('token_hash')
-    const type = searchParams.get('type') as EmailOtpType | null
-    const next = searchParams.get('next') ?? '/'
-    const redirectTo = request.nextUrl.clone()
-    redirectTo.pathname = next
+	const { searchParams } = new URL(request.url)
+	const token_hash = searchParams.get('token_hash')
+	const type = searchParams.get('type') as EmailOtpType | null
+	const next = searchParams.get('next') ?? '/'
+	const redirectTo = request.nextUrl.clone()
+	redirectTo.pathname = next
 
-    console.log(token_hash)
-    
-    if (token_hash && type) {
-        const cookieStore = cookies()
-        const supabase = createClient(cookieStore)
+	console.log(token_hash)
 
-        const { error } = await supabase.auth.verifyOtp({
-            type,
-            token_hash,
-        })
+	if (token_hash && type) {
+		const cookieStore = cookies()
+		const supabase = createClient(cookieStore)
 
-        console.log(error)
+		const { error } = await supabase.auth.verifyOtp({
+			type,
+			token_hash
+		})
 
-        if (!error) {
-            return NextResponse.redirect(redirectTo)
-        }
-    }
+		console.log(error)
 
-    redirectTo.pathname = '/'
-    return NextResponse.redirect(redirectTo)
+		if (!error) {
+			return NextResponse.redirect(redirectTo)
+		}
+	}
+
+	redirectTo.pathname = '/'
+	return NextResponse.redirect(redirectTo)
 }
