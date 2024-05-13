@@ -35,17 +35,15 @@ export const handleCourseReviewSubmit = async (
 		reviewText = censor.applyTo(reviewText, matches)
 	}
 
-	const { error } = await supabase
-		.from('course_reviews')
-		.insert({
-			body: reviewText,
-			easy: easy,
-			useful: useful,
-			liked: liked,
-			user_id_fk: user?.id,
-			instructor_name_fk: instructor,
-			course_code_fk: courseName
-		})
+	const { error } = await supabase.from('course_reviews').insert({
+		body: reviewText,
+		easy: easy,
+		useful: useful,
+		liked: liked,
+		user_id_fk: user?.id,
+		instructor_name_fk: instructor,
+		course_code_fk: courseName
+	})
 
 	return error
 }
@@ -74,17 +72,15 @@ export const handleInstructorReviewSubmit = async (
 		reviewText = censor.applyTo(reviewText, matches)
 	}
 
-	const { error } = await supabase
-		.from('instructor_reviews')
-		.insert({
-			body: reviewText,
-			clear: clear,
-			engaging: engaging,
-			liked: liked,
-			user_id_fk: user?.id,
-			course_code_fk: course,
-			instructor_name_fk: instructorName
-		})
+	const { error } = await supabase.from('instructor_reviews').insert({
+		body: reviewText,
+		clear: clear,
+		engaging: engaging,
+		liked: liked,
+		user_id_fk: user?.id,
+		course_code_fk: course,
+		instructor_name_fk: instructorName
+	})
 
 	return error
 }

@@ -13,9 +13,9 @@ export const handleChangePassword = async (newPassword: string) => {
 		password: newPassword
 	})
 
-    if (error) {
-        return { success: false, message: error.message}
-    } else {
-        return { success: true, message: ''}
-    }
-};
+	if (error) {
+		return { success: false, message: error.message }
+	} else {
+		return { success: true, message: '' }
+	}
+}
