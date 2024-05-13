@@ -11,7 +11,7 @@ import CourseRequisites from "../CourseRequisites";
 import Spinner from "@/components/Spinner";
 import Header from "@/components/Header";
 import { fetchUser } from "@/utils/supabase/authActions";
-import { Metadata , ResolvingMetadata } from "next"
+import { Metadata, ResolvingMetadata } from "next"
 const AddReview = dynamic(() => import("../AddReview"), { ssr: false });
 import Footer from "@/components/Footer";
 
@@ -47,16 +47,16 @@ export interface section {
 export async function generateMetadata(
     { params }: CoursePageProps,
     parent: ResolvingMetadata
-  ): Promise<Metadata> {
+): Promise<Metadata> {
     let courseCode = decodeURIComponent(params.code.toUpperCase())
     return {
         title: `${courseCode.split(' ').join('')}`,
         description: `Course Information & Reviews for ${courseCode}`
     }
-  }
+}
 
 
-async function CoursePage({params}: CoursePageProps) {
+async function CoursePage({ params }: CoursePageProps) {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     let courseCode = decodeURIComponent(params.code.toUpperCase())
@@ -82,7 +82,9 @@ async function CoursePage({params}: CoursePageProps) {
                         <hr className="mt-8 mb-8 border-gray-300 dark:border-gray-800"></hr>
                         <div className="lg:flex lg:flex-col lg:flex-1 lg:pr-4">
                             <AddReview courseName={courseCode} supabase={supabase} instructor={false} />
-                            <CourseReviews supabase={supabase} courseName={courseCode} />
+                            <Suspense fallback={<div className="w-full h-full p-8"><Spinner /></div>}>
+                                <CourseReviews supabase={supabase} courseName={courseCode} />
+                            </Suspense>
                             <hr className="mt-8 mb-8 border-0"></hr>
                         </div>
                     </div>
