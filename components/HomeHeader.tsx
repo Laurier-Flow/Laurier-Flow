@@ -19,7 +19,7 @@ export default function HomeHeader({ user }: { user: User | null }) {
         togglePasswordPopup
     } = usePopupManager()
 
-    useManageBodyScroll(showLoginPopup || showSignUpPopup)
+    useManageBodyScroll(showLoginPopup || showSignUpPopup || showPasswordPopup)
 
     return (
         <>
@@ -53,7 +53,7 @@ export default function HomeHeader({ user }: { user: User | null }) {
                 </div>
             )}
             {showPasswordPopup && !showLoginPopup && !showLoginPopup && (
-                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[200] md:hidden">
                     <PasswordPopup
                         searchParams={{ message: '' }}
                         onClose={togglePasswordPopup}
