@@ -75,12 +75,6 @@ export default function SearchBar() {
 	const [profResults, setProfResults] = useState<ProfResult[]>([])
 	const [exploreResults, setExploreResults] = useState<string[]>([])
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
-		redirectToExploreAll()
-
-	}
-
 	useEffect(() => {
 		/**
 		 * Failsafes to parse the raw user inputted search string
@@ -164,46 +158,44 @@ export default function SearchBar() {
 		'flex absolute bg-background text-foreground w-full text-base rounded-b-md border-input border-[2px] peer-focus-visible:border-secondary border-t-0 rounded-t-transparent shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50'
 
 	return (
-		<form onSubmit={(e) => handleSubmit(e)} className='w-full'>
-			<div className='relative z-[100] block box-border w-full text-base peer has-[:focus-visible]:peer'>
-				<Search className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground z-[100]' />
-				<Input
-					type='search'
-					placeholder='Search for courses, professors or faculties'
-					name='q'
-					onInput={(e) => {
-						e.preventDefault()
-						setSearchQuery(e.currentTarget.value)
+		<div className='relative z-[100] block box-border w-full text-base peer has-[:focus-visible]:peer'>
+			<Search className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground z-[100]' />
+			<Input
+				type='search'
+				placeholder='Search for courses, professors or faculties'
+				name='q'
+				onInput={(e) => {
+					e.preventDefault()
+					setSearchQuery(e.currentTarget.value)
 
-					}}
-					className={
-						courseResults.length !== 0 || profResults.length !== 0
-							? barStyleOpen
-							: barStyleClosed
-					}
-				/>
-				<div
-					className={
-						courseResults.length !== 0 || profResults.length !== 0
-							? resultsStyleOpen
-							: resultsStyleClosed
-					}
-				>
+				}}
+				className={
+					courseResults.length !== 0 || profResults.length !== 0
+						? barStyleOpen
+						: barStyleClosed
+				}
+			/>
+			<div
+				className={
+					courseResults.length !== 0 || profResults.length !== 0
+						? resultsStyleOpen
+						: resultsStyleClosed
+				}
+			>
 
-					<div className='bg-background rounded-lg text-foreground divide-y divide-{secondary} text-base w-full z-[100] '>
-						{courseResults.map((course) => (
-							<CourseResultListItem params={course} />
-						))}
-						{profResults.map((prof) => (
-							<ProfResultListItem params={prof} />
-						))}
-						{exploreResults.map((faculty) => (
-							<ExploreResultListItem faculty={faculty} />
-						))}
-					</div>
+				<div className='bg-background rounded-lg text-foreground divide-y divide-{secondary} text-base w-full z-[100] '>
+					{courseResults.map((course) => (
+						<CourseResultListItem params={course} />
+					))}
+					{profResults.map((prof) => (
+						<ProfResultListItem params={prof} />
+					))}
+					{exploreResults.map((faculty) => (
+						<ExploreResultListItem faculty={faculty} />
+					))}
 				</div>
 			</div>
-		</form>
+		</div>
 
 	)
 }
