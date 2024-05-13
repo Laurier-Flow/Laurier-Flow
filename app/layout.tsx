@@ -3,6 +3,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import dynamic from "next/dynamic";
 import { Metadata } from "next"
 const FormWidget = dynamic(() => import("@/components/FormWidget"), {ssr: false});
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata : Metadata = {
   title: {
@@ -32,6 +33,7 @@ export default function RootLayout({
           </main>
           <FormWidget />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
