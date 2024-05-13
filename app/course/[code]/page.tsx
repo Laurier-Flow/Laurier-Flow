@@ -100,12 +100,20 @@ async function CoursePage({ params }: CoursePageProps) {
 								supabase={supabase}
 								instructor={false}
 							/>
-							<CourseReviews supabase={supabase} courseName={courseCode} />
+							<Suspense
+								fallback={
+									<div className='h-full w-full p-8'>
+										<Spinner />
+									</div>
+								}
+							>
+								<CourseReviews supabase={supabase} courseName={courseCode} />
+							</Suspense>
 							<hr className='mb-8 mt-8 border-0'></hr>
 						</div>
 					</div>
 				</div>
-			</Suspense>
+			</Suspense >
 			<Footer />
 		</>
 	)
