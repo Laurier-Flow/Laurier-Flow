@@ -9,13 +9,13 @@ import { Eye, EyeOff } from "lucide-react";
 interface ToggleVisibilityButtonProps {
     visible: boolean;
     toggleVisibility: () => void;
-    className?: string; // Define className as an optional prop
+    className?: string;
     }
 
     const ToggleVisibilityButton: React.FC<ToggleVisibilityButtonProps> = ({
     visible,
     toggleVisibility,
-    className, // Destructure className from props
+    className,
     }) => {
     return (
         <button onClick={toggleVisibility} className={`focus:outline-none ${className}`}>
