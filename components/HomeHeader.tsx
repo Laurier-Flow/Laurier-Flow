@@ -7,6 +7,7 @@ import { useManageBodyScroll, usePopupManager } from "./Header"
 import LoginPopup from "./LoginPopup"
 import SignUpPopup from "./SignUpPopup"
 import Image from "next/image"
+import PasswordPopup from "./PasswordPopup"
 
 export default function HomeHeader({ user }: { user: User | null }) {
     const {
@@ -47,6 +48,15 @@ export default function HomeHeader({ user }: { user: User | null }) {
                     <SignUpPopup
                         searchParams={{ message: '' }}
                         onClose={toggleSignUpPopup}
+                        toggleLogIn={toggleLoginPopup}
+                    />
+                </div>
+            )}
+            {showPasswordPopup && !showLoginPopup && !showLoginPopup && (
+                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <PasswordPopup
+                        searchParams={{ message: '' }}
+                        onClose={togglePasswordPopup}
                         toggleLogIn={toggleLoginPopup}
                     />
                 </div>
