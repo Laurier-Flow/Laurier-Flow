@@ -8,7 +8,13 @@ import Link from 'next/link'
 import { facultyCoursePrefix } from '@/utils/lib/facultyCoursePrefix'
 import { disciplineCodes } from '@/utils/lib/disciplineCodes'
 import { redirectToExploreAll } from '@/utils/lib/clientSideRedirects'
-import { Search, Telescope, BookOpenText, UserRound } from 'lucide-react'
+import {
+	Search,
+	Telescope,
+	BookOpenText,
+	UserRound,
+	GalleryVerticalEnd
+} from 'lucide-react'
 
 type CourseResult = {
 	course_code: string
@@ -80,12 +86,35 @@ const ExploreResultListItem = ({ faculty }: { faculty: string }) => {
 	)
 }
 
-export default function SearchBar() {
-	const [searchQuery, setSearchQuery] = useState<string>('')
-	const [courseResults, setCourseResults] = useState<CourseResult[]>([])
-	const [profResults, setProfResults] = useState<ProfResult[]>([])
-	const [exploreResults, setExploreResults] = useState<string[]>([])
+const ExploreAllListItem = () => {
+	return (
+		<Link
+			href={`/explore`}
+			className='flex w-full flex-row bg-transparent p-2 pl-3 last:rounded-b-md hover:bg-stone-200 dark:hover:bg-stone-800'
+		>
+			<GalleryVerticalEnd />
+			<span className='pl-3 font-bold'>
+				Search for all <span className='text-secondary'>ALL</span> courses
+			</span>
+		</Link>
+	)
+}
 
+export default function SearchBar() {
+	const [searchQuery, setSearchQuery] = useState<string>('') // Search Query State
+	const [courseResults, setCourseResults] = useState<CourseResult[]>([]) // Course Results State
+	const [profResults, setProfResults] = useState<ProfResult[]>([]) // Professor Results State
+	const [exploreResults, setExploreResults] = useState<string[]>([]) // Explore Results State
+	const [focused, setFocused] = useState<boolean>(false) // Focus State
+
+	const handleFocus = () => {
+		setFocused(true)
+	}
+	const handleBlur = () => {
+		setFocused(false)
+	}
+
+	// Use Effect Hook to fetch results from backend
 	useEffect(() => {
 		/**
 		 * Failsafes to parse the raw user inputted search string
@@ -158,15 +187,6 @@ export default function SearchBar() {
 		}
 	}, [searchQuery])
 
-	const barStyleOpen =
-		'peer relative box-border block w-full rounded-b-none border-[2px] border-b-0 border-b-transparent bg-background pl-8 text-base focus-visible:ring-0 focus-visible:ring-transparent'
-	const barStyleClosed =
-		'relative box-border block w-full border-[2px] bg-background pl-8 text-base focus-visible:ring-0 focus-visible:ring-transparent'
-	const resultsStyleClosed =
-		'peer absolute z-[100] w-full border-[2px] border-transparent bg-transparent px-3 text-base text-foreground '
-	const resultsStyleOpen =
-		'rounded-t-transparent absolute flex w-full rounded-b-md border-[2px] border-t-0 border-input bg-background text-base text-foreground shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 peer-focus-visible:border-secondary'
-
 	return (
 		<div className='has-[:focus-visible]:peer peer relative z-[100] box-border block w-full text-base'>
 			<Search className='absolute left-2.5 top-2.5 z-[100] h-4 w-4 text-muted-foreground' />
@@ -178,30 +198,36 @@ export default function SearchBar() {
 					e.preventDefault()
 					setSearchQuery(e.currentTarget.value)
 				}}
+				onFocus={handleFocus}
+				onBlur={handleBlur}
+				autoComplete={'off'}
 				className={
-					courseResults.length !== 0 || profResults.length !== 0
-						? barStyleOpen
-						: barStyleClosed
+					focused
+						? 'peer relative box-border block w-full rounded-b-none border-[2px] border-b-0 border-b-transparent bg-background pl-8 text-base focus-visible:ring-0 focus-visible:ring-transparent'
+						: 'relative box-border block w-full border-[2px] bg-background pl-8 text-base focus-visible:ring-0 focus-visible:ring-transparent'
 				}
 			/>
 			<div
 				className={
-					courseResults.length !== 0 || profResults.length !== 0
-						? resultsStyleOpen
-						: resultsStyleClosed
+					focused
+						? 'rounded-t-transparent absolute flex w-full rounded-b-md border-[2px] border-t-0 border-input bg-background text-base text-foreground shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 peer-focus-visible:border-secondary'
+						: 'peer absolute z-[100] w-full border-[2px] border-transparent bg-transparent px-3 text-base text-foreground'
 				}
 			>
-				<div className='divide-{secondary} z-[100] w-full divide-y rounded-lg bg-background text-base text-foreground '>
-					{courseResults.map((course) => (
-						<CourseResultListItem params={course} />
-					))}
-					{profResults.map((prof) => (
-						<ProfResultListItem params={prof} />
-					))}
-					{exploreResults.map((faculty) => (
-						<ExploreResultListItem faculty={faculty} />
-					))}
-				</div>
+				{focused && (
+					<div className='divide-{secondary} z-[100] w-full divide-y rounded-lg bg-background text-base text-foreground '>
+						{courseResults.map((course) => (
+							<CourseResultListItem params={course} />
+						))}
+						{profResults.map((prof) => (
+							<ProfResultListItem params={prof} />
+						))}
+						{exploreResults.map((faculty) => (
+							<ExploreResultListItem faculty={faculty} />
+						))}
+						<ExploreAllListItem />
+					</div>
+				)}
 			</div>
 		</div>
 	)
