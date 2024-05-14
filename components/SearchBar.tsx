@@ -215,7 +215,7 @@ export default function SearchBar() {
 				}
 			>
 				{focused && (
-					<div className='divide-{secondary} z-[100] w-full divide-y rounded-lg bg-background text-base text-foreground '>
+					<div className='divide-{secondary} z-[100] w-full divide-y rounded-b-md bg-background text-base text-foreground'>
 						{courseResults.map((course) => (
 							<CourseResultListItem params={course} />
 						))}
