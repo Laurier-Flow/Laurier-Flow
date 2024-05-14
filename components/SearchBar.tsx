@@ -203,32 +203,24 @@ export default function SearchBar() {
 				autoComplete={'off'}
 				className={
 					focused
-						? 'peer relative box-border block w-full rounded-b-none border-[2px] border-b-0 border-b-transparent bg-background pl-8 text-base focus-visible:ring-0 focus-visible:ring-transparent'
-						: 'relative box-border block w-full border-[2px] bg-background pl-8 text-base focus-visible:ring-0 focus-visible:ring-transparent'
+						? 'relative box-border block w-full rounded-b-none border-[2px] border-b-0 border-b-transparent bg-background pl-8 text-base'
+						: 'relative box-border block w-full border-[2px] bg-background pl-8 text-base'
 				}
 			/>
-			<div
-				className={
-					focused
-						? 'rounded-t-transparent absolute flex w-full rounded-b-md border-[2px] border-t-0 border-input bg-background text-base text-foreground shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 peer-focus-visible:border-secondary'
-						: 'peer absolute z-[100] w-full border-[2px] border-transparent bg-transparent px-3 text-base text-foreground'
-				}
-			>
-				{focused && (
-					<div className='divide-{secondary} z-[100] w-full divide-y rounded-b-md bg-background text-base text-foreground'>
-						{courseResults.map((course) => (
-							<CourseResultListItem params={course} />
-						))}
-						{profResults.map((prof) => (
-							<ProfResultListItem params={prof} />
-						))}
-						{exploreResults.map((faculty) => (
-							<ExploreResultListItem faculty={faculty} />
-						))}
-						<ExploreAllListItem />
-					</div>
-				)}
-			</div>
+			{focused && (
+				<div className='rounded-t-transparent divide-{secondary} absolute z-[100] max-h-screen w-full flex-row divide-y overflow-y-auto rounded-b-md border-[2px] border-t-0 border-secondary bg-background text-base text-foreground'>
+					{courseResults.map((course) => (
+						<CourseResultListItem params={course} />
+					))}
+					{profResults.map((prof) => (
+						<ProfResultListItem params={prof} />
+					))}
+					{exploreResults.map((faculty) => (
+						<ExploreResultListItem faculty={faculty} />
+					))}
+					<ExploreAllListItem />
+				</div>
+			)}
 		</div>
 	)
 }
