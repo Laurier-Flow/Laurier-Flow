@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useRef } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { Input } from '@/components/ui/input'
 import { useState, useEffect } from 'react'
@@ -188,7 +188,11 @@ export default function SearchBar() {
 	}, [searchQuery])
 
 	return (
-		<div className='has-[:focus-visible]:peer peer relative z-[100] box-border block w-full text-base'>
+		<div
+			className='relative z-[100] box-border block w-full text-base'
+			onFocus={handleFocus}
+			onBlur={handleBlur}
+		>
 			<Search className='absolute left-2.5 top-2.5 z-[100] h-4 w-4 text-muted-foreground' />
 			<Input
 				type='search'
@@ -198,8 +202,6 @@ export default function SearchBar() {
 					e.preventDefault()
 					setSearchQuery(e.currentTarget.value)
 				}}
-				onFocus={handleFocus}
-				onBlur={handleBlur}
 				autoComplete={'off'}
 				className={
 					focused
