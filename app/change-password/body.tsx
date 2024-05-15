@@ -42,12 +42,10 @@ export default function Body() {
 
 		const result = await handleChangePassword(password)
 
-		if (result.success) {
-			redirect('/')
-		} else {
-			setErrorMessage(result.message)
-		}
-	}
+        if (result) {
+            setErrorMessage(result.message);
+        }
+    }
 
 	return (
 		<BackgroundGradientAnimation
