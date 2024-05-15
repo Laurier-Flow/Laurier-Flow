@@ -84,7 +84,7 @@ export default async function Index(): Promise<React.ReactElement> {
 							<SearchBar />
 						</div>
 
-						<h1 className='pt-4 text-sm font-normal italic text-background dark:text-foreground md:text-lg'>
+						<h1 className='pl-2 pt-4 text-sm font-normal italic text-background dark:text-foreground md:text-lg'>
 							Plan your courses • Read course and professor reviews • Find
 							classes
 						</h1>
