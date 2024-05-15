@@ -82,7 +82,7 @@ export default function LoginPopup({
 					<X className='cursor-pointer' onClick={() => onClose()} />
 				</label>
 				{loginError && (
-					<p className='mb-2 rounded-md bg-red-500 p-2 text-center text-white'>
+					<p className='mb-2 rounded-md bg-red-500 p-4 text-center text-white'>
 						{loginError}
 					</p>
 				)}

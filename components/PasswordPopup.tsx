@@ -52,41 +52,34 @@ export default function PasswordPopup({
 		}
 	}
 
-	const handleLogInClick = () => {
-		toggleLogIn()
-		onClose()
-	}
-
-	return (
-		<div
-			ref={popupRef}
-			className='fixed left-1/2 top-1/2 max-h-[90vh] w-11/12 max-w-md -translate-x-1/2 -translate-y-1/2 transform overflow-y-auto rounded-md border-2 bg-background p-8 backdrop-blur dark:border-secondary dark:bg-background/80'
-		>
-			<form
-				className='flex w-full flex-1 flex-col justify-center gap-2 text-foreground animate-in'
-				onSubmit={handleReset}
-				onChange={() => setResetError('')}
-			>
-				<label className='mb-5 flex flex-row items-center justify-between text-3xl font-bold text-foreground'>
-					<h1>Reset Password</h1>
-					<X className='cursor-pointer' onClick={() => onClose()} />
-				</label>
-				{resetError && (
-					<p className='mb-4 rounded-md bg-red-500 p-2 text-center text-white'>
-						{resetError}
-					</p>
-				)}
-				{successMessage && (
-					<p className='mb-4 rounded-md bg-green-500 p-2 text-center text-white'>
-						{successMessage}
-					</p>
-				)}
-				<input
-					className='mb-4 rounded-md border-neutral-300 bg-stone-200 px-4 py-2 placeholder-gray-400 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-gray-900'
-					name='email'
-					placeholder='Email'
-					required
-				/>
+    const handleLogInClick = () => {
+        toggleLogIn();
+        onClose();
+    }
+  
+      return (
+        <div ref={popupRef} className="overflow-y-auto max-h-[90vh] border-2 dark:border-secondary fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background dark:bg-background/80 backdrop-blur rounded-md max-w-md p-8 w-11/12">
+          <form
+                className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
+                onSubmit={handleReset}
+                onChange={() => setResetError('')}
+              >
+                  <label className="flex flex-row justify-between items-center text-3xl font-bold mb-5 text-foreground">
+                        <h1>Reset Password</h1>
+                        <X className='cursor-pointer' onClick={() => onClose()} />
+                  </label>
+                  {resetError && 
+                      <p className="rounded-md p-4 mb-4 bg-red-500 text-white text-center">{resetError}</p>
+                  }
+                  {successMessage && 
+                      <p className="my-2 bg-teal-500 text-md text-white rounded-lg p-4 text-center">{successMessage}</p>
+                  }
+                  <input
+                      className="my-2 mb-4 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
+                      name="email"
+                      placeholder="Email"
+                      required
+                    />
 
 				<button
 					type='submit'

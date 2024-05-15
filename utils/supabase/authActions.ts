@@ -45,10 +45,12 @@ export const signUp = async (formData: FormData) => {
 		}
 	})
 
-	if (error) {
-		console.log(error)
-		return { success: false, message: error.message }
-	}
+  if (error) {
+    if (error.message.startsWith("Password should")) {
+      return { success: false, message: "Password must be at least 6 characters and include at least one uppercase letter, lowercase letter, number, and special character"}
+    }
+    return { success: false, message: error.message };
+  }
 
 	return { success: true, message: 'Check email to continue sign-in process' }
 }
