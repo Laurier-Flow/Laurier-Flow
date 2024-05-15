@@ -83,7 +83,7 @@ const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
 				<li className='w-full focus-within:z-10'>
 					<a
 						onClick={handleProfileTabClick}
-						className={`inline-block w-full p-4 ${profileTabSelected ? `bg-gray-300 dark:bg-gray-700 dark:text-white` : `bg-white dark:bg-gray-100 dark:text-black`} active rounded-l-lg border-r border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-300`}
+						className={`inline-block h-full w-full p-4 ${profileTabSelected ? `bg-gray-300 dark:bg-gray-700 dark:text-white` : `bg-white dark:bg-gray-100 dark:text-black`} active rounded-l-lg border-r border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-300`}
 					>
 						My Profile
 					</a>
@@ -91,7 +91,7 @@ const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
 				<li className='w-full focus-within:z-10'>
 					<a
 						onClick={handleMyScheduleTabClick}
-						className={`inline-block w-full p-4 ${myScheduleTabSelected ? `bg-gray-300 dark:bg-gray-700 dark:text-white` : `bg-white dark:bg-gray-100 dark:text-black`} border-r border-gray-200  hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300`}
+						className={`inline-block h-full w-full p-4 ${myScheduleTabSelected ? `bg-gray-300 dark:bg-gray-700 dark:text-white` : `bg-white dark:bg-gray-100 dark:text-black`} border-r border-gray-200  hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300`}
 					>
 						My Schedule
 					</a>
@@ -99,7 +99,7 @@ const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
 				<li className='w-full focus-within:z-10'>
 					<a
 						onClick={handleEditUserDetailsTabSelected}
-						className={`inline-block w-full p-4 ${editUserDetailsTabSelected ? `bg-gray-300 dark:bg-gray-700 dark:text-white` : `bg-white dark:bg-gray-100 dark:text-black`} rounded-r-lg border-s-0  border-gray-200 hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300`}
+						className={`inline-block h-full w-full p-4 ${editUserDetailsTabSelected ? `bg-gray-300 dark:bg-gray-700 dark:text-white` : `bg-white dark:bg-gray-100 dark:text-black`} rounded-r-lg border-s-0  border-gray-200 hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300`}
 					>
 						User Details
 					</a>
