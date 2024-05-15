@@ -16,7 +16,6 @@ import {
 	GalleryVerticalEnd
 } from 'lucide-react'
 
-
 // Type for Course Result Object from Supabase
 type CourseResult = {
 	course_code: string
@@ -45,7 +44,8 @@ interface ProfResultProps extends React.AllHTMLAttributes<HTMLAnchorElement> {
 	params: ProfResult
 }
 
-interface ExploreResultProps extends React.AllHTMLAttributes<HTMLAnchorElement> {
+interface ExploreResultProps
+	extends React.AllHTMLAttributes<HTMLAnchorElement> {
 	faculty: string
 }
 
@@ -53,7 +53,10 @@ const slugify = (link: string) => {
 	return link.replaceAll(/\s/g, '%20')
 }
 
-const CourseResultListItem: React.FC<CourseResultProps> = ({params, ...props}) => {
+const CourseResultListItem: React.FC<CourseResultProps> = ({
+	params,
+	...props
+}) => {
 	const courseLink = '/course/' + slugify(params.course_code)
 	return (
 		<Link
@@ -70,7 +73,10 @@ const CourseResultListItem: React.FC<CourseResultProps> = ({params, ...props}) =
 	)
 }
 
-const ProfResultListItem: React.FC<ProfResultProps> = ({params, ...props}) => {
+const ProfResultListItem: React.FC<ProfResultProps> = ({
+	params,
+	...props
+}) => {
 	const profLink = '/instructor/' + slugify(params.instructor_name)
 
 	return (
@@ -87,7 +93,10 @@ const ProfResultListItem: React.FC<ProfResultProps> = ({params, ...props}) => {
 	)
 }
 
-const ExploreResultListItem: React.FC<ExploreResultProps> = ({faculty, ...props}) => {
+const ExploreResultListItem: React.FC<ExploreResultProps> = ({
+	faculty,
+	...props
+}) => {
 	const facultyCode = disciplineCodes[faculty]
 
 	return (
@@ -104,7 +113,7 @@ const ExploreResultListItem: React.FC<ExploreResultProps> = ({faculty, ...props}
 	)
 }
 
-const ExploreAllListItem = ({...props}) => {
+const ExploreAllListItem = ({ ...props }) => {
 	return (
 		<Link
 			href={`/explore`}
@@ -124,28 +133,38 @@ export default function SearchBar() {
 	const [courseResults, setCourseResults] = useState<CourseResult[]>([]) // Course Results State
 	const [profResults, setProfResults] = useState<ProfResult[]>([]) // Professor Results State
 	const [exploreResults, setExploreResults] = useState<string[]>([]) // Explore Results State
-	const [isFocues, setIsFocused] = useState<boolean>(false) // Focus State
-	const blurTimeoutRef = useRef<null | NodeJS.Timeout>(null)
-	const linkClickedRef = useRef(false)
+	const [isFocused, setIsFocused] = useState<boolean>(false) // Focus State for Div Rendering
+	const containerRef = useRef<HTMLDivElement | null>(null)
 
 	const handleFocus = () => {
-		if (blurTimeoutRef.current) {
-			clearTimeout(blurTimeoutRef.current)
-		}
 		setIsFocused(true)
 	}
-	const handleBlur = () => {
-		blurTimeoutRef.current = setTimeout(() => {
-			if (!linkClickedRef.current) {
-				setIsFocused(false)
-			}
-			linkClickedRef.current = false // reset after handling click
-		}, 100) // Adjust timeout as necessary
+	const handleBlur = (event: React.FocusEvent) => {
+		if (
+			containerRef.current &&
+			containerRef.current.contains(event.relatedTarget)
+		) {
+			return
+		}
 	}
 
-	const handleLinkClick = () => {
-		linkClickedRef.current = true
-	}
+	useEffect(() => {
+		const handleClick = (event: MouseEvent) => {
+			if (
+				containerRef.current &&
+				containerRef.current.contains(event.target as Node)
+			) {
+				setIsFocused(true)
+			} else {
+				setIsFocused(false)
+			}
+		}
+
+		document.addEventListener('mousedown', handleClick)
+		return () => {
+			document.removeEventListener('mousedown', handleClick)
+		}
+	}, [])
 
 	// Use Effect Hook to fetch results from backend
 	useEffect(() => {
@@ -221,7 +240,12 @@ export default function SearchBar() {
 	}, [searchQuery])
 
 	return (
-		<div className='relative z-[100] box-border block w-full text-base'>
+		<div
+			className='relative z-[100] box-border block w-full text-base'
+			ref={containerRef}
+			onFocus={handleFocus}
+			onBlur={handleBlur}
+		>
 			<Search className='absolute left-2.5 top-2.5 z-[100] h-4 w-4 text-muted-foreground' />
 			<Input
 				type='search'
@@ -231,30 +255,25 @@ export default function SearchBar() {
 					e.preventDefault()
 					setSearchQuery(e.currentTarget.value)
 				}}
-				onFocus={handleFocus}
-				onBlur={handleBlur}
 				autoComplete={'off'}
 				className={
-					isFocues
-						? 'relative box-border block w-full rounded-b-none border-[2px] border-b-0 border-b-transparent bg-background pl-8 text-base'
+					isFocused
+						? 'relative box-border block w-full rounded-b-none border-[2px] border-b-0 border-secondary border-b-transparent bg-background pl-8 text-base'
 						: 'relative box-border block w-full border-[2px] bg-background pl-8 text-base'
 				}
 			/>
-			{isFocues && (
+			{isFocused && (
 				<div className='rounded-t-transparent divide-{secondary} absolute z-[100] max-h-screen w-full flex-row divide-y overflow-y-auto rounded-b-md border-[2px] border-t-0 border-secondary bg-background text-base text-foreground'>
 					{courseResults.map((course) => (
-						<CourseResultListItem
-							params={course}
-							onClick={handleLinkClick}
-						/>
+						<CourseResultListItem params={course} />
 					))}
 					{profResults.map((prof) => (
-						<ProfResultListItem params={prof} onClick={handleLinkClick} />
+						<ProfResultListItem params={prof} />
 					))}
 					{exploreResults.map((faculty) => (
-						<ExploreResultListItem faculty={faculty} onClick={handleLinkClick}/>
+						<ExploreResultListItem faculty={faculty} />
 					))}
-					<ExploreAllListItem onClick={handleLinkClick} />
+					{exploreResults.length == 0 && <ExploreAllListItem />}
 				</div>
 			)}
 		</div>
