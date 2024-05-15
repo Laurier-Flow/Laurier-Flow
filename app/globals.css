@@ -26,7 +26,7 @@
     --radius: 1rem;
     --gradient-start: rgb(38, 6, 61);
     --gradient-end: rgb(42, 7, 68);
-    --bubble: 101,5,141;
+    --bubble: 101, 5, 141;
     --footer: 275 82.1% 13.1%;
   }
 
@@ -50,10 +50,10 @@
     --border: 215 27.9% 16.9%;
     --input: 215 27.9% 16.9%;
     --ring: 263.4 70% 50.4%;
-    --gradient-start: rgb(2,6,23);
-    --gradient-end: rgb(3,7,18);
-    --bubble: 65,18,124;
-    --footer: 229 84.0% 4.9%;
+    --gradient-start: rgb(2, 6, 23);
+    --gradient-end: rgb(3, 7, 18);
+    --bubble: 65, 18, 124;
+    --footer: 229 84% 4.9%;
   }
 
   .component-absolute-center {
@@ -75,5 +75,8 @@
   }
   .exploreCard {
     @apply flex flex-col justify-evenly w-full bg-white dark:bg-slate-950 lg:max-w-6xl lg:border-x-2 dark:lg:border-slate-900;
+  }
+  .customCard {
+    @apply flex flex-col justify-evenly w-full bg-white dark:bg-slate-950 lg:max-w-7xl lg:border-x-2 dark:lg:border-slate-900 lg:pl-4 lg:pr-4;
   }
 }
