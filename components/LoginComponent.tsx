@@ -37,7 +37,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
 		const email = formData.get('email')?.toString()
 
         if (email && !emailRegex.test(email)) {
-            setError('Email needs to be of type mylaurier.ca or wlu.ca')
+            setError('Email needs to be of type @mylaurier.ca or @wlu.ca')
         } else {
             const result = await signUp(formData);
 
@@ -79,7 +79,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
             >
                 <label className="text-3xl font-bold mb-5 text-foreground">Log In</label>
                 {error &&
-                    <div className="rounded-md p-2 mb-2 bg-red-500 text-white text-center" role="alert">
+                    <div className="rounded-md p-4 mb-2 bg-red-500 text-white text-center" role="alert">
                         {error}
                     </div>
                 }
@@ -124,7 +124,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
                     Sign Up
                 </label>
                 {error &&
-                    <p className="rounded-md p-2 mb-2 bg-red-500 text-white text-center">{error}</p>
+                    <p className="rounded-md p-4 mb-2 bg-red-500 text-white text-center">{error}</p>
                 }
                 {confirmMessage &&
                     <div className="my-2 bg-teal-500 text-md text-white rounded-lg p-4 text-center" role="alert">
@@ -206,10 +206,10 @@ export default function LoginComponent({ user }: { user: User | null }) {
             Reset Password
         </label>
         {error &&
-            <p className="rounded-md p-2 mb-2 bg-red-500 text-white text-center">{error}</p>
+            <p className="rounded-md p-4 mb-2 bg-red-500 text-white text-center">{error}</p>
         }
           {checkInboxMessage && 
-              <p className="font-bold bg-teal-500 text-md text-white rounded-lg p-4 text-center">Please check your inbox</p>
+              <p className="bg-teal-500 text-md text-white rounded-lg p-4 text-center">Please check your inbox</p>
           }
           <input
               className="my-2 rounded-lg px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"

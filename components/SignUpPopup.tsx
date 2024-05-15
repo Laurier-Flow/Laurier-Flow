@@ -21,6 +21,7 @@ export default function SignUpPopup({
 }): React.ReactElement {
 	const [selectedProgram, setSelectedProgram] = useState('')
 	const [signUpError, setSignUpError] = useState<string>('')
+	const [confirmMessage, setConfirmMessage] = useState(false)
 
 	const popupRef = useRef<HTMLDivElement | null>(null)
 
@@ -52,13 +53,22 @@ export default function SignUpPopup({
 
 		const formData = new FormData(event.currentTarget)
 
-		const result = await signUp(formData)
+		const emailRegex = /(@mylaurier\.ca|@wlu\.ca)$/i
 
-		if (result.success) {
-			onClose()
-			location.reload()
+		const email = formData.get('email')?.toString()
+
+		if (email && !emailRegex.test(email)) {
+            setSignUpError('Email needs to be of type @mylaurier.ca or @wlu.ca')
 		} else {
-			setSignUpError(result.message)
+			const result = await signUp(formData)
+
+			if (result.success) {
+				setSignUpError('')
+				setConfirmMessage(true)
+			} else {
+				setSignUpError(result.message)
+				setConfirmMessage(false)
+			}
 		}
 	}
 
@@ -82,10 +92,15 @@ export default function SignUpPopup({
 					<X className='cursor-pointer' onClick={() => onClose()} />
 				</label>
 				{signUpError && (
-					<p className='mb-2 rounded-md bg-red-500 p-2 text-center text-white'>
+					<p className='mb-2 rounded-md bg-red-500 p-4 text-center text-white'>
 						{signUpError}
 					</p>
 				)}
+				{confirmMessage &&
+                    <div className="my-2 bg-teal-500 text-md text-white rounded-lg p-4 text-center" role="alert">
+                        <span className="font-bold">Success!</span> Check your inbox for a verification link then <span onClick={() => { handleLogInClick() }} className="cursor-pointer underline underline-offset-2 decoration-1">login.</span> It may take a minute to arrive
+                    </div>
+                }
 				<div className='mb-2 flex flex-row gap-4'>
 					<input
 						className='w-1/2 rounded-md border-neutral-300 bg-stone-200 px-4 py-2 placeholder-stone-400 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-gray-900 dark:placeholder-gray-400'
