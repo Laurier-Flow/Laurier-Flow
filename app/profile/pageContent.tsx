@@ -14,7 +14,7 @@ import {
 } from "./user-data-functions";
 import { getUserReviewsInterface } from "./UserReviews";
 import { User } from "@supabase/supabase-js";
-import Schedule from "./user-schedule";
+import Schedule from "./userSchedule";
 
 interface PageContentProps {
   userReviews: any;
@@ -73,8 +73,7 @@ const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
               <span className="text-yellow-200">{userLastName}</span>
             </h1>
             <h4 className="mb-2 text-lg font-bold text-white italic">
-              <span className="text-purple-200">Stud</span>
-              <span className="text-yellow-200">ying</span> - {userProgram}
+              {userProgram}
             </h4>
           </div>
         </div>
@@ -108,13 +107,7 @@ const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
       </ul>
 
       {profileTabSelected ? userReviews : null}
-      {myScheduleTabSelected ? (
-        <Schedule
-          deleteClassFunction={deleteSpecificClassFromSchedule}
-          addClassFunction={addClassesToSchedule}
-          updateClassFunction={updateUserClass}
-        />
-      ) : null}
+      {myScheduleTabSelected ? <Schedule /> : null}
       {editUserDetailsTabSelected ? (
         <UserDetails
           getUserDetailsFunction={getUserData}

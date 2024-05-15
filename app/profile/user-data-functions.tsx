@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { fetchUser } from "@/utils/supabase/authActions";
 import { SupabaseClient, User } from "@supabase/supabase-js";
+import { section } from "../course/CourseSchedule";
 
 export const updateUserFirstName = async (
   first_name: string
@@ -137,7 +138,8 @@ export const addClassesToSchedule = async (
   time: string,
   date: string,
   type: string,
-  grade: string
+  grade: string,
+  section: string
 ): Promise<any> => {
   "use server";
 
@@ -157,6 +159,7 @@ export const addClassesToSchedule = async (
       type: type,
       grade: grade,
       instructor: instructor,
+      section: section,
     })
     .select();
 
@@ -176,7 +179,8 @@ export const updateUserClass = async (
   date: string,
   type: string,
   grade: string,
-  id: number
+  id: number,
+  section: string
 ): Promise<any> => {
   "use server";
 
@@ -196,6 +200,7 @@ export const updateUserClass = async (
       type: type,
       grade: grade,
       instructor: instructor,
+      section: section,
     })
     .eq("id", id);
 
