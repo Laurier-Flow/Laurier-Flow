@@ -1,67 +1,63 @@
-"use client";
+'use client'
 
-import { Suspense, useEffect, useState } from "react";
-import UserDetails from "./user-details";
+import { Suspense, useEffect, useState } from 'react'
+import UserDetails from './user-details'
 import {
   getUserData,
   updateUserFirstName,
   updateUserLastName,
   updateUserProgram,
   deleteUserAccount,
-  deleteSpecificClassFromSchedule,
-  addClassesToSchedule,
-  updateUserClass,
 } from "./user-data-functions";
-import { getUserReviewsInterface } from "./UserReviews";
 import { User } from "@supabase/supabase-js";
 import Schedule from "./userSchedule";
 
 interface PageContentProps {
-  userReviews: any;
-  user: User;
+	userReviews: any
+	user: User
 }
 
 const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
-  const [profileTabSelected, setProfileTabSelected] = useState<boolean>(true);
-  const [myScheduleTabSelected, setMyScheduleTabSelected] =
-    useState<boolean>(false);
-  const [editUserDetailsTabSelected, setEditUserDetailsTabSelected] =
-    useState<boolean>(false);
+	const [profileTabSelected, setProfileTabSelected] = useState<boolean>(true)
+	const [myScheduleTabSelected, setMyScheduleTabSelected] =
+		useState<boolean>(false)
+	const [editUserDetailsTabSelected, setEditUserDetailsTabSelected] =
+		useState<boolean>(false)
 
-  const [userFirstName, setUserFirstName] = useState<string>();
-  const [userLastName, setUserLastName] = useState<string>();
-  const [userProgram, setUserProgram] = useState<string>();
+	const [userFirstName, setUserFirstName] = useState<string>()
+	const [userLastName, setUserLastName] = useState<string>()
+	const [userProgram, setUserProgram] = useState<string>()
 
-  const [screenWidth, setScreenWidth] = useState<number>();
+	const [screenWidth, setScreenWidth] = useState<number>()
 
-  useEffect(() => {
-    const getData = async () => {
-      const data = await getUserData();
-      setUserFirstName(data[0]["first_name"]);
-      setUserLastName(data[0]["last_name"]);
-      setUserProgram(data[0]["program"]);
-    };
-    setScreenWidth(window.screen.width);
-    getData();
-  }, []);
+	useEffect(() => {
+		const getData = async () => {
+			const data = await getUserData()
+			setUserFirstName(data[0]['first_name'])
+			setUserLastName(data[0]['last_name'])
+			setUserProgram(data[0]['program'])
+		}
+		setScreenWidth(window.screen.width)
+		getData()
+	}, [])
 
-  const handleProfileTabClick = () => {
-    setProfileTabSelected(true);
-    setMyScheduleTabSelected(false);
-    setEditUserDetailsTabSelected(false);
-  };
+	const handleProfileTabClick = () => {
+		setProfileTabSelected(true)
+		setMyScheduleTabSelected(false)
+		setEditUserDetailsTabSelected(false)
+	}
 
-  const handleMyScheduleTabClick = () => {
-    setProfileTabSelected(false);
-    setMyScheduleTabSelected(true);
-    setEditUserDetailsTabSelected(false);
-  };
+	const handleMyScheduleTabClick = () => {
+		setProfileTabSelected(false)
+		setMyScheduleTabSelected(true)
+		setEditUserDetailsTabSelected(false)
+	}
 
-  const handleEditUserDetailsTabSelected = () => {
-    setMyScheduleTabSelected(false);
-    setEditUserDetailsTabSelected(true);
-    setProfileTabSelected(false);
-  };
+	const handleEditUserDetailsTabSelected = () => {
+		setMyScheduleTabSelected(false)
+		setEditUserDetailsTabSelected(true)
+		setProfileTabSelected(false)
+	}
 
   return (
     <>
@@ -122,4 +118,4 @@ const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
   );
 };
 
-export default PageContent;
+export default PageContent

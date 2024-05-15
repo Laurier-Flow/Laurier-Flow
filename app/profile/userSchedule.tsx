@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import { useEffect, useState } from "react";
 import DaysDisplay from "../course/DaysDisplay";
@@ -25,13 +25,13 @@ interface UserClasses {
 }
 
 interface UserTerm {
-  term: string;
-  classes: UserClasses[];
+	term: string
+	classes: UserClasses[]
 }
 
 interface SortingInterface {
-  term: string;
-  id: number;
+	term: string
+	id: number
 }
 
 const Schedule = () => {
@@ -60,7 +60,7 @@ const Schedule = () => {
   const [userPreExistingSchedule, setUserPreExistingSchedule] =
     useState<UserTerm[]>();
 
-  const [pageLoaded, setPageLoaded] = useState<boolean>(false);
+	const [pageLoaded, setPageLoaded] = useState<boolean>(false)
 
   const [update, setUpdate] = useState<boolean>(false);
   const [addCourse, setAddCourse] = useState<boolean>(false);
@@ -77,8 +77,8 @@ const Schedule = () => {
   const [editClassDatesDisplay, setEditClassDatesDisplay] =
     useState<days>(initialDateStatus);
 
-  const [error, setError] = useState<boolean>(false);
-  const [errorMsg, setErrorMsg] = useState<string>();
+	const [error, setError] = useState<boolean>(false)
+	const [errorMsg, setErrorMsg] = useState<string>()
 
   const [newTermName, setNewTermName] = useState<string>();
 
@@ -89,26 +89,26 @@ const Schedule = () => {
         var determineTermOrder: SortingInterface[] = [];
         const mapOfClasses: Map<number, UserClasses> = new Map();
 
-        data.forEach((course: UserClasses) => {
-          const sInt: SortingInterface = {
-            term: course.term,
-            id: course.id,
-          };
-          determineTermOrder.push(sInt);
-          mapOfClasses.set(course.id, course);
-        });
+				data.forEach((course: UserClasses) => {
+					const sInt: SortingInterface = {
+						term: course.term,
+						id: course.id
+					}
+					determineTermOrder.push(sInt)
+					mapOfClasses.set(course.id, course)
+				})
 
-        // Sort the classes in lexicographical order so they appear in the proper term by term order
-        determineTermOrder = determineTermOrder.sort(
-          (a: SortingInterface, b: SortingInterface) =>
-            a.term.localeCompare(b.term)
-        );
+				// Sort the classes in lexicographical order so they appear in the proper term by term order
+				determineTermOrder = determineTermOrder.sort(
+					(a: SortingInterface, b: SortingInterface) =>
+						a.term.localeCompare(b.term)
+				)
 
         const userTerms: UserTerm[] = [];
 
-        // Set initial variables
-        var classesInTerm: UserClasses[] = [];
-        var currentTerm = determineTermOrder[0].term;
+				// Set initial variables
+				var classesInTerm: UserClasses[] = []
+				var currentTerm = determineTermOrder[0].term
 
         // Looping through all of the user's classes
         determineTermOrder.forEach((course: SortingInterface) => {
@@ -458,10 +458,10 @@ const Schedule = () => {
     setEditClass(curClass);
   };
 
-  const handleCancelEditSchedule = () => {
-    setError(false);
-    setEditSchedule(false);
-  };
+	const handleCancelEditSchedule = () => {
+		setError(false)
+		setEditSchedule(false)
+	}
 
   const handleStartEditSchedule = (userClass: UserClasses) => {
     var editDays: days = {
@@ -552,6 +552,12 @@ const Schedule = () => {
         );
         setNewTermName("");
       }
+    }
+    else {
+        setError(true);
+        setErrorMsg(
+            "Please ensure all fields (aside from Grade if not necessary) are filled out when adding a course to your schedule"
+          );
     }
   };
   return (
