@@ -1,58 +1,56 @@
-import { handleResetPassword } from '@/utils/supabase/authActions';
-import { useRef, useEffect, useState } from 'react';
-import { X } from 'lucide-react';
-import Link from 'next/link';
-
+import { handleResetPassword } from '@/utils/supabase/authActions'
+import { useRef, useEffect, useState } from 'react'
+import { X } from 'lucide-react'
+import Link from 'next/link'
 
 export default function PasswordPopup({
-    searchParams,
-    onClose,
-    toggleLogIn,
-  }: {
-    searchParams: { message: string };
-    onClose: () => void;
-    toggleLogIn: () => void;
-  }): React.ReactElement {
-        const [resetError, setResetError] = useState<String>('')
-        const [successMessage, setSuccessMessage] = useState<String>('')
-  
-        const popupRef = useRef<HTMLDivElement | null>(null);
-  
-        const handleClickOutside = (event: MouseEvent) => {
-            if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-                onClose();
-                document.body.classList.remove('overflow-hidden')
-            }
-        };
-  
-      useEffect(() => {
-          const handleOutsideClick = (event: MouseEvent) => {
-            handleClickOutside(event);
-          };
-      
-          document.addEventListener('mousedown', handleOutsideClick);
-      
-          return () => {
-            document.removeEventListener('mousedown', handleOutsideClick);
-          };
-      }, [handleClickOutside]);
-  
-  
-    const handleReset = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+	searchParams,
+	onClose,
+	toggleLogIn
+}: {
+	searchParams: { message: string }
+	onClose: () => void
+	toggleLogIn: () => void
+}): React.ReactElement {
+	const [resetError, setResetError] = useState<String>('')
+	const [successMessage, setSuccessMessage] = useState<String>('')
 
-        const formData = new FormData(event.currentTarget);
+	const popupRef = useRef<HTMLDivElement | null>(null)
 
-        const result = await handleResetPassword(window.location.origin, formData);
+	const handleClickOutside = (event: MouseEvent) => {
+		if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+			onClose()
+			document.body.classList.remove('overflow-hidden')
+		}
+	}
 
-        if (result.success) {
-            setResetError('');
-            setSuccessMessage(result.message);
-        } else {
-            setSuccessMessage('');
-            setResetError(result.message);
-        }
-    };
+	useEffect(() => {
+		const handleOutsideClick = (event: MouseEvent) => {
+			handleClickOutside(event)
+		}
+
+		document.addEventListener('mousedown', handleOutsideClick)
+
+		return () => {
+			document.removeEventListener('mousedown', handleOutsideClick)
+		}
+	}, [handleClickOutside])
+
+	const handleReset = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
+
+		const formData = new FormData(event.currentTarget)
+
+		const result = await handleResetPassword(window.location.origin, formData)
+
+		if (result.success) {
+			setResetError('')
+			setSuccessMessage(result.message)
+		} else {
+			setSuccessMessage('')
+			setResetError(result.message)
+		}
+	}
 
     const handleLogInClick = () => {
         toggleLogIn();
@@ -83,25 +81,36 @@ export default function PasswordPopup({
                       required
                     />
 
-                  <button 
-                    type="submit"
-                    className="mb-2 bg-secondary rounded-md px-4 py-2 text-foreground"
-                  >
-                    Reset Password
-                  </button>
+				<button
+					type='submit'
+					className='mb-2 rounded-md bg-secondary px-4 py-2 text-foreground'
+				>
+					Reset Password
+				</button>
 
-                  <div className="flex justify-center text-gray-500 text-sm mb-4">
-                    <h1>Read our <Link href="/privacy" className='underline underline-offset-2'>Privacy Policy</Link></h1>
-                  </div>
+				<div className='mb-4 flex justify-center text-sm text-gray-500'>
+					<h1>
+						Read our{' '}
+						<Link href='/privacy' className='underline underline-offset-2'>
+							Privacy Policy
+						</Link>
+					</h1>
+				</div>
 
-                  <hr className="mb-6 border-gray-300 dark:border-gray-800"></hr>
-                  
-                  <div className="flex justify-center text-foreground">
-                    <h1>Back to <span onClick={handleLogInClick} className="cursor-pointer underline underline-offset-2 decoration-1">Log In</span></h1>
-                  </div>
-              </form>
-          </div>
-      )
-  }
-  
-  
+				<hr className='mb-6 border-gray-300 dark:border-gray-800'></hr>
+
+				<div className='flex justify-center text-foreground'>
+					<h1>
+						Back to{' '}
+						<span
+							onClick={handleLogInClick}
+							className='cursor-pointer underline decoration-1 underline-offset-2'
+						>
+							Log In
+						</span>
+					</h1>
+				</div>
+			</form>
+		</div>
+	)
+}

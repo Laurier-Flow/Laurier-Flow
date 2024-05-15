@@ -1,63 +1,63 @@
-"use client";
+'use client'
 
-import { Suspense, useEffect, useState } from "react";
-import UserDetails from "./user-details";
+import { Suspense, useEffect, useState } from 'react'
+import UserDetails from './user-details'
 import {
   getUserData,
   updateUserFirstName,
   updateUserLastName,
   updateUserProgram,
   deleteUserAccount,
-  deleteSpecificClassFromSchedule,
-  addClassesToSchedule,
 } from "./user-data-functions";
-import { getUserReviewsInterface } from "./UserReviews";
 import { User } from "@supabase/supabase-js";
-import Schedule from "./user-schedule";
+import Schedule from "./userSchedule";
 
 interface PageContentProps {
-  userReviews: any;
-  user: User;
+	userReviews: any
+	user: User
 }
 
 const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
-  const [profileTabSelected, setProfileTabSelected] = useState<boolean>(true);
-  const [myScheduleTabSelected, setMyScheduleTabSelected] =
-    useState<boolean>(false);
-  const [editUserDetailsTabSelected, setEditUserDetailsTabSelected] =
-    useState<boolean>(false);
+	const [profileTabSelected, setProfileTabSelected] = useState<boolean>(true)
+	const [myScheduleTabSelected, setMyScheduleTabSelected] =
+		useState<boolean>(false)
+	const [editUserDetailsTabSelected, setEditUserDetailsTabSelected] =
+		useState<boolean>(false)
 
-  const [userFirstName, setUserFirstName] = useState<string>();
-  const [userLastName, setUserLastName] = useState<string>();
-  const [userProgram, setUserProgram] = useState<string>();
+	const [userFirstName, setUserFirstName] = useState<string>()
+	const [userLastName, setUserLastName] = useState<string>()
+	const [userProgram, setUserProgram] = useState<string>()
 
-  useEffect(() => {
-    const getData = async () => {
-      const data = await getUserData();
-      setUserFirstName(data[0]["first_name"]);
-      setUserLastName(data[0]["last_name"]);
-      setUserProgram(data[0]["program"]);
-    };
-    getData();
-  }, []);
+	const [screenWidth, setScreenWidth] = useState<number>()
 
-  const handleProfileTabClick = () => {
-    setProfileTabSelected(true);
-    setMyScheduleTabSelected(false);
-    setEditUserDetailsTabSelected(false);
-  };
+	useEffect(() => {
+		const getData = async () => {
+			const data = await getUserData()
+			setUserFirstName(data[0]['first_name'])
+			setUserLastName(data[0]['last_name'])
+			setUserProgram(data[0]['program'])
+		}
+		setScreenWidth(window.screen.width)
+		getData()
+	}, [])
 
-  const handleMyScheduleTabClick = () => {
-    setProfileTabSelected(false);
-    setMyScheduleTabSelected(true);
-    setEditUserDetailsTabSelected(false);
-  };
+	const handleProfileTabClick = () => {
+		setProfileTabSelected(true)
+		setMyScheduleTabSelected(false)
+		setEditUserDetailsTabSelected(false)
+	}
 
-  const handleEditUserDetailsTabSelected = () => {
-    setMyScheduleTabSelected(false);
-    setEditUserDetailsTabSelected(true);
-    setProfileTabSelected(false);
-  };
+	const handleMyScheduleTabClick = () => {
+		setProfileTabSelected(false)
+		setMyScheduleTabSelected(true)
+		setEditUserDetailsTabSelected(false)
+	}
+
+	const handleEditUserDetailsTabSelected = () => {
+		setMyScheduleTabSelected(false)
+		setEditUserDetailsTabSelected(true)
+		setProfileTabSelected(false)
+	}
 
   return (
     <>
@@ -69,20 +69,21 @@ const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
               <span className="text-yellow-200">{userLastName}</span>
             </h1>
             <h4 className="mb-2 text-lg font-bold text-white italic">
-              <span className="text-purple-200">Stud</span>
-              <span className="text-yellow-200">ying</span> - {userProgram}
+              {userProgram}
             </h4>
           </div>
         </div>
       </div>
       <ul
-        style={{ width: "50%" }}
-        className="mt-5 mb-5 text-md text-center text-gray-500 rounded-lg shadow sm:flex justify-center">
+        style={{
+          width: "50vw",
+        }}
+        className="mt-5 mb-5 text-center text-base text-gray-500 rounded-lg shadow flex justify-center">
         <li className="w-full focus-within:z-10">
           <a
             onClick={handleProfileTabClick}
             className={`inline-block w-full p-4 ${profileTabSelected ? `bg-gray-300 dark:bg-gray-700 dark:text-white` : `bg-white dark:bg-gray-100 dark:text-black`} border-r border-gray-200 rounded-l-lg focus:ring-4 focus:ring-blue-300 active focus:outline-none`}>
-            Profile
+            My Profile
           </a>
         </li>
         <li className="w-full focus-within:z-10">
@@ -102,12 +103,7 @@ const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
       </ul>
 
       {profileTabSelected ? userReviews : null}
-      {myScheduleTabSelected ? (
-        <Schedule
-          deleteClassFunction={deleteSpecificClassFromSchedule}
-          addClassFunction={addClassesToSchedule}
-        />
-      ) : null}
+      {myScheduleTabSelected ? <Schedule /> : null}
       {editUserDetailsTabSelected ? (
         <UserDetails
           getUserDetailsFunction={getUserData}
@@ -122,4 +118,4 @@ const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
   );
 };
 
-export default PageContent;
+export default PageContent

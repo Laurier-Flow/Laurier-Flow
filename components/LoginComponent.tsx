@@ -13,8 +13,8 @@ export default function LoginComponent({ user }: { user: User | null }) {
     const [checkInboxMessage, setCheckInboxMessage] = useState(false)
     const [selectedProgram, setSelectedProgram] = useState('');
 
-    const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+	const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
 
         const formData = new FormData(event.currentTarget);
 
@@ -27,15 +27,14 @@ export default function LoginComponent({ user }: { user: User | null }) {
         }
     };
 
-    const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+	const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
 
-        const formData = new FormData(event.currentTarget);
+		const formData = new FormData(event.currentTarget)
 
-        
-        const emailRegex = /(@mylaurier\.ca|@wlu\.ca)$/i;
+		const emailRegex = /(@mylaurier\.ca|@wlu\.ca)$/i
 
-        const email = formData.get("email")?.toString()
+		const email = formData.get('email')?.toString()
 
         if (email && !emailRegex.test(email)) {
             setError('Email needs to be of type mylaurier.ca or wlu.ca')
@@ -242,5 +241,5 @@ export default function LoginComponent({ user }: { user: User | null }) {
 }
 
 function setSelectedProgram(value: string) {
-    throw new Error("Function not implemented.");
+	throw new Error('Function not implemented.')
 }
