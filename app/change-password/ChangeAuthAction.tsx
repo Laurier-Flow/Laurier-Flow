@@ -14,8 +14,12 @@ export const handleChangePassword = async (newPassword: string) => {
     })
 
     if (error) {
+        if (error.message.startsWith("Password should contain at least one")) {
+            return { success: false, message: "Password should contain: 1 upper-case character, 1 lower-case character, a number, a special character"}
+        }
         return { success: false, message: error.message}
     } else {
-        return { success: true, message: ''}
+        redirect('/');
+        return { success: true, message: ""}
     }
 };
