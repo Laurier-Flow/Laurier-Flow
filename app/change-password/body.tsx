@@ -3,7 +3,6 @@
 import { BackgroundGradientAnimation } from '@/components/background-gradient-animation'
 import { handleChangePassword } from './ChangeAuthAction'
 import { useState } from 'react'
-import { redirect } from 'next/navigation'
 import { Eye, EyeOff } from 'lucide-react'
 
 interface ToggleVisibilityButtonProps {

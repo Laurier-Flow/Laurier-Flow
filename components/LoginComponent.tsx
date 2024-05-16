@@ -4,14 +4,84 @@ import { signIn, signUp, handleResetPassword } from "@/utils/supabase/authAction
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useState } from "react";
-import { programOptions } from "./SignUpPopup";
+import { programOptions } from "@/utils/programOptions";
+import { Eye, EyeOff } from 'lucide-react'
+import Select, { ActionMeta, StylesConfig, GroupBase } from 'react-select'
+import ValueType from "react-select";
+
+const customStyles: StylesConfig<{ value: string; label: string; }, boolean, GroupBase<{ value: string; label: string; }>>  = {
+    control: (provided) => ({
+        ...provided,
+        backgroundColor: '#111827',
+        borderColor: '#1e293b', 
+        borderRadius: '1rem',
+        minHeight: '2.75rem',
+        color: '#cbd5e0',
+        '&:hover': {
+            borderColor: '#2d3748',
+        },
+    }),
+    placeholder: (provided) => ({
+        ...provided,
+        color: '#a0aec0',
+    }),
+    singleValue: (provided) => ({
+        ...provided,
+        color: '#cbd5e0',
+    }),
+    menu: (provided) => ({
+        ...provided,
+        backgroundColor: '#2d3748',
+        color: '#cbd5e0',
+    }),
+    option: (provided, state) => ({
+        ...provided,
+        backgroundColor: state.isSelected ? '#4a5568' : 'transparent',
+        color: '#cbd5e0',
+        '&:hover': {
+            backgroundColor: '#2d3748',
+        },
+    }),
+    input: (provided) => ({
+        ...provided,
+        color: 'white',
+        "input:focus": {
+            boxShadow: "none",
+            },
+    }),
+};
+
+interface ToggleVisibilityButtonProps {
+	visible: boolean
+	toggleVisibility: () => void
+	className?: string
+}
+
+const ToggleVisibilityButton: React.FC<ToggleVisibilityButtonProps> = ({
+	visible,
+	toggleVisibility,
+	className
+}) => {
+	return (
+		<button
+			onClick={toggleVisibility}
+            type="button"
+			className={`focus:outline-none ${className}`}
+		>
+			{visible ? <EyeOff size={20} /> : <Eye size={20} />}
+		</button>
+	)
+}
 
 export default function LoginComponent({ user }: { user: User | null }) {
     const [mode, setMode] = useState<'login' | 'signup' | 'forgot'>('login');
     const [error, setError] = useState<string>('');
     const [confirmMessage, setConfirmMessage] = useState(false)
     const [checkInboxMessage, setCheckInboxMessage] = useState(false)
-    const [selectedProgram, setSelectedProgram] = useState('');
+    // @ts-ignore
+    const [selectedProgram, setSelectedProgram] = useState<ValueType<{ value: string; label: string; }>>(null);
+    const [showLoginPassword, setShowLoginPassword] = useState<boolean>(false)
+    const [showSignupPassword, setShowSignupPassword] = useState<boolean>(false)
 
 	const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
@@ -64,9 +134,10 @@ export default function LoginComponent({ user }: { user: User | null }) {
             setCheckInboxMessage(false)
         }
     };
-
-    const handleProgramChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedProgram(event.target.value);
+    // @ts-ignore
+    const handleProgramChange = (newValue: ValueType<{ value: string; label: string; }>, actionMeta: ActionMeta<{ value: string; label: string; }>) => {
+        console.log(newValue)
+        setSelectedProgram(newValue);
     };
 
     return (
@@ -90,13 +161,22 @@ export default function LoginComponent({ user }: { user: User | null }) {
                     required
                 />
 
-                <input
-                    className="rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400"
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    required
-                />
+                <div className='relative flex'>
+                    <input
+                        className='flex-1 rounded-md border-neutral-300 bg-stone-200 px-4 py-2 placeholder-gray-400 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-gray-900'
+                        type={showLoginPassword ? 'text' : 'password'}
+                        placeholder='Password'
+                        name="password"
+                        style={{ paddingRight: '2rem' }}
+                        required
+                    />
+                    <ToggleVisibilityButton
+                        visible={showLoginPassword}
+                        toggleVisibility={() => setShowLoginPassword(!showLoginPassword)}
+                        className='absolute inset-y-0 right-0 flex items-center pr-3'
+                    />
+                </div>
+
                 <div className="flex justify-end text-foreground cursor-pointer">
                     <h1><span onClick={() => { setMode('forgot'); setError(''); setCheckInboxMessage(false) }} className="cursor-pointer underline-offset-2 decoration-1">Forgot password?</span></h1>
                 </div>
@@ -145,22 +225,17 @@ export default function LoginComponent({ user }: { user: User | null }) {
                         required
                     />
                 </div>
-                <select
-                    className="mb-2 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 text-stone-600 dark:text-gray-400 placeholder-stone-400 dark:placeholder-gray-400"
+                <Select
+                    className="mb-2"
+                    styles={customStyles}
                     name="program"
                     value={selectedProgram}
                     onChange={handleProgramChange}
+                    options={programOptions.map((program) => ({ value: program, label: program }))}
+                    placeholder="Select your program"
+                    isClearable
                     required
-                >
-                    <option value="" disabled>
-                        Select your program
-                    </option>
-                    {programOptions.map((program) => (
-                        <option className="" key={program} value={program}>
-                            {program}
-                        </option>
-                    ))}
-                </select>
+                />
                 <input
                     className="mb-2 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
                     name="email"
@@ -168,13 +243,22 @@ export default function LoginComponent({ user }: { user: User | null }) {
                     required
                 />
 
-                <input
-                    className="mb-4 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    required
-                />
+                <div className='relative flex'>
+                    <input
+                        className='mb-4 flex-1 rounded-md border-neutral-300 bg-stone-200 px-4 py-2 placeholder-gray-400 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-gray-900'
+                        type={showSignupPassword ? 'text' : 'password'}
+                        placeholder='Password'
+                        name="password"
+                        style={{ paddingRight: '2rem' }}
+                        required
+                    />
+                    <ToggleVisibilityButton
+                        visible={showSignupPassword}
+                        toggleVisibility={() => setShowSignupPassword(!showSignupPassword)}
+                        className='mb-4 absolute inset-y-0 right-0 flex items-center pr-3'
+                    />
+                </div>
+
                 <button
                     formAction={signUp}
                     className="mb-2 bg-secondary rounded-md px-4 py-2 text-foreground"

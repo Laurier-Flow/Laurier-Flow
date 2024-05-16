@@ -3,12 +3,30 @@ import React, { useRef, useEffect, useState } from 'react'
 import { signUp } from '@/utils/supabase/authActions'
 import Link from 'next/link'
 import { X } from 'lucide-react'
+import { programOptions } from "@/utils/programOptions";
+import { Eye, EyeOff } from 'lucide-react'
 
-export const programOptions = [
-	'Computer Science',
-	'Engineering',
-	'Business Administration'
-]
+interface ToggleVisibilityButtonProps {
+	visible: boolean
+	toggleVisibility: () => void
+	className?: string
+}
+
+const ToggleVisibilityButton: React.FC<ToggleVisibilityButtonProps> = ({
+	visible,
+	toggleVisibility,
+	className
+}) => {
+	return (
+		<button
+			onClick={toggleVisibility}
+            type="button"
+			className={`focus:outline-none ${className}`}
+		>
+			{visible ? <EyeOff size={20} /> : <Eye size={20} />}
+		</button>
+	)
+}
 
 export default function SignUpPopup({
 	searchParams,
@@ -22,6 +40,7 @@ export default function SignUpPopup({
 	const [selectedProgram, setSelectedProgram] = useState('')
 	const [signUpError, setSignUpError] = useState<string>('')
 	const [confirmMessage, setConfirmMessage] = useState(false)
+	const [showPassword, setShowPassword] = useState<boolean>(false)
 
 	const popupRef = useRef<HTMLDivElement | null>(null)
 
@@ -137,14 +156,21 @@ export default function SignUpPopup({
 					placeholder='Email'
 					required
 				/>
-
-				<input
-					className='mb-4 rounded-md border-neutral-300 bg-stone-200 px-4 py-2 placeholder-stone-400 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-gray-900 dark:placeholder-gray-400'
-					type='password'
-					name='password'
-					placeholder='Password'
-					required
-				/>
+				<div className='relative flex'>
+                    <input
+                        className='flex-1 rounded-md border-neutral-300 bg-stone-200 px-4 py-2 placeholder-gray-400 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-gray-900'
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder='Password'
+                        name="password"
+                        style={{ paddingRight: '2rem' }}
+                        required
+                    />
+                    <ToggleVisibilityButton
+                        visible={showPassword}
+                        toggleVisibility={() => setShowPassword(!showPassword)}
+                        className='absolute inset-y-0 right-0 flex items-center pr-3'
+                    />
+                </div>
 				<button
 					formAction={signUp}
 					className='mb-2 rounded-md bg-secondary px-4 py-2 text-foreground'
