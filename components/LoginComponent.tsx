@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { programOptions } from "@/utils/programOptions";
 import { Eye, EyeOff } from 'lucide-react'
-import Select, { ValueType, ActionMeta, StylesConfig, GroupBase } from 'react-select'
+import Select, { ActionMeta, StylesConfig, GroupBase } from 'react-select'
 
 const customStyles: StylesConfig<{ value: string; label: string; }, boolean, GroupBase<{ value: string; label: string; }>>  = {
     control: (provided) => ({
