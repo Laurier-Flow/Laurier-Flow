@@ -59,7 +59,7 @@ export default async function Index(): Promise<React.ReactElement> {
 	]
 
 	return (
-		<>
+		<div className='flex flex-col w-full'>
 			<BackgroundGradientAnimation
 				gradientBackgroundStart='var(--gradient-start)'
 				gradientBackgroundEnd='var(--gradient-end)'
@@ -70,6 +70,8 @@ export default async function Index(): Promise<React.ReactElement> {
 				fifthColor='var(--bubble)'
 				pointerColor='var(--bubble)'
 			>
+			</BackgroundGradientAnimation>
+			<div className='h-screen'>
 				<HomeHeader user={user} />
 				<div className='absolute inset-0 z-[100] mx-auto flex w-full max-w-6xl flex-row items-center justify-center gap-12 p-6'>
 					<div className='flex w-full flex-col lg:w-2/3'>
@@ -91,8 +93,8 @@ export default async function Index(): Promise<React.ReactElement> {
 					</div>
 					<LoginComponent user={user} />
 				</div>
-			</BackgroundGradientAnimation>
+			</div>
 			<HomeFooter />
-		</>
+		</div>
 	)
 }
