@@ -25,13 +25,6 @@ export default function Body({
 	const searchParams = useSearchParams()
 	const subject = searchParams.get('subject') || 'all'
 
-	const [subjectState, setSubjectState] = useState(subject)
-
-	useEffect(() => {
-		setSubjectState(subject)
-	}, [subject])
-
-
 	const itemsPerPage = 50
 	const [visibleCourseCount, setVisibleCourseCount] = useState(itemsPerPage)
 	const [visibleInstructorCount, setVisibleInstructorCount] =
@@ -323,10 +316,10 @@ export default function Body({
 
 			if (courseFilters.thisTerm && !course.isOfferedThisTerm) return false
 			if (courseFilters.afterTerm && !course.isOfferedNextTerm) return false
-			if (subjectState !== 'all') {
-				let codeLength = subjectState.length
+			if (subject !== 'all') {
+				let codeLength = subject.length
 				let extractedCode = course.course_code.substring(0, codeLength)
-				if (extractedCode !== subjectState.toUpperCase()) return false
+				if (extractedCode !== subject.toUpperCase()) return false
 			}
 
 			return true
@@ -334,17 +327,17 @@ export default function Body({
 
 		setFilteredCourses(filtered)
 		handleCourseResort(courseSortField, filtered)
-	}, [courseFilters, subjectState])
+	}, [courseFilters, subject])
 
 	useEffect(() => {
 		const filtered = instructors.filter((instructor) => {
 			if (instructor.total_reviews < instructorFilters.minRatings) return false
-			if (subjectState !== 'all') {
-				let codeLength = subjectState.length
+			if (subject !== 'all') {
+				let codeLength = subject.length
 				let codes = []
 				instructor.coursesTaught.forEach((course: string) => {
 					let extractedCode = course.substring(0, codeLength)
-					if (extractedCode == subjectState) codes.push(extractedCode)
+					if (extractedCode == subject) codes.push(extractedCode)
 				})
 				if (codes.length === 0) return false
 			}
@@ -354,7 +347,7 @@ export default function Body({
 
 		setFilteredInstructors(filtered)
 		handleInstructorResort(instructorSortField, filtered)
-	}, [instructorFilters, subjectState])
+	}, [instructorFilters, subject])
 
 	const handleCurrentTermChange = () => {
 		setCourseFilters((prevFilters) => ({
@@ -375,7 +368,7 @@ export default function Body({
 			<div className="flex min-w-full flex-col bg-[url('/banner-sm-light.jpg')] p-4 dark:bg-[url('/banner-sm.jpg')] md:flex-row md:justify-center md:bg-[url('/banner-md-light.jpg')] md:dark:bg-[url('/banner-md.jpg')] lg:bg-[url('/banner-light.jpg')] lg:dark:bg-[url('/banner.jpg')]">
 				<div className='w-f flex max-w-6xl flex-1 flex-row justify-between pt-20'>
 					<div className='flex flex-1 flex-col justify-end pl-4'>
-						<h1 className='mb-2 text-2xl text-3xl font-bold text-white md:text-4xl'>{`Showing ${subjectState} courses and professors`}</h1>
+						<h1 className='mb-2 text-2xl text-3xl font-bold text-white md:text-4xl'>{`Showing ${subject} courses and professors`}</h1>
 					</div>
 				</div>
 			</div>
