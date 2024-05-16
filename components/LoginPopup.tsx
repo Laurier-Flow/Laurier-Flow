@@ -3,6 +3,29 @@ import Link from 'next/link'
 import { signIn } from '@/utils/supabase/authActions'
 import { useRef, useEffect, useState } from 'react'
 import { X } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
+
+interface ToggleVisibilityButtonProps {
+	visible: boolean
+	toggleVisibility: () => void
+	className?: string
+}
+
+const ToggleVisibilityButton: React.FC<ToggleVisibilityButtonProps> = ({
+	visible,
+	toggleVisibility,
+	className
+}) => {
+	return (
+		<button
+			onClick={toggleVisibility}
+            type="button"
+			className={`focus:outline-none ${className}`}
+		>
+			{visible ? <EyeOff size={20} /> : <Eye size={20} />}
+		</button>
+	)
+}
 
 export default function LoginPopup({
 	searchParams,
@@ -17,6 +40,7 @@ export default function LoginPopup({
 }): React.ReactElement {
 	const [loginError, setLoginError] = useState<string>('')
 	const [isVisible, setIsVisible] = useState(false)
+	const [showPassword, setShowPassword] = useState<boolean>(false)
 
 	useEffect(() => {
 		setIsVisible(true)
@@ -92,14 +116,21 @@ export default function LoginPopup({
 					placeholder='Laurier Email'
 					required
 				/>
-
-				<input
-					className='rounded-md border-neutral-300 bg-stone-200 px-4 py-2 placeholder-gray-400 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-gray-900'
-					type='password'
-					name='password'
-					placeholder='Password'
-					required
-				/>
+				<div className='relative flex'>
+                    <input
+                        className='flex-1 rounded-md border-neutral-300 bg-stone-200 px-4 py-2 placeholder-gray-400 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-gray-900'
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder='Password'
+                        name="password"
+                        style={{ paddingRight: '2rem' }}
+                        required
+                    />
+                    <ToggleVisibilityButton
+                        visible={showPassword}
+                        toggleVisibility={() => setShowPassword(!showPassword)}
+                        className='absolute inset-y-0 right-0 flex items-center pr-3'
+                    />
+                </div>
 				<div
 					onClick={handlePasswordResetClick}
 					className='flex cursor-pointer justify-end text-foreground'

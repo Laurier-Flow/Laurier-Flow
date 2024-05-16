@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
-import { programOptions } from '@/components/SignUpPopup'
+import { programOptions } from '@/utils/programOptions'
 import { useManageBodyScroll } from '@/components/Header'
 
 interface UserDetailsProps {
