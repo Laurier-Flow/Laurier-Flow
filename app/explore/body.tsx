@@ -32,20 +32,6 @@ export default function Body({
 	}, [subject])
 
 
-
-	// const createSubjectFilter = useCallback(
-	// 	() => {
-	// 		const subject = searchParams.get('subject')
-	// 		if (subject) {
-	// 			return subject
-	// 		} else {
-	// 			return 'all'
-	// 		}
-	// 	}, 
-	// [searchParams])
-
-	// const subject = createSubjectFilter()
-
 	const itemsPerPage = 50
 	const [visibleCourseCount, setVisibleCourseCount] = useState(itemsPerPage)
 	const [visibleInstructorCount, setVisibleInstructorCount] =
