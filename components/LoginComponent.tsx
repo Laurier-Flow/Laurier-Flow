@@ -7,6 +7,7 @@ import { useState } from "react";
 import { programOptions } from "@/utils/programOptions";
 import { Eye, EyeOff } from 'lucide-react'
 import Select, { ActionMeta, StylesConfig, GroupBase } from 'react-select'
+import ValueType from "react-select";
 
 const customStyles: StylesConfig<{ value: string; label: string; }, boolean, GroupBase<{ value: string; label: string; }>>  = {
     control: (provided) => ({
@@ -77,6 +78,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
     const [error, setError] = useState<string>('');
     const [confirmMessage, setConfirmMessage] = useState(false)
     const [checkInboxMessage, setCheckInboxMessage] = useState(false)
+    // @ts-ignore
     const [selectedProgram, setSelectedProgram] = useState<ValueType<{ value: string; label: string; }>>(null);
     const [showLoginPassword, setShowLoginPassword] = useState<boolean>(false)
     const [showSignupPassword, setShowSignupPassword] = useState<boolean>(false)
@@ -132,8 +134,9 @@ export default function LoginComponent({ user }: { user: User | null }) {
             setCheckInboxMessage(false)
         }
     };
-
+    // @ts-ignore
     const handleProgramChange = (newValue: ValueType<{ value: string; label: string; }>, actionMeta: ActionMeta<{ value: string; label: string; }>) => {
+        console.log(newValue)
         setSelectedProgram(newValue);
     };
 
