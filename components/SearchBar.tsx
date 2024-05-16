@@ -263,7 +263,7 @@ export default function SearchBar() {
 				}
 			/>
 			{isFocused && (
-				<div className={`rounded-t-transparent divide-{secondary} ${window.location.pathname === '/' ? 'relative' : 'absolute'} z-[100] max-h-screen w-full flex-row divide-y overflow-y-auto rounded-b-md border-[2px] border-t-0 border-secondary bg-background text-base text-foreground`}>
+				<div className='rounded-t-transparent divide-{secondary} z-[100] max-h-screen w-full flex-row divide-y overflow-y-auto rounded-b-md border-[2px] border-t-0 border-secondary bg-background text-base text-foreground'>
 					{courseResults.map((course) => (
 						<CourseResultListItem params={course} />
 					))}
