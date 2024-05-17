@@ -33,7 +33,7 @@ export function ComboboxDemo({value, setValue}: {value: string, setValue: React.
           aria-expanded={open}
           className="w-full justify-between overflow-hidden"
         >
-          <span className="truncate">
+          <span className="truncate font-normal text-neutral-300">
             {value
               ? programOptions.find((program) => program.value === value)?.label
               : "Select program..."}
