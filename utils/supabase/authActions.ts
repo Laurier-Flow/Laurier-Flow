@@ -23,6 +23,8 @@ export const signIn = async (formData: FormData) => {
 }
 
 export const signUp = async (formData: FormData) => {
+	console.log(formData)
+
 	const origin = headers().get('origin')
 	const email = formData.get('email') as string
 	const password = formData.get('password') as string

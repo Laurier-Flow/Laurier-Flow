@@ -6,50 +6,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { programOptions } from "@/utils/programOptions";
 import { Eye, EyeOff } from 'lucide-react'
-import Select, { ActionMeta, StylesConfig, GroupBase } from 'react-select'
-import ValueType from "react-select";
-
-const customStyles: StylesConfig<{ value: string; label: string; }, boolean, GroupBase<{ value: string; label: string; }>>  = {
-    control: (provided) => ({
-        ...provided,
-        backgroundColor: '#111827',
-        borderColor: '#1e293b', 
-        borderRadius: '1rem',
-        minHeight: '2.75rem',
-        color: '#cbd5e0',
-        '&:hover': {
-            borderColor: '#2d3748',
-        },
-    }),
-    placeholder: (provided) => ({
-        ...provided,
-        color: '#a0aec0',
-    }),
-    singleValue: (provided) => ({
-        ...provided,
-        color: '#cbd5e0',
-    }),
-    menu: (provided) => ({
-        ...provided,
-        backgroundColor: '#2d3748',
-        color: '#cbd5e0',
-    }),
-    option: (provided, state) => ({
-        ...provided,
-        backgroundColor: state.isSelected ? '#4a5568' : 'transparent',
-        color: '#cbd5e0',
-        '&:hover': {
-            backgroundColor: '#2d3748',
-        },
-    }),
-    input: (provided) => ({
-        ...provided,
-        color: 'white',
-        "input:focus": {
-            boxShadow: "none",
-            },
-    }),
-};
+import { ComboboxDemo } from "./Combobox";
+import React from "react";
 
 interface ToggleVisibilityButtonProps {
 	visible: boolean
@@ -78,10 +36,9 @@ export default function LoginComponent({ user }: { user: User | null }) {
     const [error, setError] = useState<string>('');
     const [confirmMessage, setConfirmMessage] = useState(false)
     const [checkInboxMessage, setCheckInboxMessage] = useState(false)
-    // @ts-ignore
-    const [selectedProgram, setSelectedProgram] = useState<ValueType<{ value: string; label: string; }>>(null);
     const [showLoginPassword, setShowLoginPassword] = useState<boolean>(false)
     const [showSignupPassword, setShowSignupPassword] = useState<boolean>(false)
+    const [value, setValue] = React.useState("")
 
 	const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
@@ -133,11 +90,6 @@ export default function LoginComponent({ user }: { user: User | null }) {
             setError(result.message)
             setCheckInboxMessage(false)
         }
-    };
-    // @ts-ignore
-    const handleProgramChange = (newValue: ValueType<{ value: string; label: string; }>, actionMeta: ActionMeta<{ value: string; label: string; }>) => {
-        console.log(newValue)
-        setSelectedProgram(newValue);
     };
 
     return (
@@ -225,16 +177,9 @@ export default function LoginComponent({ user }: { user: User | null }) {
                         required
                     />
                 </div>
-                <Select
-                    className="mb-2"
-                    styles={customStyles}
-                    name="program"
-                    value={selectedProgram}
-                    onChange={handleProgramChange}
-                    options={programOptions.map((program) => ({ value: program, label: program }))}
-                    placeholder="Select your program"
-                    isClearable
-                    required
+                <ComboboxDemo
+                    value = {value}
+                    setValue = {setValue}
                 />
                 <input
                     className="mb-2 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
