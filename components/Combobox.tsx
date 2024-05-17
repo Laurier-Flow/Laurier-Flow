@@ -25,19 +25,19 @@ export function ComboboxDemo({value, setValue}: {value: string, setValue: React.
   const [open, setOpen] = React.useState(false)
 
   return (
-    <Popover
-        open={open} onOpenChange={setOpen}
-    >
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between"
+          className="w-full justify-between overflow-hidden"
         >
-          {value
-            ? programOptions.find((program) => program.value === value)?.label
-            : "Select program..."}
+          <span className="truncate">
+            {value
+              ? programOptions.find((program) => program.value === value)?.label
+              : "Select program..."}
+          </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -47,24 +47,18 @@ export function ComboboxDemo({value, setValue}: {value: string, setValue: React.
           <CommandEmpty>No program found.</CommandEmpty>
           <CommandGroup>
             <CommandList>
-                {programOptions.map((program) => (
+              {programOptions.map((program) => (
                 <CommandItem
-                    key={program.value}
-                    value={program.value}
-                    onSelect={(currentValue) => {
+                  key={program.value}
+                  value={program.value}
+                  onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue)
                     setOpen(false)
-                    }}
+                  }}
                 >
-                    <Check
-                    className={cn(
-                        "mr-2 h-4 w-4",
-                        value === program.value ? "opacity-100" : "opacity-0"
-                    )}
-                    />
-                    {program.label}
+                  {program.label}
                 </CommandItem>
-                ))}
+              ))}
             </CommandList>
           </CommandGroup>
         </Command>
