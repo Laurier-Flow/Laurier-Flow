@@ -97,7 +97,7 @@ const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
           <a
             onClick={handleEditUserDetailsTabSelected}
             className={`inline-block w-full p-4 ${editUserDetailsTabSelected ? `bg-gray-300 dark:bg-gray-700 dark:text-white` : `bg-white dark:bg-gray-100 dark:text-black`} border-s-0 border-gray-200  rounded-r-lg hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300`}>
-            User Details
+            Update Profile
           </a>
         </li>
       </ul>

@@ -13,13 +13,15 @@ const buttonVariants = cva(
 				destructive:
 					'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
 
-				// this is the one we currently use:
+				// this is the one we currently use in the homepage/auth popups:
 				outline:
 					'bg-stone-200 dark:bg-gray-900 hover:text-accent-foreground',
-				// ^^
 
+				// this one is used in the user details page
 				secondary:
-					'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
+					'bg-stone-100 dark:bg-gray-900 hover:text-accent-foreground',
+
+
 				ghost: 'hover:bg-accent hover:text-accent-foreground',
 				link: 'text-primary underline-offset-4 hover:underline'
 			},

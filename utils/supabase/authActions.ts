@@ -22,7 +22,7 @@ export const signIn = async (formData: FormData) => {
 	return { success: true, message: 'Login successful' }
 }
 
-export const signUp = async (formData: FormData) => {
+export const signUp = async (formData: FormData, program: string) => {
 	console.log(formData)
 
 	const origin = headers().get('origin')
@@ -30,9 +30,10 @@ export const signUp = async (formData: FormData) => {
 	const password = formData.get('password') as string
 	const first_name = formData.get('first name') as string
 	const last_name = formData.get('last name') as string
-	const program = formData.get('program') as string
 	const cookieStore = cookies()
 	const supabase = createClient(cookieStore)
+
+	console.log(email, password, first_name, last_name, program)
 
 	const { error } = await supabase.auth.signUp({
 		email,

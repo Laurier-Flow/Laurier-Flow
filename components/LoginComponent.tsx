@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { programOptions } from "@/utils/programOptions";
 import { Eye, EyeOff } from 'lucide-react'
-import { ComboboxDemo } from "./Combobox";
+import { ProgramDropdown } from "./Combobox";
 import React from "react";
 
 interface ToggleVisibilityButtonProps {
@@ -38,7 +38,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
     const [checkInboxMessage, setCheckInboxMessage] = useState(false)
     const [showLoginPassword, setShowLoginPassword] = useState<boolean>(false)
     const [showSignupPassword, setShowSignupPassword] = useState<boolean>(false)
-    const [value, setValue] = React.useState("")
+    const [program, setProgram] = React.useState("")
 
 	const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
@@ -66,7 +66,7 @@ export default function LoginComponent({ user }: { user: User | null }) {
         if (email && !emailRegex.test(email)) {
             setError('Email needs to be of type @mylaurier.ca or @wlu.ca')
         } else {
-            const result = await signUp(formData);
+            const result = await signUp(formData, program);
 
             if (result.success) {
                 setConfirmMessage(true)
@@ -178,9 +178,9 @@ export default function LoginComponent({ user }: { user: User | null }) {
                     />
                 </div>
                 <div className="mb-2 rounded-md bg-stone-200 dark:bg-gray-900">
-                <ComboboxDemo
-                    value = {value}
-                    setValue = {setValue}
+                <ProgramDropdown
+                    value = {program}
+                    setValue = {setProgram}
                 />
                 </div>
                 <input
@@ -207,7 +207,6 @@ export default function LoginComponent({ user }: { user: User | null }) {
                 </div>
 
                 <button
-                    formAction={signUp}
                     className="mb-2 bg-secondary rounded-md px-4 py-2 text-foreground"
                 >
                     Sign Up
