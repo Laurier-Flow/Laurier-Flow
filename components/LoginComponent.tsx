@@ -177,10 +177,12 @@ export default function LoginComponent({ user }: { user: User | null }) {
                         required
                     />
                 </div>
+                <div className="mb-2 rounded-md bg-stone-200 dark:bg-gray-900">
                 <ComboboxDemo
                     value = {value}
                     setValue = {setValue}
                 />
+                </div>
                 <input
                     className="mb-2 rounded-md px-4 py-2 bg-stone-200 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400"
                     name="email"

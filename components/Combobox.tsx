@@ -31,9 +31,9 @@ export function ComboboxDemo({value, setValue}: {value: string, setValue: React.
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between overflow-hidden"
+          className="w-full justify-between overflow-hidden border-neutral-300 dark:border-slate-800 border"
         >
-          <span className="truncate font-normal text-neutral-300">
+          <span className={`truncate font-normal ${value ? "text-stone-950 dark:text-gray-50" : "text-stone-400 dark:text-gray-400"}`}>
             {value
               ? programOptions.find((program) => program.value === value)?.label
               : "Select program..."}
@@ -41,9 +41,9 @@ export function ComboboxDemo({value, setValue}: {value: string, setValue: React.
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[--radix-popover-trigger-width] max-h-[--radix-popover-content-available-height] p-0">
+      <PopoverContent className="w-[--radix-popover-trigger-width] max-h-[--radix-popover-content-available-height] p-0 border-neutral-300 dark:border-slate-800 border">
         <Command>
-          <CommandInput placeholder="Search programs..." />
+          <CommandInput className="focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400" placeholder="Search programs..." />
           <CommandEmpty>No program found.</CommandEmpty>
           <CommandGroup>
             <CommandList>
