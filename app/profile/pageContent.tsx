@@ -3,14 +3,14 @@
 import { Suspense, useEffect, useState } from 'react'
 import UserDetails from './user-details'
 import {
-  getUserData,
-  updateUserFirstName,
-  updateUserLastName,
-  updateUserProgram,
-  deleteUserAccount,
-} from "./user-data-functions";
-import { User } from "@supabase/supabase-js";
-import Schedule from "./userSchedule";
+	getUserData,
+	updateUserFirstName,
+	updateUserLastName,
+	updateUserProgram,
+	deleteUserAccount
+} from './user-data-functions'
+import { User } from '@supabase/supabase-js'
+import Schedule from './userSchedule'
 
 interface PageContentProps {
 	userReviews: any
@@ -102,20 +102,20 @@ const PageContent: React.FC<PageContentProps> = ({ userReviews, user }) => {
         </li>
       </ul>
 
-      {profileTabSelected ? userReviews : null}
-      {myScheduleTabSelected ? <Schedule /> : null}
-      {editUserDetailsTabSelected ? (
-        <UserDetails
-          getUserDetailsFunction={getUserData}
-          email={user.email!}
-          updateUserFirstName={updateUserFirstName}
-          updateUserLastName={updateUserLastName}
-          updateUserProgram={updateUserProgram}
-          deleteUserAccount={deleteUserAccount}
-        />
-      ) : null}
-    </>
-  );
-};
+			{profileTabSelected ? userReviews : null}
+			{myScheduleTabSelected ? <Schedule /> : null}
+			{editUserDetailsTabSelected ? (
+				<UserDetails
+					getUserDetailsFunction={getUserData}
+					email={user.email!}
+					updateUserFirstName={updateUserFirstName}
+					updateUserLastName={updateUserLastName}
+					updateUserProgram={updateUserProgram}
+					deleteUserAccount={deleteUserAccount}
+				/>
+			) : null}
+		</>
+	)
+}
 
 export default PageContent

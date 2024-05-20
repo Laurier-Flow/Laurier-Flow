@@ -84,7 +84,7 @@ export default function Header({
 			<header className='sticky top-0 z-50 w-full self-center border-b border-border/40 bg-white dark:bg-background/95 dark:backdrop-blur dark:supports-[backdrop-filter]:bg-background/60'>
 				<div className='container flex h-14 items-center lg:max-w-6xl'>
 					<div className='mr-4 flex flex-1 gap-2'>
-						<Link href='/'>
+						<Link href='/' className='hidden md:inline'>
 							<Image
 								className='mr-4'
 								src='/icon.png'

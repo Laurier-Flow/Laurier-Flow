@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { SetStateAction, useEffect, useMemo, useRef, useState } from 'react'
+import { SetStateAction, use, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
 	courseInfoDBResponseExplore,
 	instructorInfoDBResponseExplore
@@ -23,7 +23,7 @@ export default function Body({
 	instructors: instructorInfoDBResponseExplore[]
 }) {
 	const searchParams = useSearchParams()
-	const subject = searchParams.get('subject')?.toUpperCase() || 'all'
+	const subject = searchParams.get('subject') || 'all'
 
 	const itemsPerPage = 50
 	const [visibleCourseCount, setVisibleCourseCount] = useState(itemsPerPage)
@@ -327,7 +327,7 @@ export default function Body({
 
 		setFilteredCourses(filtered)
 		handleCourseResort(courseSortField, filtered)
-	}, [courseFilters])
+	}, [courseFilters, subject])
 
 	useEffect(() => {
 		const filtered = instructors.filter((instructor) => {
@@ -347,7 +347,7 @@ export default function Body({
 
 		setFilteredInstructors(filtered)
 		handleInstructorResort(instructorSortField, filtered)
-	}, [instructorFilters])
+	}, [instructorFilters, subject])
 
 	const handleCurrentTermChange = () => {
 		setCourseFilters((prevFilters) => ({
