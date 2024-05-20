@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { X } from 'lucide-react'
 import { programOptions } from "@/utils/programOptions";
 import { Eye, EyeOff } from 'lucide-react'
+import { ProgramDropdown } from './Combobox';
 
 interface ToggleVisibilityButtonProps {
 	visible: boolean
@@ -37,19 +38,25 @@ export default function SignUpPopup({
 	onClose: () => void
 	toggleLogIn: () => void
 }): React.ReactElement {
-	const [selectedProgram, setSelectedProgram] = useState('')
+	const [program, setProgram] = React.useState("")
 	const [signUpError, setSignUpError] = useState<string>('')
 	const [confirmMessage, setConfirmMessage] = useState(false)
 	const [showPassword, setShowPassword] = useState<boolean>(false)
 
 	const popupRef = useRef<HTMLDivElement | null>(null)
+	const dropdownRef = useRef<HTMLDivElement | null>(null)
 
 	const handleClickOutside = (event: MouseEvent) => {
-		if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-			onClose()
-			document.body.classList.remove('overflow-hidden')
-		}
-	}
+        if (
+            popupRef.current &&
+            !popupRef.current.contains(event.target as Node) &&
+            dropdownRef.current &&
+            !dropdownRef.current.contains(event.target as Node)
+        ) {
+            onClose()
+            document.body.classList.remove('overflow-hidden')
+        }
+    }
 
 	useEffect(() => {
 		const handleOutsideClick = (event: MouseEvent) => {
@@ -63,9 +70,6 @@ export default function SignUpPopup({
 		}
 	}, [handleClickOutside])
 
-	const handleProgramChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		setSelectedProgram(event.target.value)
-	}
 
 	const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
@@ -79,7 +83,7 @@ export default function SignUpPopup({
 		if (email && !emailRegex.test(email)) {
             setSignUpError('Email needs to be of type @mylaurier.ca or @wlu.ca')
 		} else {
-			const result = await signUp(formData)
+			const result = await signUp(formData, program)
 
 			if (result.success) {
 				setSignUpError('')
@@ -134,29 +138,20 @@ export default function SignUpPopup({
 						required
 					/>
 				</div>
-				<select
-					className='mb-2 rounded-md border-neutral-300 bg-stone-200 px-4 py-2 text-stone-600 placeholder-stone-400 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-gray-900 dark:text-gray-400 dark:placeholder-gray-400'
-					name='program'
-					value={selectedProgram}
-					onChange={handleProgramChange}
-					required
-				>
-					<option value='' disabled>
-						Select your program
-					</option>
-					{programOptions.map((program) => (
-						<option className='' key={program} value={program}>
-							{program}
-						</option>
-					))}
-				</select>
+				<div>
+					<ProgramDropdown
+						value = {program}
+						setValue = {setProgram}
+						ref={dropdownRef}
+					/>
+				</div>
 				<input
 					className='mb-2 rounded-md border-neutral-300 bg-stone-200 px-4 py-2 placeholder-stone-400 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-gray-900 dark:placeholder-gray-400'
 					name='email'
 					placeholder='Email'
 					required
 				/>
-				<div className='relative flex'>
+				<div className='relative flex mb-2'>
                     <input
                         className='flex-1 rounded-md border-neutral-300 bg-stone-200 px-4 py-2 placeholder-gray-400 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-gray-900'
                         type={showPassword ? 'text' : 'password'}
@@ -172,7 +167,6 @@ export default function SignUpPopup({
                     />
                 </div>
 				<button
-					formAction={signUp}
 					className='mb-2 rounded-md bg-secondary px-4 py-2 text-foreground'
 				>
 					Sign Up

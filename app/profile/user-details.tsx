@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
 import { programOptions } from '@/utils/programOptions'
 import { useManageBodyScroll } from '@/components/Header'
+import { ProgramDropdownUserDetails } from '@/components/Combobox'
+import { useRef } from 'react'
 
 interface UserDetailsProps {
 	getUserDetailsFunction: () => Promise<any>
@@ -25,7 +27,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 	const [newFirstName, setNewFirstName] = useState<string>()
 	const [newLastName, setNewLastName] = useState<string>()
 
-	const [newProgram, setNewProgram] = useState<string>()
+	const [newProgram, setNewProgram] = React.useState("")
 
 	const [isVisible, setIsVisible] = useState<boolean>(false)
 
@@ -42,6 +44,8 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 
 	const [showDeleteProfilePopup, setShowDeleteProfilePopup] =
 		useState<boolean>(false)
+		
+	const popupRef = useRef<HTMLDivElement | null>(null)
 
 	useManageBodyScroll(showDeleteProfilePopup)
 
@@ -92,9 +96,26 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 		setNewLastName(event.target.value)
 	}
 
-	const handleProgramChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		setNewProgram(event.target.value)
+	const handleClickOutside = (event: MouseEvent) => {
+		console.log(12321)
+		if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+			setShowDeleteProfilePopup(false)
+			document.body.classList.remove('overflow-hidden')
+		}
+		console.log(showDeleteProfilePopup)
 	}
+
+	useEffect(() => {
+		const handleOutsideClick = (event: MouseEvent) => {
+			handleClickOutside(event)
+		}
+
+		document.addEventListener('mousedown', handleOutsideClick)
+
+		return () => {
+			document.removeEventListener('mousedown', handleOutsideClick)
+		}
+	}, [handleClickOutside])
 
 	const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
@@ -173,6 +194,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 	}
 
 	return (
+		<div className="flex sm:w-1/2 w-5/6 justify-center">
 		<div className='card'>
 			<div>
 				{update ? (
@@ -199,66 +221,47 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 
 				<form onSubmit={handleFormSubmit}>
 					<div className='mt-4 p-4'>
-						<label className='text-lg font-medium dark:text-white'>Email</label>
-						<input
-							type='text'
-							className='text-md mt-2 block w-full rounded-lg border-gray-200 px-4 py-3 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-100 dark:border-neutral-700 dark:bg-gray-900 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600'
-							placeholder={email}
-							disabled={true}
-						/>
-						<h1 className='mt-8 text-lg font-medium dark:text-white'>
+						<h1 className='mb-2 block text-lg font-medium dark:text-white'>
 							First Name
 						</h1>
 						<input
 							onChange={handleFirstNameChange}
 							type='text'
-							className='text-md mt-4 block w-full rounded-lg border-gray-200 px-4 py-3 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600'
+							className='mb-4 w-full rounded-md px-4 py-2 bg-gray-100 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400'
 							value={newFirstName}
 						/>
-						<h1 className='mb-2 mt-8 block text-lg font-medium dark:text-white'>
+						<h1 className='mb-2 block text-lg font-medium dark:text-white'>
 							Last Name
 						</h1>
 						<input
 							onChange={handleLastNameChange}
 							type='text'
-							className='text-md mt-2 block w-full rounded-lg border-gray-200 px-4 py-3 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 dark:border-neutral-700 dark:bg-gray-900 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600'
+							className='mb-4 w-full rounded-md px-4 py-2 bg-gray-100 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400'
 							value={newLastName}
 						/>
-						<h1 className='mb-2 mt-8 block text-lg font-medium dark:text-white'>
+						<h1 className='mb-2 block text-lg font-medium dark:text-white'>
 							Program
 						</h1>
-						<select
-							className='mb-2 w-full rounded-md border-neutral-300 px-4 py-2 text-stone-600 placeholder-stone-400 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-gray-900 dark:text-gray-400 dark:placeholder-gray-400'
-							name='program'
-							value={newProgram}
-							onChange={handleProgramChange}
-							required
-						>
-							<option value='' disabled>
-								Select your program
-							</option>
-							{programOptions.map((program) => (
-								<option className='' key={program} value={program}>
-									{program}
-								</option>
-							))}
-						</select>
+						<ProgramDropdownUserDetails
+							value = {newProgram}
+							setValue = {setNewProgram}
+						/>
 					</div>
 
 					<div className='p-4'>
 						<button
 							type='submit'
-							className='mt-6 inline-flex w-full items-center justify-center gap-x-2 rounded-lg border border-transparent bg-secondary px-4 py-3 text-sm font-semibold text-black disabled:pointer-events-none disabled:opacity-50 dark:text-white'
+							className='mb-4 inline-flex w-full items-center justify-center gap-x-2 rounded-lg border border-transparent bg-secondary px-4 py-3 text-sm font-semibold text-black disabled:pointer-events-none disabled:opacity-50 dark:text-white'
 						>
 							Save Changes
 						</button>
 					</div>
 				</form>
 
-				<hr className='mb-8 mt-8 border-gray-300 dark:border-gray-800'></hr>
+				<hr className='mb-4 border-gray-300 dark:border-gray-800'></hr>
 
 				<div className='p-4'>
-					<button
+					{/* <button
 						type='submit'
 						onClick={(e) => {
 							e.preventDefault()
@@ -267,7 +270,10 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 						className='text-md mb-5 flex w-full flex-row items-center justify-center gap-2 rounded-lg bg-red-500 px-6 py-3 font-semibold text-white dark:bg-red-800 dark:text-white'
 					>
 						<h1>Delete Account</h1>
-					</button>
+					</button> */}
+					<div className="flex justify-center text-foreground mb-4">
+						<h1><span onClick={(e) => { e.preventDefault(); toggleDeleteReviewPopup() }} className="cursor-pointer underline text-red-500 underline-offset-2 decoration-1">Delete your account</span></h1>
+					</div>
 				</div>
 			</div>
 
@@ -288,9 +294,8 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 							</label>
 							<h2 className='text-md'>
 								Are you sure you want to delete your account? This action cannot
-								be undone and will remove all reviews and user data.
+								be undone and will remove all your reviews and user data.
 							</h2>
-							<hr className='mb-2 mt-4 border-gray-300 dark:border-gray-800'></hr>
 							<div className='flex flex-row gap-6'>
 								<button
 									type='submit'
@@ -298,7 +303,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 										e.preventDefault()
 										handleAccountDeletion()
 									}}
-									className='text-md mb-5 mt-4 flex w-full flex-row items-center justify-center gap-2 rounded-lg bg-red-500 px-6 py-3 font-semibold text-white dark:bg-red-800 dark:text-white'
+									className='text-md mb-5 mt-4 flex w-full flex-row items-center justify-center gap-2 rounded-lg bg-teal-500 px-6 py-3 font-semibold text-white dark:text-white'
 								>
 									<h1>Yes</h1>
 								</button>
@@ -309,7 +314,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 										e.preventDefault()
 										toggleDeleteReviewPopup()
 									}}
-									className='text-md mb-5 mt-4 flex w-full flex-row items-center justify-center gap-2 rounded-lg bg-gray-800 px-6 py-3 font-semibold text-white dark:bg-gray-600 dark:text-white'
+									className='text-md mb-5 mt-4 flex w-full flex-row items-center justify-center gap-2 rounded-lg bg-red-500 px-6 py-3 font-semibold text-white dark:text-white'
 								>
 									<h1>No</h1>
 								</button>
@@ -318,6 +323,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 					</div>
 				</div>
 			) : null}
+		</div>
 		</div>
 	)
 }
