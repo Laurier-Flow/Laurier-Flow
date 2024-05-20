@@ -46,29 +46,24 @@ export default function SignUpPopup({
 	const popupRef = useRef<HTMLDivElement | null>(null)
 	const dropdownRef = useRef<HTMLDivElement | null>(null)
 
-	const handleClickOutside = (event: MouseEvent) => {
-        if (
-            popupRef.current &&
-            !popupRef.current.contains(event.target as Node) &&
-            dropdownRef.current &&
-            !dropdownRef.current.contains(event.target as Node)
-        ) {
-            onClose()
-            document.body.classList.remove('overflow-hidden')
-        }
-    }
-
 	useEffect(() => {
-		const handleOutsideClick = (event: MouseEvent) => {
-			handleClickOutside(event)
+		const handleClickOutside = (event: MouseEvent) => {
+			if (
+				popupRef.current &&
+				!popupRef.current.contains(event.target as Node) &&
+				(!dropdownRef.current || !dropdownRef.current.contains(event.target as Node))
+			) {
+				onClose()
+				document.body.classList.remove('overflow-hidden')
+			}
 		}
 
-		document.addEventListener('mousedown', handleOutsideClick)
+		document.addEventListener('mousedown', handleClickOutside)
 
 		return () => {
-			document.removeEventListener('mousedown', handleOutsideClick)
+			document.removeEventListener('mousedown', handleClickOutside)
 		}
-	}, [handleClickOutside])
+	}, [popupRef, dropdownRef, onClose])
 
 
 	const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
