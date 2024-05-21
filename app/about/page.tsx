@@ -59,7 +59,7 @@ export default async function About() {
 						/>
 						<TeamMember
 							name='Muhammad Mujtaba'
-							role='Software Engineer - Computer Science (UW) + Business Administration (BBA)'
+							role='Co-Lead Software Engineer - Computer Science (UW) + Business Administration (BBA)'
 							imageUrl='./teampics/mhmd.jpeg'
 							linkedinUrl='https://www.linkedin.com/in/mhmmd-m/'
 							igUrl='https://www.instagram.com/_.mh.mm.d._'
