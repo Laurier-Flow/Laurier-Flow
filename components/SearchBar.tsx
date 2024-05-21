@@ -205,6 +205,8 @@ export default function SearchBar() {
 						.or(
 							`course_code.ilike.%${fuzzyCodeQuery}%,course_title.ilike.%${fuzzyPhraseQuery}%`
 						) // Wack Syntax bc double .ilike() calls don't chain together properly
+						.is('is_uwaterloo_course', false)
+						.order('course_code', { ascending: true })
 						.limit(COURSE_LIMIT),
 					supabase
 						.from('instructors')
