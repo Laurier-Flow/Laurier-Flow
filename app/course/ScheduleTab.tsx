@@ -40,10 +40,17 @@ function ScheduleTab({
 		showSignUpPopup,
 		toggleSignUpPopup,
 		showPasswordPopup,
-		togglePasswordPopup
+		togglePasswordPopup,
+		showAddToSchedulePopup,
+		toggleAddToSchedulePopup
 	} = usePopupManager()
 
-	useManageBodyScroll(showLoginPopup || showSignUpPopup || showPasswordPopup)
+	useManageBodyScroll(
+		showLoginPopup ||
+			showSignUpPopup ||
+			showPasswordPopup ||
+			showAddToSchedulePopup
+	)
 
 	const pages = Math.ceil(termSections.length / 10)
 	const pageButtons = []
@@ -223,6 +230,14 @@ function ScheduleTab({
 																{item.instructor}
 															</Link>
 														)}
+													</td>
+													<td>
+														<button
+															className='py-2 text-xs underline'
+															onClick={toggleAddToSchedulePopup}
+														>
+															Add to Schedule
+														</button>
 													</td>
 												</tr>
 											))

@@ -1,10 +1,10 @@
 'use server'
 
-import { cookies } from "next/headers";
-import { createClient } from "@/utils/supabase/server";
-import { fetchUser } from "@/utils/supabase/authActions";
-import { SupabaseClient, User } from "@supabase/supabase-js";
-import { section } from "../course/CourseSchedule";
+import { cookies } from 'next/headers'
+import { createClient } from '@/utils/supabase/server'
+import { fetchUser } from '@/utils/supabase/authActions'
+import { SupabaseClient, User } from '@supabase/supabase-js'
+import { section } from '../course/CourseSchedule'
 
 export const updateUserFirstName = async (
 	first_name: string
@@ -131,15 +131,15 @@ export const getUserScheduleForTerm = async (term: string): Promise<any> => {
 }
 
 export const addClassesToSchedule = async (
-  term: string,
-  course: string,
-  instructor: string,
-  location: string,
-  time: string,
-  date: string,
-  type: string,
-  grade: string,
-  section: string
+	term: string,
+	course: string,
+	instructor: string,
+	location: string,
+	time: string,
+	date: string,
+	type: string,
+	grade: string,
+	section: string
 ): Promise<any> => {
 	'use server'
 
@@ -147,21 +147,21 @@ export const addClassesToSchedule = async (
 	const cookieStore = cookies()
 	const supabase = createClient(cookieStore)
 
-  const { data, error } = await supabase
-    .from("user_schedule")
-    .upsert({
-      user_id_fk: user?.id,
-      term: term,
-      class: course,
-      location: location,
-      time: time,
-      date: date,
-      type: type,
-      grade: grade,
-      instructor: instructor,
-      section: section,
-    })
-    .select();
+	const { data, error } = await supabase
+		.from('user_schedule')
+		.upsert({
+			user_id_fk: user?.id,
+			term: term,
+			class: course,
+			location: location,
+			time: time,
+			date: date,
+			type: type,
+			grade: grade,
+			instructor: instructor,
+			section: section
+		})
+		.select()
 
 	if (error) {
 		return error
@@ -171,16 +171,16 @@ export const addClassesToSchedule = async (
 }
 
 export const updateUserClass = async (
-  term: string,
-  course: string,
-  instructor: string,
-  location: string,
-  time: string,
-  date: string,
-  type: string,
-  grade: string,
-  id: number,
-  section: string
+	term: string,
+	course: string,
+	instructor: string,
+	location: string,
+	time: string,
+	date: string,
+	type: string,
+	grade: string,
+	id: number,
+	section: string
 ): Promise<any> => {
 	'use server'
 
@@ -188,21 +188,21 @@ export const updateUserClass = async (
 	const cookieStore = cookies()
 	const supabase = createClient(cookieStore)
 
-  const { data, error } = await supabase
-    .from("user_schedule")
-    .update({
-      user_id_fk: user?.id,
-      term: term,
-      class: course,
-      location: location,
-      time: time,
-      date: date,
-      type: type,
-      grade: grade,
-      instructor: instructor,
-      section: section,
-    })
-    .eq("id", id);
+	const { data, error } = await supabase
+		.from('user_schedule')
+		.update({
+			user_id_fk: user?.id,
+			term: term,
+			class: course,
+			location: location,
+			time: time,
+			date: date,
+			type: type,
+			grade: grade,
+			instructor: instructor,
+			section: section
+		})
+		.eq('id', id)
 
 	if (error) {
 		return error
