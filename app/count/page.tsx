@@ -33,7 +33,9 @@ const CountPage = () => {
 						' @ ' +
 						currentDate.getHours() +
 						':' +
-						currentDate.getMinutes() +
+						(currentDate.getMinutes() < 10
+							? '0' + currentDate.getMinutes()
+							: currentDate.getMinutes()) +
 						(currentDate.getHours() > 12 ? ' PM' : ' AM')
 				)
 				setFetched(true)
@@ -55,7 +57,7 @@ const CountPage = () => {
 				<div style={{ minHeight: '90vh' }} className='place-content-center'>
 					<div
 						style={{ borderRadius: 20 }}
-						className='bg-primary pb-5 pl-5 pr-5 pt-5 text-white dark:bg-secondary'
+						className='mb-2 bg-primary pb-5 pl-5 pr-5 pt-5 text-white dark:bg-secondary'
 					>
 						<h1 className='text-center text-2xl font-semibold'>
 							Users that have signed up for LaurierFlow
