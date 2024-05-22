@@ -17,7 +17,6 @@ export default function ConfirmSignup() {
 			>
 				<Body />
 			</Suspense>
-			<HomeFooter />
 		</>
 	)
 }
