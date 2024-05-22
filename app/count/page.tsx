@@ -25,9 +25,9 @@ const CountPage = () => {
 				setNumberUsers(data.length)
 				var currentDate = new Date()
 				setCurDate(
-					currentDate.getDay() +
+					currentDate.getDate() +
 						'/' +
-						currentDate.getMonth() +
+						(currentDate.getMonth() + 1) +
 						'/' +
 						currentDate.getFullYear() +
 						' @ ' +
