@@ -73,7 +73,7 @@ export default async function About() {
 							linkedinUrl='https://www.linkedin.com/in/abdullahshahid247/'
 							igUrl='https://www.instagram.com/abdshd.247'
 							githubUrl='https://github.com/abdshd'
-							desc='Abdullah has focused his expertise primarily on developing robust authentication flows and other essential components of the project. His technical prowess ensures secure and efficient user experiences. Alongside his academic and professional pursuits, Abdullah is passionate about maintaining his fitness, regularly hitting the gym, and engaging in martial arts such as jiu jitsu and wrestling.'
+							desc='Abdullah focused primarily on developing the authentication system and flows along with other essential components of the project. On top of this, he also designed the UI and theme for several pages and components, ensuring a clean user experience. Abdullah is working at Lyft, and is pursuing a career in iOS and ML engineering. Alongside his academics and career pursuits, he is passionate about maintaining his fitness by regularly doing weightlifting and calisthenics, while practicing jiu-jitsu and wrestling.'
 						/>
 						<TeamMember
 							name='Soham Nagi'
