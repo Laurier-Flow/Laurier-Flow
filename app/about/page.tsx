@@ -91,7 +91,7 @@ export default async function About() {
 							linkedinUrl='https://www.linkedin.com/in/qureshishahrukh/'
 							igUrl='https://www.instagram.com/shahruk._h'
 							githubUrl='https://github.com/ShaleeQureshi'
-							desc='Shahrukh played a crucial role in developing and refining user profile management and is actively enhancing the platform by integrating course scheduling and GPA calculation features along with other modifications throughout the platform. Known for his exceptional work ethic, Shahrukh has established himself as one of the hardest-working individuals in any setting. A passionate basketball fan, he brings the same dedication and focus to the court as he does to his professional and academic endeavors. His commitment to excellence is a hallmark of both his career and personal life, making him a standout member of our team.'
+							desc='Shahrukh played a crucial role in the ideation, development, and marketing of the platform. He ensured the core processes were seamless and is actively enhancing the platform with course schedule integration, GPA calculation features, and many others with the aim to simplify the Laurier student experience. Known for his exceptional work ethic, Shahrukh stands out as one of the hardest-working individuals in any setting. A passionate basketball fan, he brings the same dedication and focus to the court as he does to his professional and academic endeavors. His commitment to excellence is a hallmark of both his career and personal life, making him a standout member of our team.'
 						/>
 					</div>
 				</div>
