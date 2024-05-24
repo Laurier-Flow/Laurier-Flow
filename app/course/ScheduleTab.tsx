@@ -239,7 +239,7 @@ function ScheduleTab({
 						</div>
 					</div>
 					{termSections.length && ((professor && user) || !professor) ? (
-						<div className='px-4 pt-4 overflow-x-auto'>
+						<div className='px-4 pt-4'>
 							<nav className='flex items-center space-x-1'>
 								<button
 									onClick={handlePreviousPageClick}
