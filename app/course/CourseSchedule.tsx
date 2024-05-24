@@ -56,21 +56,21 @@ async function fetchSectionData(
 		] = await Promise.all([
 			axios.get(
 				'https://loris.wlu.ca/register/ssb/searchResults/getClassDetails?term=' +
-					sectionData.term +
-					'&courseReferenceNumber=' +
-					sectionData.course_registration_number.toString()
+				sectionData.term +
+				'&courseReferenceNumber=' +
+				sectionData.course_registration_number.toString()
 			),
 			axios.post(
 				'https://loris.wlu.ca/register/ssb/searchResults/getEnrollmentInfo?term=' +
-					sectionData.term +
-					'&courseReferenceNumber=' +
-					sectionData.course_registration_number.toString()
+				sectionData.term +
+				'&courseReferenceNumber=' +
+				sectionData.course_registration_number.toString()
 			),
 			axios.get(
 				'https://loris.wlu.ca/register/ssb/searchResults/getFacultyMeetingTimes?term=' +
-					sectionData.term +
-					'&courseReferenceNumber=' +
-					sectionData.course_registration_number.toString()
+				sectionData.term +
+				'&courseReferenceNumber=' +
+				sectionData.course_registration_number.toString()
 			)
 		])
 
@@ -87,7 +87,7 @@ async function fetchSectionData(
 			await new Promise((resolve) => setTimeout(resolve, delay))
 			return fetchSectionData(sectionData, retryCount + 1, maxRetries)
 		} else {
-			throw new Error(`Failed after ${maxRetries} retries: ${error}`)
+			return null
 		}
 	}
 }
@@ -118,72 +118,74 @@ export async function getCourseSections(
 		const sectionDataResponses = await Promise.all(sectionDataRequests)
 
 		sectionDataResponses.forEach((element) => {
-			let $ = cheerio.load(element.classDetails)
-			const section = $('#sectionNumber').text()
-			// ts-ignore is used because of issues with types in the cheerio dependency
-			/** @ts-ignore */
-			const campus = $('span')
-				.filter((index, element) => $(element).text().includes('Campus:'))[0]
-				?.next?.data?.trim()
-			/** @ts-ignore */
-			const type = $('span')
-				.filter((index, element) =>
-					$(element).text().includes('Instructional Method:')
-				)[0]
-				?.next?.data?.trim()
+			if (element) {
+				let $ = cheerio.load(element.classDetails)
+				const section = $('#sectionNumber').text()
+				// ts-ignore is used because of issues with types in the cheerio dependency
+				/** @ts-ignore */
+				const campus = $('span')
+					.filter((index, element) => $(element).text().includes('Campus:'))[0]
+					?.next?.data?.trim()
+				/** @ts-ignore */
+				const type = $('span')
+					.filter((index, element) =>
+						$(element).text().includes('Instructional Method:')
+					)[0]
+					?.next?.data?.trim()
 
-			$ = cheerio.load(element.enrollmentInfo)
+				$ = cheerio.load(element.enrollmentInfo)
 
-			const enrollment =
-				$('span:contains("Enrolment Actual:")').next().text() ||
-				$('span:contains("Enrollment Actual:")').next().text()
-			const enrollmentMax =
-				$('span:contains("Enrolment Maximum:")').next().text() ||
-				$('span:contains("Enrollment Maximum:")').next().text()
+				const enrollment =
+					$('span:contains("Enrolment Actual:")').next().text() ||
+					$('span:contains("Enrollment Actual:")').next().text()
+				const enrollmentMax =
+					$('span:contains("Enrolment Maximum:")').next().text() ||
+					$('span:contains("Enrollment Maximum:")').next().text()
 
-			const beginTime =
-				element.facultyMeetingTimes.fmt[0]?.meetingTime?.beginTime
-			const endTime = element.facultyMeetingTimes.fmt[0]?.meetingTime?.endTime
-			const days = {
-				monday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.monday,
-				tuesday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.tuesday,
-				wednesday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.wednesday,
-				thursday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.thursday,
-				friday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.friday,
-				saturday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.saturday,
-				sunday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.sunday
-			}
-			const location = user
-				? element.facultyMeetingTimes.fmt[0]?.meetingTime?.room
-				: null
+				const beginTime =
+					element.facultyMeetingTimes.fmt[0]?.meetingTime?.beginTime
+				const endTime = element.facultyMeetingTimes.fmt[0]?.meetingTime?.endTime
+				const days = {
+					monday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.monday,
+					tuesday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.tuesday,
+					wednesday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.wednesday,
+					thursday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.thursday,
+					friday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.friday,
+					saturday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.saturday,
+					sunday: element.facultyMeetingTimes.fmt[0]?.meetingTime?.sunday
+				}
+				const location = user
+					? element.facultyMeetingTimes.fmt[0]?.meetingTime?.room
+					: null
 
-			let instructor = null
-			if (filterCol === 'instructor_name_fk') {
-				instructor = user ? element.sectionData.course_code_fk : null
-			} else {
-				instructor = user ? element.sectionData.instructor_name_fk : null
-			}
+				let instructor = null
+				if (filterCol === 'instructor_name_fk') {
+					instructor = user ? element.sectionData.course_code_fk : null
+				} else {
+					instructor = user ? element.sectionData.instructor_name_fk : null
+				}
 
-			let c: section = {
-				crn: element.sectionData.course_registration_number.toString(),
-				type: type,
-				section: section,
-				campus: campus,
-				enrollment: enrollment,
-				enrollmentMax: enrollmentMax,
-				beginTime: beginTime,
-				endTime: endTime,
-				days: days,
-				location: location,
-				instructor: instructor
-			}
+				let c: section = {
+					crn: element.sectionData.course_registration_number.toString(),
+					type: type,
+					section: section,
+					campus: campus,
+					enrollment: enrollment,
+					enrollmentMax: enrollmentMax,
+					beginTime: beginTime,
+					endTime: endTime,
+					days: days,
+					location: location,
+					instructor: instructor
+				}
 
-			if (element.sectionData.term == nextTerm) {
-				courseSections['nextTerm']?.push(c)
-			} else if (element.sectionData.term == currentTerm) {
-				courseSections['currentTerm']?.push(c)
-			} else if (element.sectionData.term == previousTerm) {
-				courseSections['previousTerm']?.push(c)
+				if (element.sectionData.term == nextTerm) {
+					courseSections['nextTerm']?.push(c)
+				} else if (element.sectionData.term == currentTerm) {
+					courseSections['currentTerm']?.push(c)
+				} else if (element.sectionData.term == previousTerm) {
+					courseSections['previousTerm']?.push(c)
+				}
 			}
 		})
 	}
