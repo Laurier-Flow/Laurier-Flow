@@ -12,6 +12,7 @@ import {
 	getAllCourses
 } from './count-function'
 import { User } from '@supabase/supabase-js'
+import useScreenWidth from './screen-width'
 
 const CountPage = () => {
 	const [numberUsers, setNumberUsers] = useState('---')
@@ -21,25 +22,56 @@ const CountPage = () => {
 	const [user, setUser] = useState<User | null>()
 	const [curDate, setCurDate] = useState<string>()
 	const [fetched, setFetched] = useState<boolean>(false)
+	const width = useScreenWidth()
+	console.log(width)
 	useEffect(() => {
 		const getData = async () => {
-			var currentDate = new Date()
-			setCurDate(
-				currentDate.getDate() +
-					'/' +
-					(currentDate.getMonth() + 1) +
-					'/' +
-					currentDate.getFullYear() +
-					' @ ' +
-					(currentDate.getHours() > 12
-						? currentDate.getHours() - 12
-						: currentDate.getHours()) +
-					':' +
-					(currentDate.getMinutes() < 10
-						? '0' + currentDate.getMinutes()
-						: currentDate.getMinutes()) +
-					(currentDate.getHours() > 12 ? ' PM' : ' AM')
-			)
+			const date = new Date()
+
+			const daysOfWeek = [
+				'Sunday',
+				'Monday',
+				'Tuesday',
+				'Wednesday',
+				'Thursday',
+				'Friday',
+				'Saturday'
+			]
+			const months = [
+				'January',
+				'February',
+				'March',
+				'April',
+				'May',
+				'June',
+				'July',
+				'August',
+				'September',
+				'October',
+				'November',
+				'December'
+			]
+
+			const dayOfWeek = daysOfWeek[date.getDay()]
+			const month = months[date.getMonth()]
+			const dayOfMonth = date.getDate()
+			const year = date.getFullYear()
+
+			const formattedDate = `${dayOfWeek}, ${month} ${dayOfMonth}, ${year}`
+
+			let hours = date.getHours()
+			const minutes = date.getMinutes()
+
+			const ampm = hours >= 12 ? 'pm' : 'am'
+
+			hours = hours % 12
+			hours = hours ? hours : 12
+
+			const formattedMinutes = minutes < 10 ? '0' + minutes : minutes
+
+			const formattedTime = `${hours}:${formattedMinutes}${ampm}`
+
+			setCurDate(formattedDate + ' @ ' + formattedTime)
 			const curUser = await getUser()
 			if (curUser) {
 				setUser(curUser)
@@ -92,26 +124,30 @@ const CountPage = () => {
 				</div>
 				<div
 					style={{ minHeight: '90vh', maxWidth: '80vw', minWidth: '80vw' }}
-					className='card mt-5'
+					className=' mt-5'
 				>
 					<h1
 						style={{
-							borderRadius: 20,
-							marginTop: `${window.screen.width < 1000 ? '0' : '-150px'}`
+							borderRadius: 20
+							// marginTop: `${width < 1000 ? '0' : '-150px'}`
 						}}
-						className='mb-5 bg-primary pb-5 pl-5 pr-5 pt-5 text-center text-2xl font-semibold text-white dark:bg-secondary'
+						className='mb-5 mt-10 bg-primary pb-5 pl-5 pr-5 pt-5 text-center text-2xl font-semibold text-white dark:bg-secondary'
 					>
 						As of {curDate}
 					</h1>
 					<div
-						style={{
-							marginTop: `${window.screen.width < 1000 ? '0' : '-200px'}`
-						}}
-						className={`grid grid-flow-col ${window.screen.width < 700 ? 'grid-rows-4' : 'grid-rows-2'} mt-5 place-content-center gap-5`}
+						style={
+							{
+								// marginTop: `${width < 1000 ? '0' : '-200px'}`
+							}
+						}
+						className={`grid ${width < 700 ? 'grid-rows-2' : 'grid-rows-2'} mt-10 grid-cols-2 place-content-center gap-2`}
 					>
 						<div
-							style={{ borderRadius: 20, minWidth: '35vw', maxWidth: '35vw' }}
-							className='mb-2 bg-primary pb-5 pl-5 pr-5 pt-5 text-white dark:bg-secondary'
+							style={{
+								borderRadius: 20
+							}}
+							className='mb-2 w-full bg-primary pb-5 pl-5 pr-5 pt-5 text-white dark:bg-secondary'
 						>
 							<h3 className='font-regular text-center text-xl'>
 								Signed Up Users
@@ -128,11 +164,11 @@ const CountPage = () => {
 							)}
 						</div>
 						<div
-							style={{ borderRadius: 20, minWidth: '35vw', maxWidth: '35vw' }}
-							className='mb-2 bg-primary pb-5 pl-5 pr-5 pt-5 text-white dark:bg-secondary'
+							style={{ borderRadius: 20 }}
+							className='mb-2 w-full bg-primary  pb-5 pl-5 pr-5 pt-5 text-white dark:bg-secondary'
 						>
 							<h3 className='font-regular text-center text-xl'>
-								Course Reviews Made
+								Course Reviews
 							</h3>
 							<hr className='mb-2 mt-2' />
 							{fetched ? (
@@ -146,11 +182,11 @@ const CountPage = () => {
 							)}
 						</div>
 						<div
-							style={{ borderRadius: 20, minWidth: '35vw', maxWidth: '35vw' }}
-							className='mb-2 bg-primary pb-5 pl-5 pr-5 pt-5 text-white dark:bg-secondary'
+							style={{ borderRadius: 20 }}
+							className='mb-2 w-full bg-primary pb-5 pl-5 pr-5 pt-5 text-white dark:bg-secondary'
 						>
 							<h3 className='font-regular text-center text-xl'>
-								Instructor Reviews Made
+								Instructor Reviews
 							</h3>
 							<hr className='mb-2 mt-2' />
 							{fetched ? (
@@ -164,8 +200,8 @@ const CountPage = () => {
 							)}
 						</div>
 						<div
-							style={{ borderRadius: 20, minWidth: '35vw', maxWidth: '35vw' }}
-							className='mb-2 bg-primary pb-5 pl-5 pr-5 pt-5 text-white dark:bg-secondary'
+							style={{ borderRadius: 20 }}
+							className='mb-2 w-full bg-primary pb-5 pl-5 pr-5 pt-5 text-white dark:bg-secondary'
 						>
 							<h3 className='font-regular text-center text-xl'>
 								Courses on Laurier Flow
