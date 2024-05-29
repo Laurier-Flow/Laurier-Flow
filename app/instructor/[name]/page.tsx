@@ -10,6 +10,7 @@ import { fetchUser } from '@/utils/supabase/authActions'
 import { Metadata, ResolvingMetadata } from 'next'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import { getAndIncrementPageVisits } from '@/utils/supabase/pageVisits'
 
 type InstructorPageProps = {
 	params: {
@@ -37,6 +38,7 @@ async function InstructorPage({ params }: InstructorPageProps) {
 	const supabase = createClient(cookieStore)
 	const decodedName = decodeURIComponent(params.name)
 	const user = await fetchUser()
+	await getAndIncrementPageVisits()
 
 	return (
 		<>
