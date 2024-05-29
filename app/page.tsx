@@ -6,6 +6,7 @@ import LoginComponent from '@/components/LoginComponent'
 import { Metadata } from 'next'
 import HomeHeader from '@/components/HomeHeader'
 import HomeFooter from '@/components/HomeFooter'
+import { getAndIncrementPageVisits } from '@/utils/supabase/pageVisits'
 
 export const metadata: Metadata = {
 	title: `Laurier Flow`,
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 
 export default async function Index(): Promise<React.ReactElement> {
 	const user = await fetchUser()
+	await getAndIncrementPageVisits()
 
 	const homepageTitleWordArray = [
 		{
@@ -59,7 +61,7 @@ export default async function Index(): Promise<React.ReactElement> {
 	]
 
 	return (
-		<div className='flex flex-col w-full'>
+		<div className='flex w-full flex-col'>
 			<BackgroundGradientAnimation
 				gradientBackgroundStart='var(--gradient-start)'
 				gradientBackgroundEnd='var(--gradient-end)'
@@ -69,8 +71,7 @@ export default async function Index(): Promise<React.ReactElement> {
 				fourthColor='var(--bubble)'
 				fifthColor='var(--bubble)'
 				pointerColor='var(--bubble)'
-			>
-			</BackgroundGradientAnimation>
+			></BackgroundGradientAnimation>
 			<div className='h-screen'>
 				<HomeHeader user={user} />
 				<div className='absolute inset-0 z-[100] mx-auto flex w-full max-w-6xl flex-row items-center justify-center gap-12 p-6'>

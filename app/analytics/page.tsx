@@ -13,17 +13,18 @@ import {
 } from './count-function'
 import { User } from '@supabase/supabase-js'
 import useScreenWidth from './screen-width'
+import { getAndIncrementPageVisits } from '@/utils/supabase/pageVisits'
 
 const CountPage = () => {
 	const [numberUsers, setNumberUsers] = useState('---')
 	const [numberCourseReviews, setNumberCourseReviews] = useState('---')
 	const [numberInstructorReviews, setNumberInstructorReviews] = useState('---')
 	const [numberCourses, setNumberCourses] = useState('---')
+	const [pageVisits, setTotalPageVisits] = useState('---')
 	const [user, setUser] = useState<User | null>()
 	const [curDate, setCurDate] = useState<string>()
 	const [fetched, setFetched] = useState<boolean>(false)
 	const width = useScreenWidth()
-	console.log(width)
 	useEffect(() => {
 		const getData = async () => {
 			const date = new Date()
@@ -82,7 +83,7 @@ const CountPage = () => {
 			const allCourseReviews = await getAllCourseReviews()
 			const allInstructorReviews = await getAllInstructorReviews()
 			const allCourses = await getAllCourses()
-			console.log(allCourses)
+			const totalVisits = await getAndIncrementPageVisits()
 			if (allUsers) {
 				setNumberUsers(allUsers)
 			}
@@ -95,7 +96,16 @@ const CountPage = () => {
 			if (allCourses) {
 				setNumberCourses(allCourses)
 			}
-			if (allUsers && allCourseReviews && allInstructorReviews && allCourses) {
+			if (totalVisits) {
+				setTotalPageVisits(totalVisits.toLocaleString())
+			}
+			if (
+				totalVisits &&
+				allUsers &&
+				allCourseReviews &&
+				allInstructorReviews &&
+				allCourses
+			) {
 				setFetched(true)
 			}
 		}
@@ -118,6 +128,8 @@ const CountPage = () => {
 							<h1 className='mb-2 text-2xl font-bold text-white md:text-5xl'>
 								<span className='text-purple-200'>Laurier</span>{' '}
 								<span className='text-yellow-200'>Flow</span> Analytics
+								<br />
+								<span className='text-xl italic'>Since May 23, 2024</span>
 							</h1>
 						</div>
 					</div>
@@ -135,6 +147,23 @@ const CountPage = () => {
 					>
 						As of {curDate}
 					</h1>
+
+					<div
+						className='mb-5 mt-10 bg-secondary pb-5 pl-5 pr-5 pt-5 dark:bg-primary'
+						style={{
+							borderRadius: 20
+							// marginTop: `${width < 1000 ? '0' : '-150px'}`
+						}}
+					>
+						{fetched ? (
+							<h1 className='text-center text-2xl font-semibold text-white'>
+								{pageVisits} page visits to {width < 700 ? <br /> : null}
+								Laurier Flow
+							</h1>
+						) : (
+							<Spinner />
+						)}
+					</div>
 					<div
 						style={
 							{

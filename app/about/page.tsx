@@ -2,6 +2,7 @@ import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import TeamMember from '@/components/TeamMember'
 import { fetchUser } from '@/utils/supabase/authActions'
+import { getAndIncrementPageVisits } from '@/utils/supabase/pageVisits'
 import { PopupButton } from '@typeform/embed-react'
 import { Metadata } from 'next'
 
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 
 export default async function About() {
 	const user = await fetchUser()
+	await getAndIncrementPageVisits()
 
 	return (
 		<>
