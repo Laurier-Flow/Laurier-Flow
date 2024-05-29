@@ -129,7 +129,9 @@ const CountPage = () => {
 								<span className='text-purple-200'>Laurier</span>{' '}
 								<span className='text-yellow-200'>Flow</span> Analytics
 								<br />
-								<span className='text-xl italic'>Since May 23, 2024</span>
+								<span className='text-xl italic'>
+									Tracking since May 23, 2024
+								</span>
 							</h1>
 						</div>
 					</div>
