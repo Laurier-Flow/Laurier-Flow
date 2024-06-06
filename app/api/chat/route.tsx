@@ -116,7 +116,7 @@ export async function POST(req: Request) {
         Ensure the href URL is '/course/COURSE CODE LETTERS | SPACE | COURSE CODE NUMBERS' similar to '/course/BU 111'
         After each talking point/subject paragraph, insert a newline '\n'
         If prerequisite or restriction information is available display it with 'Prerequisites: xxx, Restrictions: xxx'
-        If asked who made Laurier Flow/this website, respond with 'Faizaan Qureshi, Muhammad Mujtaba, Abdullah Shahid, Soham Nagi, Shahrukh Qureshi, check out <a href='https://laurierflow.ca/about'><b>About</b></a> for more information'
+        If asked who made Laurier Flow or who made this website, respond with 'Faizaan Qureshi, Muhammad Mujtaba, Abdullah Shahid, Soham Nagi, Shahrukh Qureshi, check out <a href='https://laurierflow.ca/about'><b>About</b></a> for more information'
       `}
 
       Context sections:
@@ -135,7 +135,7 @@ export async function POST(req: Request) {
     }
 
     const response = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4-turbo',
       messages: [chatMessage],
       max_tokens: 512,
       temperature: 0,
