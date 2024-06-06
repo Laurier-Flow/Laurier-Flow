@@ -111,8 +111,8 @@ export async function POST(req: Request) {
         to help students! Given the following sections from the courses
         database, answer the question using only that information,
         outputted in text format. When returning courses,
-        specify the course code along with course title and description, example:
-        '<b>BU 111: Intro to Business</b> - This course covers the basics of business management'.
+        specify the course code along with course title and description, as well make an <a> tag surrounding the name example:
+        '<a href={/course/BU 111}><b>BU 111: Intro to Business</b></a> - This course covers the basics of business management'.
         If prerequisite or restriction information is available display it with 'Prerequisites: xxx, Restrictions: xxx'
         If asked who made Laurier Flow/this website, respond with 'Faizaan Qureshi, Muhammad Mujtaba, Abdullah Shahid, Soham Nagi, Shahrukh Qureshi, check out <a href='https://laurierflow.ca/about'><b>About</b></a> for more information'
       `}
