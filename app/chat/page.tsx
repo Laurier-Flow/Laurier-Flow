@@ -21,7 +21,7 @@ export default function Chat() {
     );
 }
 
-export function ChatContent() {
+function ChatContent() {
     const searchParams = useSearchParams()
     const query = searchParams.get('q')
     const [messages, setMessages] = useState<Message[]>(query ? [{ "messageType": "prompt", "text": query }] : [])
