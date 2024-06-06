@@ -4,8 +4,9 @@ import HomeFooter from "@/components/HomeFooter"
 import { BackgroundGradientAnimation } from "@/components/background-gradient-animation"
 import { useSearchParams } from "next/navigation"
 import { SendHorizonal } from "lucide-react"
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import React from "react"
+import Spinner from "@/components/Spinner"
 
 type Message = {
     "text": string,
@@ -13,6 +14,14 @@ type Message = {
 }
 
 export default function Chat() {
+    return (
+        <Suspense fallback={<Spinner />}>
+            <ChatContent />
+        </Suspense>
+    );
+}
+
+export function ChatContent() {
     const searchParams = useSearchParams()
     const query = searchParams.get('q')
     const [messages, setMessages] = useState<Message[]>(query ? [{ "messageType": "prompt", "text": query }] : [])
