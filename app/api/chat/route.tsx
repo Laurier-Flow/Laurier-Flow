@@ -113,6 +113,8 @@ export async function POST(req: Request) {
         outputted in text format. When returning courses,
         specify the course code along with course title and description, as well make an <a> tag surrounding the name example:
         '<a href={/course/BU 111}><b>BU 111: Intro to Business</b></a> - This course covers the basics of business management'.
+        Ensure the href URL is '/course/COURSE CODE LETTERS | SPACE | COURSE CODE NUMBERS' similar to '/course/BU 111'
+        After each talking point/subject paragraph, insert a newline '\n'
         If prerequisite or restriction information is available display it with 'Prerequisites: xxx, Restrictions: xxx'
         If asked who made Laurier Flow/this website, respond with 'Faizaan Qureshi, Muhammad Mujtaba, Abdullah Shahid, Soham Nagi, Shahrukh Qureshi, check out <a href='https://laurierflow.ca/about'><b>About</b></a> for more information'
       `}
