@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { facultyCoursePrefix } from '@/utils/lib/facultyCoursePrefix'
 import { disciplineCodes } from '@/utils/lib/disciplineCodes'
-import { redirectToExploreAll } from '@/utils/lib/clientSideRedirects'
+import { Bot } from 'lucide-react'
 import {
 	Search,
 	Telescope,
@@ -123,6 +123,20 @@ const ExploreAllListItem = ({ ...props }) => {
 			<GalleryVerticalEnd />
 			<span className='pl-3 font-bold'>
 				Search for all <span className='text-secondary'>ALL</span> courses
+			</span>
+		</Link>
+	)
+}
+
+const ChatListItem = ({query}: {query: string}) => {
+	return (
+		<Link
+			href={`/chat?q=${query}`}
+			className='flex w-full flex-row bg-transparent p-2 pl-3 last:rounded-b-md hover:bg-stone-200 dark:hover:bg-stone-800'
+		>
+			<Bot />
+			<span className='pl-3 font-bold'>
+				Ask Flow Bot 🪄 - <span className='text-secondary'>{query}</span>
 			</span>
 		</Link>
 	)
@@ -276,6 +290,7 @@ export default function SearchBar() {
 						<ExploreResultListItem faculty={faculty} />
 					))}
 					{exploreResults.length == 0 && <ExploreAllListItem />}
+					{searchQuery.length > 0 && <ChatListItem query={searchQuery} />}
 				</div>
 			)}
 		</div>
