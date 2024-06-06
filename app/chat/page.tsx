@@ -160,7 +160,7 @@ function ChatContent() {
                         </div>
                         <div className="flex flex-row items-center p-6 w-full rounded-b-lg gap-4">
                             <div className="space-y-3 flex-1">
-                                <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyDown} disabled={loading} type="text" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-secondary disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-gray-700 dark:text-white dark:placeholder-white focus:ring-secondary" placeholder="Ask a question..." />
+                                <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyDown} disabled={loading} type="text" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-secondary disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-gray-700 dark:text-white dark:placeholder-white focus:ring-secondary" placeholder="Ask a question..." />
                             </div>
                             <button
                                 type="button"
