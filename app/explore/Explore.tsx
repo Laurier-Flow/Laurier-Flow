@@ -91,14 +91,14 @@ async function getCourses(supabase: SupabaseClient, currentTerm: string, nextTer
         while (hasMoreCourses) {
             const { data, error } = await supabase
                 .from('courses')
-                .select('*')
+                .select('course_code, total_reviews, easy, useful, liked, course_title, leads_to, year, course_number, course_prefix, is_uwaterloo_course, course_description')
                 .range(coursesPage * limit, (coursesPage + 1) * limit - 1);
 
             if (error) {
                 throw new Error(error.message);
             }
 
-            const processedCourses: courseInfoDBResponseExplore[] = data.map(course => ({
+            const processedCourses: any = data.map(course => ({
                 ...course,
                 isOfferedThisTerm: courseOfferingsMap[course.course_code]?.isOfferedThisTerm || false,
                 isOfferedNextTerm: courseOfferingsMap[course.course_code]?.isOfferedNextTerm || false,
