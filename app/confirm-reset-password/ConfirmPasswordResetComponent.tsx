@@ -5,7 +5,7 @@ import { Suspense } from 'react'
 import Body from './body'
 import HomeFooter from '@/components/HomeFooter'
 
-export default function ConfirmSignup() {
+export default function ConfirmPasswordReset() {
 	return (
 		<>
 			<Suspense

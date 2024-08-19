@@ -22,7 +22,7 @@ export async function getCourseData(
 ) {
 	const { data, error } = await supabase
 		.from('courses')
-		.select()
+		.select('course_code, total_reviews, easy, useful, liked, course_title, leads_to, year, course_number, course_prefix, is_uwaterloo_course, course_description')
 		.eq('course_code', courseName)
 
 	return data || []

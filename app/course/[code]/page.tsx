@@ -14,6 +14,7 @@ import { fetchUser } from '@/utils/supabase/authActions'
 import { Metadata, ResolvingMetadata } from 'next'
 const AddReview = dynamic(() => import('../AddReview'), { ssr: false })
 import Footer from '@/components/Footer'
+import { getAndIncrementPageVisits } from '@/utils/supabase/pageVisits'
 
 type CoursePageProps = {
 	params: {
@@ -59,6 +60,7 @@ async function CoursePage({ params }: CoursePageProps) {
 	const supabase = createClient(cookieStore)
 	let courseCode = decodeURIComponent(params.code.toUpperCase())
 	const user = await fetchUser()
+	await getAndIncrementPageVisits()
 
 	return (
 		<>
@@ -113,7 +115,7 @@ async function CoursePage({ params }: CoursePageProps) {
 						</div>
 					</div>
 				</div>
-			</Suspense >
+			</Suspense>
 			<Footer />
 		</>
 	)

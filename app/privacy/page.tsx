@@ -1,6 +1,7 @@
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import { fetchUser } from '@/utils/supabase/authActions'
+import { getAndIncrementPageVisits } from '@/utils/supabase/pageVisits'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 
 export default async function Privacy() {
 	const user = await fetchUser()
+	await getAndIncrementPageVisits()
 
 	return (
 		<>
