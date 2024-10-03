@@ -84,7 +84,7 @@ export default async function About() {
 							linkedinUrl='https://www.linkedin.com/in/sohamnagi/'
 							igUrl='https://www.instagram.com/soham.nagi'
 							githubUrl='https://github.com/SohamNagi'
-							desc="Soham's role has been pivotal in enhancing the user experience, having developed key features such as feedback components, the About page, and the Privacy Policy. Soham's keen eye for detail doesn't stop at development; he is also deeply involved in thorough testing and UI/UX feedback and planning, ensuring that every user interaction is both intuitive and pleasing. Known for his charm, Soham is recognized as one of the handsomest brown boys around. Outside of his professional life, he is an enthusiastic soccer player and an ardent fan of Real Madrid, channeling the same passion and precision he has for frontend engineering into every game he plays or watches."
+							desc="Soham's role has been pivotal in enhancing the user experience, having developed key features such as feedback components, the About page, and the Privacy Policy. Soham's keen eye for detail doesn't stop at development; he is also deeply involved in thorough testing and UI/UX feedback and planning, ensuring that every user interaction is both intuitive and pleasing. Outside of his professional life, he is an enthusiastic soccer player and an ardent fan of Real Madrid, channeling the same passion and precision he has for frontend engineering into every game he plays or watches."
 						/>
 						<TeamMember
 							name='Shahrukh Qureshi'
