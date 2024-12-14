@@ -1,5 +1,4 @@
 import { SupabaseClient } from '@supabase/supabase-js'
-import { getCurrentTerm } from '../course/CourseSchedule'
 import React from 'react'
 import InstructorStats from '@/components/InstructorStats'
 
@@ -33,8 +32,20 @@ async function getCurrentCourses(
 		.select()
 		.eq('instructor_name_fk', instructorName)
 
+	const currentDate = new Date()
+	const currentMonth = currentDate.getMonth()
+	const currentYear = currentDate.getFullYear()
+	let currentTerm = ''
+
+	if (0 <= currentMonth && currentMonth <= 3) {
+		currentTerm = `${currentYear}01`
+	} else if (4 <= currentMonth && currentMonth <= 7) {
+		currentTerm = `${currentYear}05`
+	} else if (8 <= currentMonth && currentMonth <= 11) {
+		currentTerm = `${currentYear}09`
+	}
+
 	const courses = new Set<string>()
-	const currentTerm = await getCurrentTerm(false)
 
 	data?.forEach((section) => {
 		if (section.term === currentTerm) {

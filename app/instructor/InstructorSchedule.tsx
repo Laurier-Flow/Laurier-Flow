@@ -1,8 +1,6 @@
 import ScheduleTable from '../course/ScheduleTab'
+import { getTerms } from '../course/getTerms'
 import {
-	getNextTerm,
-	getPreviousTerm,
-	getCurrentTerm,
 	section,
 	sections,
 	getCourseSections
@@ -18,44 +16,56 @@ async function InstructorSchedule({
 	instructorName: string
 	user: User | null
 }) {
+	const prettyTerms = getTerms(true)
+	const dataTerms = getTerms(false)
+
 	const [
-		nextTerm,
-		previousTerm,
-		currentTerm,
-		nextTermData,
-		currentTermData,
-		previousTermData
+		springTerm,
+		fallTerm,
+		winterTerm,
+		nextSpringTerm,
+		springTermData,
+		fallTermData,
+		winterTermData,
+		nextSpringTermData,
 	] = await Promise.all([
-		getNextTerm(true),
-		getPreviousTerm(true),
-		getCurrentTerm(true),
-		getNextTerm(false),
-		getCurrentTerm(false),
-		getPreviousTerm(false)
+		prettyTerms.springTerm,
+		prettyTerms.fallTerm,
+		prettyTerms.winterTerm,
+		prettyTerms.nextSpringTerm,
+		dataTerms.springTerm,
+		dataTerms.fallTerm,
+		dataTerms.winterTerm,
+		dataTerms.nextSpringTerm,
 	])
+
 	const termSections: sections = await getCourseSections(
-		nextTermData,
-		currentTermData,
-		previousTermData,
+		springTermData,
+		fallTermData,
+		winterTermData,
+		nextSpringTermData,
 		'instructor_name_fk',
 		instructorName,
 		supabase,
 		user
 	)
-	const currentTermSections: section[] = termSections['currentTerm']
-	const previousTermSections: section[] = termSections['previousTerm']
-	const nextTermSections: section[] = termSections['nextTerm']
+	const springTermSections: section[] = termSections['springTerm']
+	const fallTermSections: section[] = termSections['fallTerm']
+	const winterTermSections: section[] = termSections['winterTerm']
+	const nextSpringTermSections: section[] = termSections['nextSpringTerm']
 
 	return (
 		<div className='flex flex-col p-4 lg:mt-8'>
 			<h1 className='text-xl'>Instructor Schedule</h1>
 			<ScheduleTable
-				nextTerm={nextTerm}
-				previousTerm={previousTerm}
-				currentTerm={currentTerm}
-				currentTermSections={currentTermSections}
-				previousTermSections={previousTermSections}
-				nextTermSections={nextTermSections}
+				springTerm={springTerm}
+				fallTerm={fallTerm}
+				winterTerm={winterTerm}
+				nextSpringTerm={nextSpringTerm}
+				springTermSections={springTermSections}
+				fallTermSections={fallTermSections}
+				winterTermSections={winterTermSections}
+				nextSpringTermSections={nextSpringTermSections}
 				professor={true}
 				user={user}
 			/>
