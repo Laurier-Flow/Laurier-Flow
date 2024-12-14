@@ -12,13 +12,17 @@ type SortableCourseFields = keyof courseInfoDBResponseExplore
 type SortableInstructorFields = keyof instructorInfoDBResponseExplore
 
 export default function Body({
-	currentTerm,
-	nextTerm,
+	springTerm,
+	fallTerm,
+	winterTerm,
+	nextSpringTerm,
 	courses,
 	instructors
 }: {
-	currentTerm: string
-	nextTerm: string
+	springTerm: string
+	fallTerm: string
+	winterTerm: string
+	nextSpringTerm: string
 	courses: courseInfoDBResponseExplore[]
 	instructors: instructorInfoDBResponseExplore[]
 }) {
@@ -47,8 +51,10 @@ export default function Body({
 		fourthYear: true,
 		seniorYear: true,
 		minRatings: 0,
-		thisTerm: false,
-		afterTerm: false
+		springTerm: false,
+		fallTerm: false,
+		winterTerm: false,
+		nextSpringTerm: false
 	})
 	/////////////////////////////////////////////////////////////////////////////// INSTRUCTOR HOOKS AND VARS
 	const [filteredInstructors, setFilteredInstructors] = useState(instructors)
@@ -287,8 +293,10 @@ export default function Body({
 				fourthYear: true,
 				seniorYear: true,
 				minRatings: 0,
-				thisTerm: false,
-				afterTerm: false
+				springTerm: false,
+				fallTerm: false,
+				winterTerm: false,
+				nextSpringTerm: false
 			})
 		} else {
 			setInstructorFilters({
@@ -302,8 +310,10 @@ export default function Body({
 	useEffect(() => {
 		const filtered = courses.filter((course) => {
 			if (course.total_reviews < courseFilters.minRatings) return false
-			if (!course.isOfferedThisTerm && courseFilters.thisTerm) return false
-			if (!course.isOfferedNextTerm && courseFilters.afterTerm) return false
+			if (!course.isOfferedSpringTerm && courseFilters.springTerm) return false
+			if (!course.isOfferedFallTerm && courseFilters.fallTerm) return false
+			if (!course.isOfferedWinterTerm && courseFilters.winterTerm) return false
+			if (!course.isOfferedNextSpringTerm && courseFilters.nextSpringTerm) return false
 
 			let firstSpaceIndex = course.course_code.indexOf(' ')
 			let charAfterSpace = course.course_code[firstSpaceIndex + 1]
@@ -314,8 +324,10 @@ export default function Body({
 			if (!courseFilters.fourthYear && charAfterSpace === '4') return false
 			if (!courseFilters.seniorYear && charAfterSpace >= '5') return false
 
-			if (courseFilters.thisTerm && !course.isOfferedThisTerm) return false
-			if (courseFilters.afterTerm && !course.isOfferedNextTerm) return false
+			if (courseFilters.springTerm && !course.isOfferedSpringTerm) return false
+			if (courseFilters.fallTerm && !course.isOfferedFallTerm) return false
+			if (courseFilters.winterTerm && !course.isOfferedWinterTerm) return false
+			if (courseFilters.nextSpringTerm && !course.isOfferedNextSpringTerm) return false
 			if (subject !== 'all') {
 				let codeLength = subject.length
 				let extractedCode = course.course_code.substring(0, codeLength)
@@ -349,17 +361,31 @@ export default function Body({
 		handleInstructorResort(instructorSortField, filtered)
 	}, [instructorFilters, subject])
 
-	const handleCurrentTermChange = () => {
+	const handleSpringTermChange = () => {
 		setCourseFilters((prevFilters) => ({
 			...prevFilters,
-			thisTerm: !prevFilters.thisTerm
+			springTerm: !prevFilters.springTerm
 		}))
 	}
 
-	const handleNextTermChange = () => {
+	const handleFallTermChange = () => {
 		setCourseFilters((prevFilters) => ({
 			...prevFilters,
-			afterTerm: !prevFilters.afterTerm
+			fallTerm: !prevFilters.fallTerm
+		}))
+	}
+
+	const handleWinterTermChange = () => {
+		setCourseFilters((prevFilters) => ({
+			...prevFilters,
+			winterTerm: !prevFilters.winterTerm
+		}))
+	}
+
+	const handleNextSpringTermChange = () => {
+		setCourseFilters((prevFilters) => ({
+			...prevFilters,
+			nextSpringTerm: !prevFilters.nextSpringTerm
 		}))
 	}
 
@@ -495,11 +521,13 @@ export default function Body({
 								onChange={() =>
 									setCourseFilters((prevFilters) => ({
 										...prevFilters,
-										thisTerm: false,
-										afterTerm: false
+										springTerm: false,
+										fallTerm: false,
+										winterTerm: false,
+										nextSpringTerm: false
 									}))
 								}
-								checked={!courseFilters.thisTerm && !courseFilters.afterTerm}
+								checked={!courseFilters.springTerm && !courseFilters.fallTerm && !courseFilters.winterTerm && !courseFilters.nextSpringTerm}
 							/>
 							<h1 className='ms-4 text-sm text-gray-500 dark:text-gray-400'>
 								All terms
@@ -511,11 +539,11 @@ export default function Body({
 								type='checkbox'
 								className='ml-8 mt-0.5 shrink-0 scale-150 rounded border-gray-200 text-amber-400 focus:ring-amber-300 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-primary dark:checked:border-secondary dark:checked:bg-secondary dark:focus:ring-secondary dark:focus:ring-offset-gray-800 lg:ml-0 lg:mt-6'
 								id='hs-default-checkbox'
-								onChange={handleCurrentTermChange}
-								checked={courseFilters.thisTerm}
+								onChange={handleSpringTermChange}
+								checked={courseFilters.springTerm}
 							/>
 							<h1 className='ms-4 text-sm text-gray-500 dark:text-gray-400 lg:mt-6'>
-								This term ({currentTerm})
+								({springTerm})
 							</h1>
 						</div>
 
@@ -524,11 +552,37 @@ export default function Body({
 								type='checkbox'
 								className='ml-8 mt-0.5 shrink-0 scale-150 rounded border-gray-200 text-amber-400 focus:ring-amber-300 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-primary dark:checked:border-secondary dark:checked:bg-secondary dark:focus:ring-secondary dark:focus:ring-offset-gray-800 lg:ml-0 lg:mt-6'
 								id='hs-default-checkbox'
-								onChange={handleNextTermChange}
-								checked={courseFilters.afterTerm}
+								onChange={handleFallTermChange}
+								checked={courseFilters.fallTerm}
 							/>
 							<h1 className='ms-4 text-sm text-gray-500 dark:text-gray-400 lg:mt-6'>
-								Next term ({nextTerm})
+								({fallTerm})
+							</h1>
+						</div>
+
+						<div className='flex flex-row items-center'>
+							<input
+								type='checkbox'
+								className='ml-8 mt-0.5 shrink-0 scale-150 rounded border-gray-200 text-amber-400 focus:ring-amber-300 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-primary dark:checked:border-secondary dark:checked:bg-secondary dark:focus:ring-secondary dark:focus:ring-offset-gray-800 lg:ml-0 lg:mt-6'
+								id='hs-default-checkbox'
+								onChange={handleWinterTermChange}
+								checked={courseFilters.winterTerm}
+							/>
+							<h1 className='ms-4 text-sm text-gray-500 dark:text-gray-400 lg:mt-6'>
+								({winterTerm})
+							</h1>
+						</div>
+
+						<div className='flex flex-row items-center'>
+							<input
+								type='checkbox'
+								className='ml-8 mt-0.5 shrink-0 scale-150 rounded border-gray-200 text-amber-400 focus:ring-amber-300 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-primary dark:checked:border-secondary dark:checked:bg-secondary dark:focus:ring-secondary dark:focus:ring-offset-gray-800 lg:ml-0 lg:mt-6'
+								id='hs-default-checkbox'
+								onChange={handleNextSpringTermChange}
+								checked={courseFilters.nextSpringTerm}
+							/>
+							<h1 className='ms-4 text-sm text-gray-500 dark:text-gray-400 lg:mt-6'>
+								({nextSpringTerm})
 							</h1>
 						</div>
 					</div>

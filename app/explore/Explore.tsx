@@ -1,14 +1,11 @@
 import Spinner from "@/components/Spinner";
 import { Suspense } from "react";
-import { getCurrentTerm, getNextTerm } from "../course/CourseSchedule";
+import { getTerms } from "../course/getTerms";
 import Body from "./body";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { SupabaseClient } from "@supabase/supabase-js";
-import { fetchUser } from "@/utils/supabase/authActions";
-import Header from "@/components/Header";
 import { Metadata } from "next";
-import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
     title: "Explore",
@@ -23,8 +20,10 @@ export interface courseInfoDBResponseExplore {
     useful: number,
     liked: number,
     course_title: string,
-    isOfferedThisTerm: boolean,
-    isOfferedNextTerm: boolean
+    isOfferedSpringTerm: boolean,
+    isOfferedFallTerm: boolean
+    isOfferedWinterTerm: boolean
+    isOfferedNextSpringTerm: boolean
 }
 
 export interface instructorInfoDBResponseExplore {
@@ -37,15 +36,17 @@ export interface instructorInfoDBResponseExplore {
 }
 
 interface courseOffering {
-    isOfferedThisTerm: boolean;
-    isOfferedNextTerm: boolean;
+    isOfferedSpringTerm: boolean,
+    isOfferedFallTerm: boolean
+    isOfferedWinterTerm: boolean
+    isOfferedNextSpringTerm: boolean
 }
 
 interface courseOfferingsMap {
     [key: string]: courseOffering;
 }
 
-async function getCourses(supabase: SupabaseClient, currentTerm: string, nextTerm: string): Promise<courseInfoDBResponseExplore[]> {
+async function getCourses(supabase: SupabaseClient, springTerm: string, fallTerm: string, winterTerm: string, nextSpringTerm: string): Promise<courseInfoDBResponseExplore[]> {
     let sectionsPage = 0;
     const limit = 1000;
     let hasMoreSections = true;
@@ -58,7 +59,7 @@ async function getCourses(supabase: SupabaseClient, currentTerm: string, nextTer
             const { data, error } = await supabase
                 .from('sections')
                 .select('course_code_fk, term')
-                .in('term', [currentTerm, nextTerm])
+                .in('term', [springTerm, fallTerm, winterTerm, nextSpringTerm])
                 .range(sectionsPage * limit, (sectionsPage + 1) * limit - 1);
 
             if (error) {
@@ -67,11 +68,13 @@ async function getCourses(supabase: SupabaseClient, currentTerm: string, nextTer
 
             data.forEach(({ course_code_fk, term }) => {
                 if (!courseOfferingsMap[course_code_fk]) {
-                    courseOfferingsMap[course_code_fk] = { isOfferedThisTerm: false, isOfferedNextTerm: false };
+                    courseOfferingsMap[course_code_fk] = { isOfferedSpringTerm: false, isOfferedFallTerm: false, isOfferedWinterTerm: false, isOfferedNextSpringTerm: false };
                 }
 
-                courseOfferingsMap[course_code_fk].isOfferedThisTerm ||= term === currentTerm;
-                courseOfferingsMap[course_code_fk].isOfferedNextTerm ||= term === nextTerm;
+                courseOfferingsMap[course_code_fk].isOfferedSpringTerm ||= term === springTerm;
+                courseOfferingsMap[course_code_fk].isOfferedFallTerm ||= term === fallTerm;
+                courseOfferingsMap[course_code_fk].isOfferedWinterTerm ||= term === winterTerm;
+                courseOfferingsMap[course_code_fk].isOfferedNextSpringTerm ||= term === nextSpringTerm;
             });
 
             hasMoreSections = data.length === limit;
@@ -100,8 +103,10 @@ async function getCourses(supabase: SupabaseClient, currentTerm: string, nextTer
 
             const processedCourses: any = data.map(course => ({
                 ...course,
-                isOfferedThisTerm: courseOfferingsMap[course.course_code]?.isOfferedThisTerm || false,
-                isOfferedNextTerm: courseOfferingsMap[course.course_code]?.isOfferedNextTerm || false,
+                isOfferedSpringTerm: courseOfferingsMap[course.course_code]?.isOfferedSpringTerm || false,
+                isOfferedFallTerm: courseOfferingsMap[course.course_code]?.isOfferedFallTerm || false,
+                isOfferedWinterTerm: courseOfferingsMap[course.course_code]?.isOfferedWinterTerm || false,
+                isOfferedNextSpringTerm: courseOfferingsMap[course.course_code]?.isOfferedNextSpringTerm || false,
                 easy: course.total_reviews > 0 ? Math.round((course.easy / course.total_reviews) * 20) : null,
                 useful: course.total_reviews > 0 ? Math.round((course.useful / course.total_reviews) * 20) : null,
                 liked: course.total_reviews > 0 ? Math.round((course.liked / course.total_reviews) * 100) : null,
@@ -193,25 +198,20 @@ async function getInstructors(supabase: SupabaseClient) {
 }
 
 export default async function Explore() {
-    const [currentTerm, nextTerm, currentTermServer, nextTermServer] = await Promise.all([
-        getCurrentTerm(true),
-        getNextTerm(true),
-        getCurrentTerm(false),
-        getNextTerm(false),
-    ]);
+    const prettyTerms = getTerms(true);
+    const dataTerms = getTerms(false);
 
     const cookieStore = cookies();
     const supabase = createClient(cookieStore)
-    const user = await fetchUser();
 
     const [courses, instructors] = await Promise.all([
-        getCourses(supabase, currentTermServer, nextTermServer),
+        getCourses(supabase, dataTerms.springTerm, dataTerms.fallTerm, dataTerms.winterTerm, dataTerms.nextSpringTerm),
         getInstructors(supabase),
     ]);
 
     return (
         <Suspense fallback={<div className="w-full h-full"><Spinner /></div>}>
-            <Body currentTerm={currentTerm} nextTerm={nextTerm} courses={courses} instructors={instructors} />
+            <Body springTerm={prettyTerms.springTerm} fallTerm={prettyTerms.fallTerm} winterTerm={prettyTerms.winterTerm} nextSpringTerm={prettyTerms.nextSpringTerm} courses={courses} instructors={instructors} />
         </Suspense>
     )
 }
