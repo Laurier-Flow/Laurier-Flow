@@ -377,7 +377,7 @@ export default function ScheduleTable({
 					suppressHydrationWarning
 					onClick={() => handleTabClick(4)}
 					type='button'
-					className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white inline-flex grow basis-0 items-center justify-center gap-x-2 bg-transparent px-4 py-3 text-center text-center text-sm font-medium ${activeTab === 3 ? 'text-slate-900' : 'text-gray-200'} rounded-lg hover:text-slate-800 disabled:pointer-events-none disabled:opacity-50 ${activeTab === 3 ? 'dark:text-white' : 'text-gray-400'} dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 4 ? 'active' : ''}`}
+					className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white inline-flex grow basis-0 items-center justify-center gap-x-2 bg-transparent px-4 py-3 text-center text-center text-sm font-medium ${activeTab === 4 ? 'text-slate-900' : 'text-gray-200'} rounded-lg hover:text-slate-800 disabled:pointer-events-none disabled:opacity-50 ${activeTab === 3 ? 'dark:text-white' : 'text-gray-400'} dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 4 ? 'active' : ''}`}
 					data-hs-tab='#equal-width-elements-3'
 					aria-controls='equal-width-elements-3'
 					role='tab'
