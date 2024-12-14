@@ -304,21 +304,25 @@ function convertTo12HourFormat(timeString: string | null | undefined) {
 }
 
 export default function ScheduleTable({
-	nextTerm,
-	currentTerm,
-	previousTerm,
-	nextTermSections,
-	currentTermSections,
-	previousTermSections,
+	springTerm,
+	fallTerm,
+	winterTerm,
+	nextSpringTerm,
+	springTermSections,
+	fallTermSections,
+	winterTermSections,
+	nextSpringTermSections,
 	professor,
 	user
 }: {
-	nextTerm: string
-	currentTerm: string
-	previousTerm: string
-	nextTermSections: section[]
-	currentTermSections: section[]
-	previousTermSections: section[]
+	springTerm: string
+	fallTerm: string
+	winterTerm: string
+	nextSpringTerm: string
+	springTermSections: section[]
+	fallTermSections: section[]
+	winterTermSections: section[]
+	nextSpringTermSections: section[]
 	professor: boolean
 	user: User | null
 }) {
@@ -345,7 +349,7 @@ export default function ScheduleTable({
 					aria-controls='equal-width-elements-1'
 					role='tab'
 				>
-					{nextTerm}
+					{springTerm}
 				</button>
 				<button
 					suppressHydrationWarning
@@ -356,7 +360,7 @@ export default function ScheduleTable({
 					aria-controls='equal-width-elements-2'
 					role='tab'
 				>
-					{currentTerm}
+					{fallTerm}
 				</button>
 				<button
 					suppressHydrationWarning
@@ -367,28 +371,46 @@ export default function ScheduleTable({
 					aria-controls='equal-width-elements-3'
 					role='tab'
 				>
-					{previousTerm}
+					{winterTerm}
+				</button>
+				<button
+					suppressHydrationWarning
+					onClick={() => handleTabClick(4)}
+					type='button'
+					className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white inline-flex grow basis-0 items-center justify-center gap-x-2 bg-transparent px-4 py-3 text-center text-center text-sm font-medium ${activeTab === 3 ? 'text-slate-900' : 'text-gray-200'} rounded-lg hover:text-slate-800 disabled:pointer-events-none disabled:opacity-50 ${activeTab === 3 ? 'dark:text-white' : 'text-gray-400'} dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 3 ? 'active' : ''}`}
+					data-hs-tab='#equal-width-elements-3'
+					aria-controls='equal-width-elements-3'
+					role='tab'
+				>
+					{nextSpringTerm}
 				</button>
 			</nav>
 
 			<ScheduleTab
-				termSections={nextTermSections}
+				termSections={springTermSections}
 				activeTab={activeTab}
 				tabNumber={1}
 				professor={professor}
 				user={user}
 			/>
 			<ScheduleTab
-				termSections={currentTermSections}
+				termSections={fallTermSections}
 				activeTab={activeTab}
 				tabNumber={2}
 				professor={professor}
 				user={user}
 			/>
 			<ScheduleTab
-				termSections={previousTermSections}
+				termSections={winterTermSections}
 				activeTab={activeTab}
 				tabNumber={3}
+				professor={professor}
+				user={user}
+			/>
+			<ScheduleTab
+				termSections={nextSpringTermSections}
+				activeTab={activeTab}
+				tabNumber={4}
 				professor={professor}
 				user={user}
 			/>

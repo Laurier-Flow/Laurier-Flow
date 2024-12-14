@@ -31,9 +31,10 @@ export interface section {
 }
 
 export interface sections {
-	nextTerm: section[]
-	currentTerm: section[]
-	previousTerm: section[]
+	springTerm: section[]
+	fallTerm: section[]
+	winterTerm: section[]
+	nextSpringTerm: section[]
 }
 
 interface sectionResponseDB {
@@ -93,9 +94,10 @@ async function fetchSectionData(
 }
 
 export async function getCourseSections(
-	nextTerm: string,
-	currentTerm: string,
-	previousTerm: string,
+	springTerm: string,
+	fallTerm: string,
+	winterTerm: string,
+	nextSpringTerm: string,
 	filterCol: string,
 	colValue: string,
 	supabase: SupabaseClient<any, 'public', any>,
@@ -107,9 +109,10 @@ export async function getCourseSections(
 		.eq(filterCol, colValue)
 
 	const courseSections: sections = {
-		nextTerm: [],
-		currentTerm: [],
-		previousTerm: []
+		springTerm: [],
+		fallTerm: [],
+		winterTerm: [],
+		nextSpringTerm: []
 	}
 
 	const sectionDataRequests = sectionData?.map((data) => fetchSectionData(data))
@@ -179,12 +182,14 @@ export async function getCourseSections(
 					instructor: instructor
 				}
 
-				if (element.sectionData.term == nextTerm) {
-					courseSections['nextTerm']?.push(c)
-				} else if (element.sectionData.term == currentTerm) {
-					courseSections['currentTerm']?.push(c)
-				} else if (element.sectionData.term == previousTerm) {
-					courseSections['previousTerm']?.push(c)
+				if (element.sectionData.term == springTerm) {
+					courseSections['springTerm']?.push(c)
+				} else if (element.sectionData.term == fallTerm) {
+					courseSections['fallTerm']?.push(c)
+				} else if (element.sectionData.term == winterTerm) {
+					courseSections['winterTerm']?.push(c)
+				} else if (element.sectionData.term == nextSpringTerm) {
+					courseSections['nextSpringTerm']?.push(c)
 				}
 			}
 		})
@@ -202,46 +207,37 @@ async function CourseSchedule({
 	courseName: string
 	user: User | null
 }) {
-	const [
-		nextTerm,
-		previousTerm,
-		currentTerm,
-		nextTermData,
-		currentTermData,
-		previousTermData
-	] = await Promise.all([
-		getNextTerm(true),
-		getPreviousTerm(true),
-		getCurrentTerm(true),
-		getNextTerm(false),
-		getCurrentTerm(false),
-		getPreviousTerm(false)
-	])
+	const prettyTerms = getTerms(true)
+	const dataTerms = getTerms(false)
 
 	const termSections = await getCourseSections(
-		nextTermData,
-		currentTermData,
-		previousTermData,
+		dataTerms.springTerm,
+		dataTerms.fallTerm,
+		dataTerms.winterTerm,
+		dataTerms.nextSpringTerm,
 		'course_code_fk',
 		courseName,
 		supabase,
 		user
 	)
 
-	const currentTermSections: section[] = termSections['currentTerm']
-	const previousTermSections: section[] = termSections['previousTerm']
-	const nextTermSections: section[] = termSections['nextTerm']
+	const springTermSections: section[] = termSections['springTerm']
+	const fallTermSections: section[] = termSections['fallTerm']
+	const winterTermSections: section[] = termSections['winterTerm']
+	const nextSpringTermSections: section[] = termSections['nextSpringTerm']
 
 	return (
 		<div className='flex flex-col p-4 lg:mt-8'>
 			<h1 className='text-xl'>Course Schedule</h1>
 			<ScheduleTable
-				nextTerm={nextTerm}
-				previousTerm={previousTerm}
-				currentTerm={currentTerm}
-				currentTermSections={currentTermSections}
-				previousTermSections={previousTermSections}
-				nextTermSections={nextTermSections}
+				springTerm={prettyTerms.springTerm}
+				fallTerm={prettyTerms.fallTerm}
+				winterTerm={prettyTerms.winterTerm}
+				nextSpringTerm={prettyTerms.nextSpringTerm}
+				springTermSections={springTermSections}
+				fallTermSections={fallTermSections}
+				winterTermSections={winterTermSections}
+				nextSpringTermSections={nextSpringTermSections}
 				professor={false}
 				user={user}
 			/>
@@ -249,82 +245,45 @@ async function CourseSchedule({
 	)
 }
 
-export async function getNextTerm(pretty: boolean) {
+function getTerms(pretty: boolean) {
 	const currentDate = new Date()
 	const currentMonth = currentDate.getMonth()
 	const currentYear = currentDate.getFullYear()
 
+	const terms = {
+		springTerm: "",
+		fallTerm: "",
+		winterTerm: "",
+		nextSpringTerm: ""
+	}
+
 	if (pretty) {
-		if (0 <= currentMonth && currentMonth <= 3) {
-			return `Spring ${currentYear}`
-		} else if (4 <= currentMonth && currentMonth <= 7) {
-			return `Fall ${currentYear}`
-		} else if (8 <= currentMonth && currentMonth <= 11) {
-			return `Winter ${currentYear + 1}`
+		if (currentMonth >= 4) {
+			terms.springTerm = `Spring ${currentYear}`
+			terms.fallTerm = `Fall ${currentYear}`
+			terms.winterTerm = `Winter ${currentYear + 1}`
+			terms.nextSpringTerm = `Spring ${currentYear + 1}`
+		} else {
+			terms.springTerm = `Spring ${currentYear - 1}`
+			terms.fallTerm = `Fall ${currentYear - 1}`
+			terms.winterTerm = `Winter ${currentYear}`
+			terms.nextSpringTerm = `Spring ${currentYear}`
 		}
 	} else {
-		if (0 <= currentMonth && currentMonth <= 3) {
-			return `${currentYear}05`
-		} else if (4 <= currentMonth && currentMonth <= 7) {
-			return `${currentYear}09`
-		} else if (8 <= currentMonth && currentMonth <= 11) {
-			return `${currentYear + 1}01`
+		if (currentMonth >= 4) {
+			terms.springTerm = `${currentYear}05`
+			terms.fallTerm = `${currentYear}09`
+			terms.winterTerm = `${currentYear + 1}01`
+			terms.nextSpringTerm = `${currentYear + 1}05`
+		} else {
+			terms.springTerm = `${currentYear - 1}05`
+			terms.fallTerm = `${currentYear - 1}09`
+			terms.winterTerm = `${currentYear}01`
+			terms.nextSpringTerm = `${currentYear}05`
 		}
 	}
 
-	return ''
-}
-
-export async function getCurrentTerm(pretty: boolean) {
-	const currentDate = new Date()
-	const currentMonth = currentDate.getMonth()
-	const currentYear = currentDate.getFullYear()
-
-	if (pretty) {
-		if (0 <= currentMonth && currentMonth <= 3) {
-			return `Winter ${currentYear}`
-		} else if (4 <= currentMonth && currentMonth <= 7) {
-			return `Spring ${currentYear}`
-		} else if (8 <= currentMonth && currentMonth <= 11) {
-			return `Fall ${currentYear}`
-		}
-	} else {
-		if (0 <= currentMonth && currentMonth <= 3) {
-			return `${currentYear}01`
-		} else if (4 <= currentMonth && currentMonth <= 7) {
-			return `${currentYear}05`
-		} else if (8 <= currentMonth && currentMonth <= 11) {
-			return `${currentYear}09`
-		}
-	}
-
-	return ''
-}
-
-export async function getPreviousTerm(pretty: boolean) {
-	const currentDate = new Date()
-	const currentMonth = currentDate.getMonth()
-	const currentYear = currentDate.getFullYear()
-
-	if (pretty) {
-		if (0 <= currentMonth && currentMonth <= 3) {
-			return `Fall ${currentYear - 1}`
-		} else if (4 <= currentMonth && currentMonth <= 7) {
-			return `Winter ${currentYear}`
-		} else if (8 <= currentMonth && currentMonth <= 11) {
-			return `Spring ${currentYear}`
-		}
-	} else {
-		if (0 <= currentMonth && currentMonth <= 3) {
-			return `${currentYear - 1}09`
-		} else if (4 <= currentMonth && currentMonth <= 7) {
-			return `${currentYear}01`
-		} else if (8 <= currentMonth && currentMonth <= 11) {
-			return `${currentYear}09`
-		}
-	}
-
-	return ''
+	return terms
 }
 
 export default CourseSchedule
