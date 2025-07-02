@@ -14,7 +14,7 @@ import {
 } from './count-function'
 import { User } from '@supabase/supabase-js'
 import useScreenWidth from './screen-width'
-import { getAndIncrementPageVisits } from '@/utils/supabase/pageVisits'
+import { incrementPageVisitsAtomic } from '@/utils/supabase/pageVisits'
 
 const CountPage = () => {
 	const [numberUsers, setNumberUsers] = useState('---')
@@ -39,7 +39,7 @@ const CountPage = () => {
 			const allCourseReviews = await getAllCourseReviews()
 			const allInstructorReviews = await getAllInstructorReviews()
 			const allCourses = await getAllCourses()
-			const totalVisits = await getAndIncrementPageVisits()
+			const totalVisits = await incrementPageVisitsAtomic()
 
 			if (allUsers) {
 				setNumberUsers(allUsers)
