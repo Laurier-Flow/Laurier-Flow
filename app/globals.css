@@ -2888,6 +2888,10 @@
    PROFILE PAGE — redesign
    ============================================================ */
 
+.pf-root {
+  display: flex;
+  flex-direction: column;
+}
 .pf-content {
   position: relative;
   z-index: 10;
@@ -2895,6 +2899,7 @@
   width: 100%;
   margin: 0 auto;
   padding: 0 40px 80px;
+  flex: 1;
 }
 
 /* --- Profile hero --- */
@@ -3474,6 +3479,144 @@
   font-size: 14px;
   color: #ef4444;
   margin-bottom: 20px;
+}
+
+/* --- Profile: Course search + section picker --- */
+.pf-course-search {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+}
+.pf-course-search-input {
+  max-width: 100% !important;
+}
+.pf-course-search-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #16161C;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 4px;
+  z-index: 50;
+  max-height: 280px;
+  overflow-y: auto;
+}
+.pf-course-search-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 150ms ease;
+  font-family: 'DM Sans', sans-serif;
+}
+.pf-course-search-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.pf-course-search-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: #F0EFFB;
+  white-space: nowrap;
+}
+.pf-course-search-title {
+  font-size: 12px;
+  color: #8A8AAA;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pf-add-flow {
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+}
+.pf-add-flow-course {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  font-weight: 600;
+  color: #b07030;
+  margin: 0 0 16px;
+}
+.pf-section-loading {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: #8A8AAA;
+}
+.pf-section-picker {
+  display: flex;
+  flex-direction: column;
+}
+.pf-section-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.pf-section-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 150ms ease;
+  font-family: 'DM Sans', sans-serif;
+  text-align: left;
+}
+.pf-section-option:hover {
+  background: rgba(176, 112, 48, 0.08);
+  border-color: rgba(176, 112, 48, 0.3);
+}
+.pf-section-option-main {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #F0EFFB;
+}
+.pf-section-option-details {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 12px;
+  color: #8A8AAA;
+}
+.pf-section-option-dim {
+  color: #3F3F5A;
+}
+.pf-section-empty {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: #8A8AAA;
+  margin: 0 0 8px;
+}
+.pf-manual-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+.pf-manual-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pf-manual-field .pf-schedule-input {
+  max-width: 100%;
 }
 
 /* --- Profile responsive --- */
@@ -4628,4 +4771,48 @@
 :root:not(.dark) .pf-alert-error {
     background: rgba(239, 68, 68, 0.08);
     border-color: rgba(239, 68, 68, 0.2);
+  }
+:root:not(.dark) .pf-course-search-dropdown {
+    background: #FBF6EE;
+    border-color: rgba(176, 112, 48, 0.12);
+    box-shadow: 0 8px 24px rgba(120, 80, 30, 0.12);
+  }
+:root:not(.dark) .pf-course-search-item:hover {
+    background: rgba(176, 112, 48, 0.06);
+  }
+:root:not(.dark) .pf-course-search-code {
+    color: #2C1810;
+  }
+:root:not(.dark) .pf-course-search-title {
+    color: #6B5744;
+  }
+:root:not(.dark) .pf-add-flow {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(176, 112, 48, 0.1);
+  }
+:root:not(.dark) .pf-add-flow-course {
+    color: #7C3AED;
+  }
+:root:not(.dark) .pf-section-loading {
+    color: #6B5744;
+  }
+:root:not(.dark) .pf-section-option {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(176, 112, 48, 0.1);
+  }
+:root:not(.dark) .pf-section-option:hover {
+    background: rgba(124, 58, 237, 0.06);
+    border-color: rgba(124, 58, 237, 0.2);
+  }
+:root:not(.dark) .pf-section-option-main {
+    color: #2C1810;
+  }
+:root:not(.dark) .pf-section-option-details {
+    color: #6B5744;
+  }
+:root:not(.dark) .pf-section-option-dim {
+    color: #8C7A68;
+  }
+:root:not(.dark) .pf-section-empty {
+    color: #6B5744;
   }

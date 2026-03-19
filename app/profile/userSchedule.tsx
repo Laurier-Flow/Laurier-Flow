@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import DaysDisplay from '../course/DaysDisplay'
 import { days } from '../course/CourseSchedule'
 import Spinner from '@/components/Spinner'
@@ -8,7 +8,10 @@ import {
 	addClassesToSchedule,
 	deleteSpecificClassFromSchedule,
 	getUserSchedule,
-	updateUserClass
+	updateUserClass,
+	searchCourses,
+	fetchSectionsForCourse,
+	SectionOption
 } from './user-data-functions'
 
 interface UserClasses {
@@ -32,6 +35,184 @@ interface UserTerm {
 interface SortingInterface {
 	term: string
 	id: number
+}
+
+const TABLE_HEADERS = ['Class', 'Section', 'Instructor', 'Location', 'Time', 'Days', 'Type', 'Grade']
+
+const DAY_LABELS: { key: keyof days; label: string }[] = [
+	{ key: 'monday', label: 'M' },
+	{ key: 'tuesday', label: 'T' },
+	{ key: 'wednesday', label: 'W' },
+	{ key: 'thursday', label: 'T' },
+	{ key: 'friday', label: 'F' },
+	{ key: 'saturday', label: 'S' },
+	{ key: 'sunday', label: 'Su' }
+]
+
+const DAY_NAMES: Record<keyof days, string> = {
+	monday: 'Monday',
+	tuesday: 'Tuesday',
+	wednesday: 'Wednesday',
+	thursday: 'Thursday',
+	friday: 'Friday',
+	saturday: 'Saturday',
+	sunday: 'Sunday'
+}
+
+function DaySelector({
+	daysState,
+	onToggle
+}: {
+	daysState: days
+	onToggle: (dayName: string) => void
+}) {
+	return (
+		<div className='pf-day-selector'>
+			{DAY_LABELS.map(({ key, label }) => (
+				<button
+					key={key}
+					type='button'
+					className={`pf-day-btn ${daysState[key] ? 'active' : ''}`}
+					onClick={() => onToggle(DAY_NAMES[key])}
+				>
+					{label}
+				</button>
+			))}
+		</div>
+	)
+}
+
+function CourseSearch({
+	onSelect
+}: {
+	onSelect: (courseCode: string) => void
+}) {
+	const [query, setQuery] = useState('')
+	const [results, setResults] = useState<{ course_code: string; course_title: string }[]>([])
+	const [open, setOpen] = useState(false)
+	const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+	const wrapperRef = useRef<HTMLDivElement>(null)
+
+	useEffect(() => {
+		const handleClick = (e: MouseEvent) => {
+			if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+				setOpen(false)
+			}
+		}
+		document.addEventListener('mousedown', handleClick)
+		return () => document.removeEventListener('mousedown', handleClick)
+	}, [])
+
+	const handleSearch = (value: string) => {
+		setQuery(value)
+		if (debounceRef.current) clearTimeout(debounceRef.current)
+		if (value.length < 2) {
+			setResults([])
+			setOpen(false)
+			return
+		}
+		debounceRef.current = setTimeout(async () => {
+			const data = await searchCourses(value)
+			setResults(data)
+			setOpen(data.length > 0)
+		}, 250)
+	}
+
+	return (
+		<div ref={wrapperRef} className='pf-course-search'>
+			<input
+				type='text'
+				className='pf-schedule-input pf-course-search-input'
+				placeholder='Search courses...'
+				value={query}
+				onChange={(e) => handleSearch(e.target.value)}
+				onFocus={() => results.length > 0 && setOpen(true)}
+			/>
+			{open && (
+				<div className='pf-course-search-dropdown'>
+					{results.map((c) => (
+						<button
+							key={c.course_code}
+							type='button'
+							className='pf-course-search-item'
+							onClick={() => {
+								onSelect(c.course_code)
+								setQuery(c.course_code)
+								setOpen(false)
+							}}
+						>
+							<span className='pf-course-search-code'>{c.course_code}</span>
+							<span className='pf-course-search-title'>{c.course_title}</span>
+						</button>
+					))}
+				</div>
+			)}
+		</div>
+	)
+}
+
+function SectionPicker({
+	sections,
+	loading,
+	onSelect,
+	onManual
+}: {
+	sections: SectionOption[]
+	loading: boolean
+	onSelect: (s: SectionOption) => void
+	onManual: () => void
+}) {
+	if (loading) {
+		return <span className='pf-section-loading'>Loading sections...</span>
+	}
+
+	return (
+		<div className='pf-section-picker'>
+			{sections.length > 0 ? (
+				<>
+					<label className='pf-add-term-label'>Select a section</label>
+					<div className='pf-section-list'>
+						{sections.map((s, i) => (
+							<button
+								key={`${s.crn}-${i}`}
+								type='button'
+								className='pf-section-option'
+								onClick={() => onSelect(s)}
+							>
+								<span className='pf-section-option-main'>
+									{s.section && <span>Sec {s.section}</span>}
+									{s.type && <span className='pf-section-option-dim'>{s.type}</span>}
+								</span>
+								<span className='pf-section-option-details'>
+									{s.instructor && <span>{s.instructor}</span>}
+									{s.time && <span className='pf-section-option-dim'>{s.time}</span>}
+									{s.location && <span className='pf-section-option-dim'>{s.location}</span>}
+								</span>
+							</button>
+						))}
+					</div>
+				</>
+			) : (
+				<p className='pf-section-empty'>No sections found for current terms.</p>
+			)}
+			<button type='button' className='pf-btn-ghost' onClick={onManual} style={{ marginTop: 12 }}>
+				Enter details manually
+			</button>
+		</div>
+	)
+}
+
+function ScheduleTableHeaders() {
+	return (
+		<thead>
+			<tr>
+				{TABLE_HEADERS.map((h) => (
+					<th key={h}>{h}</th>
+				))}
+				<th />
+			</tr>
+		</thead>
+	)
 }
 
 const Schedule = () => {
@@ -60,411 +241,158 @@ const Schedule = () => {
 	const [userPreExistingSchedule, setUserPreExistingSchedule] =
 		useState<UserTerm[]>()
 
-	const [pageLoaded, setPageLoaded] = useState<boolean>(false)
+	const [pageLoaded, setPageLoaded] = useState(false)
+	const [update, setUpdate] = useState(false)
 
-	const [update, setUpdate] = useState<boolean>(false)
-	const [addCourse, setAddCourse] = useState<boolean>(false)
-	const [addNewTerm, setAddNewTerm] = useState<boolean>(false)
-
+	// Add course flow states
+	const [addCourseStep, setAddCourseStep] = useState<'idle' | 'search' | 'pick-section' | 'manual'>('idle')
+	const [addForTerm, setAddForTerm] = useState<string | null>(null)
+	const [selectedCourseCode, setSelectedCourseCode] = useState('')
+	const [availableSections, setAvailableSections] = useState<SectionOption[]>([])
+	const [sectionsLoading, setSectionsLoading] = useState(false)
 	const [newClass, setNewClass] = useState<UserClasses>(initialClassStatus)
+	const [addClassDatesDisplay, setAddClassDatesDisplay] = useState<days>(initialDateStatus)
 
-	const [editSchedule, setEditSchedule] = useState<boolean>(false)
+	// Add new term
+	const [addNewTerm, setAddNewTerm] = useState(false)
+	const [newTermName, setNewTermName] = useState('')
+
+	// Edit states
+	const [editSchedule, setEditSchedule] = useState(false)
 	const [editClass, setEditClass] = useState<UserClasses>(initialClassStatus)
+	const [editClassDatesDisplay, setEditClassDatesDisplay] = useState<days>(initialDateStatus)
 
-	const [addClassDatesDisplay, setAddClassDatesDisplay] =
-		useState<days>(initialDateStatus)
-
-	const [editClassDatesDisplay, setEditClassDatesDisplay] =
-		useState<days>(initialDateStatus)
-
-	const [error, setError] = useState<boolean>(false)
-	const [errorMsg, setErrorMsg] = useState<string>()
-
-	const [newTermName, setNewTermName] = useState<string>()
+	const [error, setError] = useState(false)
+	const [errorMsg, setErrorMsg] = useState('')
 
 	useEffect(() => {
 		const getData = async () => {
 			const data = await getUserSchedule()
-			if (data.length > 0) {
-				var determineTermOrder: SortingInterface[] = []
+			if (data && data.length > 0) {
+				let determineTermOrder: SortingInterface[] = []
 				const mapOfClasses: Map<number, UserClasses> = new Map()
 
 				data.forEach((course: UserClasses) => {
-					const sInt: SortingInterface = {
-						term: course.term,
-						id: course.id
-					}
-					determineTermOrder.push(sInt)
+					determineTermOrder.push({ term: course.term, id: course.id })
 					mapOfClasses.set(course.id, course)
 				})
 
-				// Sort the classes in lexicographical order so they appear in the proper term by term order
 				determineTermOrder = determineTermOrder.sort(
-					(a: SortingInterface, b: SortingInterface) =>
-						a.term.localeCompare(b.term)
+					(a, b) => a.term.localeCompare(b.term)
 				)
 
 				const userTerms: UserTerm[] = []
+				let classesInTerm: UserClasses[] = []
+				let currentTerm = determineTermOrder[0].term
 
-				// Set initial variables
-				var classesInTerm: UserClasses[] = []
-				var currentTerm = determineTermOrder[0].term
-
-				// Looping through all of the user's classes
-				determineTermOrder.forEach((course: SortingInterface) => {
-					// If we are still on the same term
+				determineTermOrder.forEach((course) => {
 					if (currentTerm === course.term) {
-						// Add the classes to the same term
 						classesInTerm.push(mapOfClasses.get(course.id)!)
-					}
-					// Otherwise
-					else {
-						// Create an object for its own term and add all classes within that term to the object
-						userTerms.push({
-							term: currentTerm,
-							classes: classesInTerm
-						})
-						// Reset the variables for the new term
+					} else {
+						userTerms.push({ term: currentTerm, classes: classesInTerm })
 						currentTerm = course.term
-						classesInTerm = []
-						classesInTerm.push(mapOfClasses.get(course.id)!)
+						classesInTerm = [mapOfClasses.get(course.id)!]
 					}
 				})
-				// The loop will terminate before being able to add the final term to the object so we do it outside the loop
-				userTerms.push({
-					term: currentTerm,
-					classes: classesInTerm
-				})
+				userTerms.push({ term: currentTerm, classes: classesInTerm })
 				setUserPreExistingSchedule(userTerms)
 			} else {
 				setUserPreExistingSchedule(undefined)
 			}
 		}
 		getData()
-			.then(() => {
-				setUpdate(false)
-				setPageLoaded(true)
-			})
-			.catch(() => {
-				setError(true)
-				setErrorMsg(
-					'An unexpected error has occured when attempting to display your schedule'
-				)
-			})
+			.then(() => { setUpdate(false); setPageLoaded(true) })
+			.catch(() => { setError(true); setErrorMsg('An unexpected error has occurred when loading your schedule') })
 	}, [update])
 
-	const handleAddTermClick = () => {
-		if (newTermName?.length! > 0) {
-			setError(false)
-			setAddNewTerm(true)
-		} else {
-			setError(true)
-			setErrorMsg('Please ensure a term name is added when adding a new term')
+	const resetAddState = () => {
+		setAddCourseStep('idle')
+		setAddForTerm(null)
+		setSelectedCourseCode('')
+		setAvailableSections([])
+		setNewClass(initialClassStatus)
+		setAddClassDatesDisplay(initialDateStatus)
+		setError(false)
+	}
+
+	const handleCourseSelect = async (courseCode: string) => {
+		setSelectedCourseCode(courseCode)
+		setNewClass({ ...initialClassStatus, class: courseCode })
+		setSectionsLoading(true)
+		setAddCourseStep('pick-section')
+
+		try {
+			const sections = await fetchSectionsForCourse(courseCode)
+			setAvailableSections(sections)
+		} catch {
+			setAvailableSections([])
+		} finally {
+			setSectionsLoading(false)
 		}
 	}
 
-	const handleNewTermNameChange = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		setNewTermName(event.target.value)
+	const handleSectionSelect = (s: SectionOption) => {
+		const daysObj: days = {
+			monday: s.days.includes('Monday'),
+			tuesday: s.days.includes('Tuesday'),
+			wednesday: s.days.includes('Wednesday'),
+			thursday: s.days.includes('Thursday'),
+			friday: s.days.includes('Friday'),
+			saturday: s.days.includes('Saturday'),
+			sunday: s.days.includes('Sunday')
+		}
+		setAddClassDatesDisplay(daysObj)
+		setNewClass({
+			...newClass,
+			class: selectedCourseCode,
+			section: s.section,
+			instructor: s.instructor,
+			location: s.location,
+			time: s.time,
+			date: s.days,
+			type: s.type,
+			grade: ''
+		})
+		setAddCourseStep('manual')
 	}
 
-	const handleAddClassClick = () => {
-		setAddCourse(true)
+	const handleGoManual = () => {
+		setAddCourseStep('manual')
+	}
+
+	const buildDateString = (d: days) => {
+		let str = ''
+		if (d.monday) str += 'Monday'
+		if (d.tuesday) str += 'Tuesday'
+		if (d.wednesday) str += 'Wednesday'
+		if (d.thursday) str += 'Thursday'
+		if (d.friday) str += 'Friday'
+		if (d.saturday) str += 'Saturday'
+		if (d.sunday) str += 'Sunday'
+		return str
+	}
+
+	const handleAddDateChange = (dayName: string) => {
+		const key = dayName.toLowerCase() as keyof days
+		const updated = { ...addClassDatesDisplay, [key]: !addClassDatesDisplay[key] }
+		setAddClassDatesDisplay(updated)
+		setNewClass({ ...newClass, date: buildDateString(updated) })
+	}
+
+	const handleEditDateChange = (dayName: string) => {
+		const key = dayName.toLowerCase() as keyof days
+		const updated = { ...editClassDatesDisplay, [key]: !editClassDatesDisplay[key] }
+		setEditClassDatesDisplay(updated)
+		setEditClass({ ...editClass, date: buildDateString(updated) })
 	}
 
 	const handleDeleteClass = async (id: number) => {
-		const res = await deleteSpecificClassFromSchedule(id)
+		await deleteSpecificClassFromSchedule(id)
 		setUpdate(true)
 	}
 
-	const handleNewClassChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		var curClass: UserClasses = { ...newClass! }
-		curClass.class = event.target.value
-		setNewClass(curClass)
-	}
-
-	const handleNewInstructorChange = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		var curClass: UserClasses = { ...newClass! }
-		curClass.instructor = event.target.value
-		setNewClass(curClass)
-	}
-
-	const handleNewLocationChange = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		var curClass: UserClasses = { ...newClass! }
-		curClass.location = event.target.value
-		setNewClass(curClass)
-	}
-
-	const handleNewTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		var curClass: UserClasses = { ...newClass! }
-		curClass.time = event.target.value
-		setNewClass(curClass)
-	}
-
-	const handleNewTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		var curClass: UserClasses = { ...newClass! }
-		curClass.type = event.target.value
-		setNewClass(curClass)
-	}
-
-	const handleNewGradeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		var curClass: UserClasses = { ...newClass! }
-		curClass.grade = event.target.value
-		setNewClass(curClass)
-	}
-
-	const handleNewSectionChange = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		var curClass: UserClasses = { ...newClass! }
-		curClass.section = event.target.value
-		setNewClass(curClass)
-	}
-
-	const handleEditClassChange = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		var curClass: UserClasses = { ...editClass! }
-		curClass.class = event.target.value
-		setEditClass(curClass)
-	}
-
-	const handleEditLocationChange = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		var curClass: UserClasses = { ...editClass! }
-		curClass.location = event.target.value
-		setEditClass(curClass)
-	}
-
-	const handleEditTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		var curClass: UserClasses = { ...editClass! }
-		curClass.time = event.target.value
-		setEditClass(curClass)
-	}
-
-	const handleEditDateChange = (dateChanged: string) => {
-		var curEditDays: days = editClassDatesDisplay!
-
-		if (dateChanged === 'Monday') {
-			if (curEditDays.monday) {
-				curEditDays.monday = false
-			} else {
-				curEditDays.monday = true
-			}
-		}
-
-		if (dateChanged === 'Tuesday') {
-			if (curEditDays.tuesday) {
-				curEditDays.tuesday = false
-			} else {
-				curEditDays.tuesday = true
-			}
-		}
-
-		if (dateChanged === 'Wednesday') {
-			if (curEditDays.wednesday) {
-				curEditDays.wednesday = false
-			} else {
-				curEditDays.wednesday = true
-			}
-		}
-
-		if (dateChanged === 'Thursday') {
-			if (curEditDays.thursday) {
-				curEditDays.thursday = false
-			} else {
-				curEditDays.thursday = true
-			}
-		}
-
-		if (dateChanged === 'Friday') {
-			if (curEditDays.friday) {
-				curEditDays.friday = false
-			} else {
-				curEditDays.friday = true
-			}
-		}
-
-		if (dateChanged === 'Saturday') {
-			if (curEditDays.saturday) {
-				curEditDays.saturday = false
-			} else {
-				curEditDays.saturday = true
-			}
-		}
-
-		if (dateChanged === 'Sunday') {
-			if (curEditDays.sunday) {
-				curEditDays.sunday = false
-			} else {
-				curEditDays.sunday = true
-			}
-		}
-
-		setEditClassDatesDisplay(curEditDays)
-		var str = ''
-		if (curEditDays.monday) {
-			str += 'Monday'
-		}
-		if (curEditDays.tuesday) {
-			str += 'Tuesday'
-		}
-		if (curEditDays.wednesday) {
-			str += 'Wednesday'
-		}
-		if (curEditDays.thursday) {
-			str += 'Thursday'
-		}
-		if (curEditDays.friday) {
-			str += 'Friday'
-		}
-		if (curEditDays.saturday) {
-			str += 'Saturday'
-		}
-		if (curEditDays.sunday) {
-			str += 'Sunday'
-		}
-		const curClass: UserClasses = { ...editClass }
-		curClass.date = str
-		setEditClass(curClass)
-	}
-
-	const handleAddDateChange = (dateChanged: string) => {
-		var curEditDays: days = addClassDatesDisplay!
-
-		if (dateChanged === 'Monday') {
-			if (curEditDays.monday) {
-				curEditDays.monday = false
-			} else {
-				curEditDays.monday = true
-			}
-		}
-
-		if (dateChanged === 'Tuesday') {
-			if (curEditDays.tuesday) {
-				curEditDays.tuesday = false
-			} else {
-				curEditDays.tuesday = true
-			}
-		}
-
-		if (dateChanged === 'Wednesday') {
-			if (curEditDays.wednesday) {
-				curEditDays.wednesday = false
-			} else {
-				curEditDays.wednesday = true
-			}
-		}
-
-		if (dateChanged === 'Thursday') {
-			if (curEditDays.thursday) {
-				curEditDays.thursday = false
-			} else {
-				curEditDays.thursday = true
-			}
-		}
-
-		if (dateChanged === 'Friday') {
-			if (curEditDays.friday) {
-				curEditDays.friday = false
-			} else {
-				curEditDays.friday = true
-			}
-		}
-
-		if (dateChanged === 'Saturday') {
-			if (curEditDays.saturday) {
-				curEditDays.saturday = false
-			} else {
-				curEditDays.saturday = true
-			}
-		}
-
-		if (dateChanged === 'Sunday') {
-			if (curEditDays.sunday) {
-				curEditDays.sunday = false
-			} else {
-				curEditDays.sunday = true
-			}
-		}
-
-		setAddClassDatesDisplay(curEditDays)
-		var str = ''
-		if (curEditDays.monday) {
-			str += 'Monday'
-		}
-		if (curEditDays.tuesday) {
-			str += 'Tuesday'
-		}
-		if (curEditDays.wednesday) {
-			str += 'Wednesday'
-		}
-		if (curEditDays.thursday) {
-			str += 'Thursday'
-		}
-		if (curEditDays.friday) {
-			str += 'Friday'
-		}
-		if (curEditDays.saturday) {
-			str += 'Saturday'
-		}
-		if (curEditDays.sunday) {
-			str += 'Sunday'
-		}
-		const curClass: UserClasses = { ...newClass }
-		curClass.date = str
-		setNewClass(curClass)
-	}
-
-	const handleEditTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		var curClass: UserClasses = { ...editClass! }
-		curClass.type = event.target.value
-		setEditClass(curClass)
-	}
-
-	const handleEditGradeChange = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		var curClass: UserClasses = { ...editClass! }
-		curClass.grade = event.target.value
-		setEditClass(curClass)
-	}
-
-	const handleEditTermChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		var curClass: UserClasses = { ...editClass! }
-		curClass.term = event.target.value
-		setEditClass(curClass)
-	}
-
-	const handleEditSectionChange = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		var curClass: UserClasses = { ...editClass! }
-		curClass.section = event.target.value
-		setEditClass(curClass)
-	}
-
-	const handleEditInstructorChange = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		var curClass: UserClasses = { ...editClass! }
-		curClass.instructor = event.target.value
-		setEditClass(curClass)
-	}
-
-	const handleCancelEditSchedule = () => {
-		setError(false)
-		setEditSchedule(false)
-	}
-
-	const handleStartEditSchedule = (userClass: UserClasses) => {
-		var editDays: days = {
+	const handleStartEdit = (userClass: UserClasses) => {
+		setEditClassDatesDisplay({
 			monday: userClass.date.includes('Monday'),
 			tuesday: userClass.date.includes('Tuesday'),
 			wednesday: userClass.date.includes('Wednesday'),
@@ -472,859 +400,357 @@ const Schedule = () => {
 			friday: userClass.date.includes('Friday'),
 			saturday: userClass.date.includes('Saturday'),
 			sunday: userClass.date.includes('Sunday')
-		}
-		setEditClassDatesDisplay(editDays)
-
+		})
 		setEditClass(userClass)
-
 		setEditSchedule(true)
 	}
 
-	const handleSaveEditChanges = async () => {
-		if (
-			editClass?.class &&
-			editClass.instructor &&
-			editClass.location &&
-			editClass.time &&
-			editClass.date &&
-			editClass.type &&
-			editClass.section
-		) {
-			const res = await updateUserClass(
-				editClass.term,
-				editClass.class,
-				editClass.instructor,
-				editClass.location,
-				editClass.time,
-				editClass.date,
-				editClass.type,
-				editClass.grade,
-				editClass.id,
-				editClass.section
+	const handleSaveEdit = async () => {
+		if (editClass.class && editClass.instructor && editClass.location &&
+			editClass.time && editClass.date && editClass.type && editClass.section) {
+			await updateUserClass(
+				editClass.term, editClass.class, editClass.instructor,
+				editClass.location, editClass.time, editClass.date,
+				editClass.type, editClass.grade, editClass.id, editClass.section
 			)
 			setError(false)
 			setUpdate(true)
-			setTimeout(() => {
-				setEditSchedule(false)
-			}, 500)
+			setTimeout(() => setEditSchedule(false), 500)
 		} else {
 			setError(true)
-			setErrorMsg(
-				'Please ensure all fields (aside from Grade if not necessary) are filled out when editing your schedule'
-			)
+			setErrorMsg('Please fill out all fields (Grade is optional)')
 		}
 	}
 
-	const handleSubmitNewClasses = async (term: string) => {
-		if (
-			term &&
-			newClass?.class &&
-			newClass.instructor &&
-			newClass.location &&
-			newClass.time &&
-			newClass.date &&
-			newClass.type &&
-			newClass.section
-		) {
+	const handleSubmitNewClass = async (term: string) => {
+		if (term && newClass.class && newClass.instructor && newClass.location &&
+			newClass.time && newClass.date && newClass.type && newClass.section) {
 			const res = await addClassesToSchedule(
-				term,
-				newClass.class,
-				newClass.instructor,
-				newClass.location,
-				newClass.time,
-				newClass.date,
-				newClass.type,
-				newClass.grade,
-				newClass.section
+				term, newClass.class, newClass.instructor, newClass.location,
+				newClass.time, newClass.date, newClass.type, newClass.grade, newClass.section
 			)
 			if (res) {
-				setAddCourse(false)
+				resetAddState()
 				setAddNewTerm(false)
-				setUpdate(true)
-				setError(false)
-				setErrorMsg('')
-				setNewClass(initialClassStatus)
 				setNewTermName('')
+				setUpdate(true)
 			} else {
 				setError(true)
-				setErrorMsg(
-					'Please ensure all fields (aside from Grade if not necessary) are filled out when adding a course to your schedule'
-				)
-				setNewTermName('')
+				setErrorMsg('Failed to add course. Please try again.')
 			}
 		} else {
 			setError(true)
-			setErrorMsg(
-				'Please ensure all fields (aside from Grade if not necessary) are filled out when adding a course to your schedule'
-			)
+			setErrorMsg('Please fill out all fields (Grade is optional)')
 		}
 	}
-	return (
-		<div className='customCard mb-8 flex h-full items-center justify-center'>
-			{error ? (
-				<div
-					className='mt-2 rounded-lg bg-red-500 p-4 text-sm text-white'
-					role='alert'
-				>
-					<span className='font-bold'>Error!</span> {errorMsg}
+
+	const renderAddFlow = (termName: string) => {
+		if (addForTerm !== termName && addCourseStep !== 'idle') return null
+
+		if (addCourseStep === 'search') {
+			return (
+				<div className='pf-add-flow'>
+					<label className='pf-add-term-label'>Search for a course</label>
+					<CourseSearch onSelect={handleCourseSelect} />
+					<button type='button' className='pf-btn-ghost' onClick={resetAddState} style={{ marginTop: 12 }}>
+						Cancel
+					</button>
 				</div>
-			) : null}
-			{pageLoaded ? (
-				<>
-					{userPreExistingSchedule?.map((term: UserTerm, index: number) => {
-						return (
-							<div
-								key={index}
-								style={{ maxWidth: '65vw' }}
-								id='equal-width-elements-1'
-								className='mb-5 mt-5'
-								aria-labelledby='equal-width-elements-item-1'
-							>
-								<h1 className='mb-2 text-xl font-bold text-black dark:text-white md:text-xl'>
-									{term.term}
-								</h1>
-								<div className='flex flex-col'>
-									<div className='-m-1.5 overflow-x-auto'>
-										<div className='inline-block min-w-full p-1.5 align-middle'>
-											<div className='overflow-hidden'>
-												<table className='min-w-full divide-y divide-gray-200 dark:divide-gray-700'>
-													<thead>
-														<tr>
-															<th
-																scope='col'
-																className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500'
-															>
-																Classname
-															</th>
-															<th
-																scope='col'
-																className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500'
-															>
-																Section
-															</th>
-															<th
-																scope='col'
-																className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500'
-															>
-																Instructor
-															</th>
-															<th
-																scope='col'
-																className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500'
-															>
-																Location
-															</th>
-															<th
-																scope='col'
-																className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500'
-															>
-																Time
-															</th>
-															<th
-																scope='col'
-																className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500'
-															>
-																Date
-															</th>
-															<th
-																scope='col'
-																className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500'
-															>
-																Type
-															</th>
-															<th
-																scope='col'
-																className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500'
-															>
-																Grade
-															</th>
-														</tr>
-													</thead>
-													<tbody className='divide-y divide-gray-200 dark:divide-gray-700'>
-														{term.classes.map(
-															(userClass: UserClasses, index: number) => {
-																return editSchedule &&
-																	editClass.id === userClass.id ? (
-																	<tr>
-																		<td>
-																			<input
-																				type='text'
-																				id='class_name'
-																				className='ml-4 mt-3 block w-2/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																				value={editClass.class}
-																				onChange={handleEditClassChange}
-																				required={true}
-																			/>
-																		</td>
-																		<td>
-																			<input
-																				type='text'
-																				id='section_name'
-																				className='ml-3 mt-3 block w-2/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																				value={editClass.section}
-																				onChange={handleEditSectionChange}
-																				required={true}
-																			/>
-																		</td>
-																		<td>
-																			<input
-																				type='text'
-																				id='instructor_name'
-																				className='ml-4 mt-3 block w-2/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																				value={editClass.instructor}
-																				onChange={handleEditInstructorChange}
-																				required={true}
-																			/>
-																		</td>
-																		<td>
-																			<input
-																				type='text'
-																				id='location_name'
-																				className='ml-4 mt-3 block w-2/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																				value={editClass.location}
-																				onChange={handleEditLocationChange}
-																				required
-																			/>
-																		</td>
-																		<td>
-																			<input
-																				type='text'
-																				id='new_time'
-																				className='mr-3 mt-3 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																				placeholder='8:30 AM - 9:30 AM'
-																				value={editClass.time}
-																				onChange={handleEditTimeChange}
-																				required
-																			/>
-																		</td>
-																		<td>
-																			<div className='ml-6 mr-2 mt-1 flex flex-row'>
-																				<p
-																					onClick={() => {
-																						handleEditDateChange('Monday')
-																					}}
-																					className={`text-sm font-medium text-gray-${editClassDatesDisplay?.monday ? 100 : 200} dark:text-gray-${editClassDatesDisplay.monday ? 200 : 500}`}
-																				>
-																					M
-																				</p>
-																				<p
-																					onClick={() => {
-																						handleEditDateChange('Tuesday')
-																					}}
-																					className={`text-sm font-medium text-gray-${editClassDatesDisplay?.tuesday ? 100 : 200} dark:text-gray-${editClassDatesDisplay.tuesday ? 200 : 500} pl-1`}
-																				>
-																					T
-																				</p>
-																				<p
-																					onClick={() => {
-																						handleEditDateChange('Wednesday')
-																					}}
-																					className={`text-sm font-medium text-gray-${editClassDatesDisplay?.wednesday ? 100 : 200} dark:text-gray-${editClassDatesDisplay.wednesday ? 200 : 500} pl-1`}
-																				>
-																					W
-																				</p>
-																				<p
-																					onClick={() => {
-																						handleEditDateChange('Thursday')
-																					}}
-																					className={`text-sm font-medium text-gray-${editClassDatesDisplay?.thursday ? 100 : 200} dark:text-gray-${editClassDatesDisplay.thursday ? 200 : 500} pl-1`}
-																				>
-																					T
-																				</p>
-																				<p
-																					onClick={() => {
-																						handleEditDateChange('Friday')
-																					}}
-																					className={`text-sm font-medium text-gray-${editClassDatesDisplay?.friday ? 100 : 200} dark:text-gray-${editClassDatesDisplay.friday ? 200 : 500} pl-1`}
-																				>
-																					F
-																				</p>
-																				<p
-																					onClick={() => {
-																						handleEditDateChange('Saturday')
-																					}}
-																					className={`text-sm font-medium text-gray-${editClassDatesDisplay?.saturday ? 100 : 200} dark:text-gray-${editClassDatesDisplay.saturday ? 200 : 500} pl-1`}
-																				>
-																					S
-																				</p>
-																				<p
-																					onClick={() => {
-																						handleEditDateChange('Sunday')
-																					}}
-																					className={`text-sm font-medium text-gray-${editClassDatesDisplay?.sunday ? 100 : 200} dark:text-gray-${editClassDatesDisplay.sunday ? 200 : 500} pl-1`}
-																				>
-																					Su
-																				</p>
-																			</div>
-																		</td>
-																		<td>
-																			<input
-																				type='text'
-																				id='new_type'
-																				className='ml-4 mt-3 block w-2/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																				value={editClass.type}
-																				onChange={handleEditTypeChange}
-																				required
-																			/>
-																		</td>
-																		<td>
-																			<input
-																				type='text'
-																				id='new_type'
-																				className='ml-4 mt-3 block w-2/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																				value={editClass.grade}
-																				onChange={handleEditGradeChange}
-																				required
-																			/>
-																		</td>
-																		<td>
-																			<button
-																				onClick={(e) => {
-																					e.preventDefault()
-																					handleCancelEditSchedule()
-																				}}
-																				type='button'
-																				className='mb-2 me-2 ml-6 mt-4 rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900'
-																			>
-																				Cancel Edit
-																			</button>
-																		</td>
-																	</tr>
-																) : (
-																	<tr>
-																		<td className='whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200'>
-																			{userClass.class}
-																		</td>
-																		<td className='whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200'>
-																			{userClass.section}
-																		</td>
-																		<td className='whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200'>
-																			{userClass.instructor}
-																		</td>
-																		<td className='whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200'>
-																			{userClass.location}
-																		</td>
-																		<td className='whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200'>
-																			{userClass.time}
-																		</td>
-																		<td className='whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200'>
-																			{
-																				<DaysDisplay
-																					days={{
-																						monday:
-																							userClass.date.includes('Monday'),
-																						tuesday:
-																							userClass.date.includes(
-																								'Tuesday'
-																							),
-																						wednesday:
-																							userClass.date.includes(
-																								'Wednesday'
-																							),
-																						thursday:
-																							userClass.date.includes(
-																								'Thursday'
-																							),
-																						friday:
-																							userClass.date.includes('Friday'),
-																						saturday:
-																							userClass.date.includes(
-																								'Saturday'
-																							),
-																						sunday:
-																							userClass.date.includes('Sunday')
-																					}}
-																				/>
-																			}
-																		</td>
-																		<td className='whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200'>
-																			{userClass.type}
-																		</td>
-																		<td className='whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200'>
-																			{userClass.grade}
-																		</td>
-																		<td className='whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200'>
-																			<button
-																				onClick={async (e) => {
-																					e.preventDefault()
-																					handleDeleteClass(userClass.id)
-																				}}
-																				type='button'
-																				className='mb-2 me-2 rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900'
-																			>
-																				Delete
-																			</button>
-																		</td>
-																		<td className='whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200'>
-																			<button
-																				onClick={async (e) => {
-																					e.preventDefault()
-																					handleStartEditSchedule(userClass)
-																				}}
-																				type='button'
-																				className='mb-2 me-2 rounded-lg border border-transparent bg-secondary px-5 py-2.5 text-sm font-semibold text-black disabled:pointer-events-none disabled:opacity-50 dark:text-white'
-																			>
-																				Edit
-																			</button>
-																		</td>
-																	</tr>
-																)
-															}
-														)}
-														{addCourse ? (
-															<tr>
-																<td>
-																	<input
-																		type='text'
-																		id='class_name'
-																		className='ml-3 mt-3 block w-2/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																		placeholder='BU111'
-																		onChange={handleNewClassChange}
-																		required
-																	/>
-																</td>
-																<td>
-																	<input
-																		type='text'
-																		id='section_name'
-																		className='ml-3 mt-3 block w-2/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																		placeholder='B7'
-																		onChange={handleNewSectionChange}
-																		required
-																	/>
-																</td>
-																<td>
-																	<input
-																		type='text'
-																		id='instructor_name'
-																		className='ml-3 mt-3 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																		placeholder='Dave Swanston'
-																		onChange={handleNewInstructorChange}
-																		required
-																	/>
-																</td>
-																<td>
-																	<input
-																		type='text'
-																		id='location_name'
-																		className='ml-4 mt-3 block w-2/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																		placeholder='LH3094'
-																		onChange={handleNewLocationChange}
-																		required
-																	/>
-																</td>
-																<td>
-																	<input
-																		type='text'
-																		id='new_time'
-																		className='ml-3 mt-3 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																		placeholder='8:30 AM - 9:30 AM'
-																		onChange={handleNewTimeChange}
-																		required
-																	/>
-																</td>
-																<td>
-																	<div className='ml-6 mr-2 mt-1 flex flex-row'>
-																		<p
-																			onClick={() => {
-																				handleAddDateChange('Monday')
-																			}}
-																			className={`text-sm font-medium text-gray-${addClassDatesDisplay?.monday ? 100 : 200} dark:text-gray-${addClassDatesDisplay.monday ? 200 : 500}`}
-																		>
-																			M
-																		</p>
-																		<p
-																			onClick={() => {
-																				handleAddDateChange('Tuesday')
-																			}}
-																			className={`text-sm font-medium text-gray-${addClassDatesDisplay?.tuesday ? 100 : 200} dark:text-gray-${addClassDatesDisplay.tuesday ? 200 : 500} pl-1`}
-																		>
-																			T
-																		</p>
-																		<p
-																			onClick={() => {
-																				handleAddDateChange('Wednesday')
-																			}}
-																			className={`text-sm font-medium text-gray-${addClassDatesDisplay?.wednesday ? 100 : 200} dark:text-gray-${addClassDatesDisplay.wednesday ? 200 : 500} pl-1`}
-																		>
-																			W
-																		</p>
-																		<p
-																			onClick={() => {
-																				handleAddDateChange('Thursday')
-																			}}
-																			className={`text-sm font-medium text-gray-${addClassDatesDisplay?.thursday ? 100 : 200} dark:text-gray-${addClassDatesDisplay.thursday ? 200 : 500} pl-1`}
-																		>
-																			T
-																		</p>
-																		<p
-																			onClick={() => {
-																				handleAddDateChange('Friday')
-																			}}
-																			className={`text-sm font-medium text-gray-${addClassDatesDisplay?.friday ? 100 : 200} dark:text-gray-${addClassDatesDisplay.friday ? 200 : 500} pl-1`}
-																		>
-																			F
-																		</p>
-																		<p
-																			onClick={() => {
-																				handleAddDateChange('Saturday')
-																			}}
-																			className={`text-sm font-medium text-gray-${addClassDatesDisplay?.saturday ? 100 : 200} dark:text-gray-${addClassDatesDisplay.saturday ? 200 : 500} pl-1`}
-																		>
-																			S
-																		</p>
-																		<p
-																			onClick={() => {
-																				handleAddDateChange('Sunday')
-																			}}
-																			className={`text-sm font-medium text-gray-${addClassDatesDisplay?.sunday ? 100 : 200} dark:text-gray-${addClassDatesDisplay.sunday ? 200 : 500} pl-1`}
-																		>
-																			Su
-																		</p>
-																	</div>
-																</td>
-																<td>
-																	<input
-																		type='text'
-																		id='new_type'
-																		className='ml-3 mt-3 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																		placeholder='Lecture'
-																		onChange={handleNewTypeChange}
-																		required
-																	/>
-																</td>
-																<td>
-																	<input
-																		type='text'
-																		id='new_grade'
-																		className='ml-3 mt-3 block w-2/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																		placeholder='9'
-																		onChange={handleNewGradeChange}
-																		required
-																	/>
-																</td>
-																<td>
-																	<button
-																		onClick={(e) => {
-																			e.preventDefault()
-																			setAddCourse(false)
-																			setNewClass(initialClassStatus)
-																		}}
-																		type='button'
-																		className='mb-2 me-2 ml-6 mt-4 rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900'
-																	>
-																		Cancel
-																	</button>
-																</td>
-															</tr>
-														) : null}
-														{addCourse ? (
-															<button
-																type='button'
-																onClick={(e) => {
-																	e.preventDefault()
-																	handleSubmitNewClasses(term.term)
-																}}
-																className='mb-2 me-2 mt-2 rounded-lg border border-transparent bg-secondary px-5 py-2.5 text-sm font-semibold text-black disabled:pointer-events-none disabled:opacity-50 dark:text-white'
-															>
-																{' '}
-																Submit Changes
-															</button>
-														) : editSchedule ? (
-															<button
-																type='button'
-																onClick={handleSaveEditChanges}
-																className='mb-2 me-2 mt-2 rounded-lg border border-transparent bg-secondary px-5 py-2.5 text-sm font-semibold text-black disabled:pointer-events-none disabled:opacity-50 dark:text-white'
-															>
-																{' '}
-																Save Changes
-															</button>
-														) : (
-															<button
-																type='button'
-																onClick={handleAddClassClick}
-																className='mb-2 me-2 mt-2 rounded-lg border border-transparent bg-secondary px-5 py-2.5 text-sm font-semibold text-black disabled:pointer-events-none disabled:opacity-50 dark:text-white'
-															>
-																{' '}
-																Add Course
-															</button>
-														)}
-													</tbody>
-												</table>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div
-									className='text-center'
-									style={{
-										display: 'flex',
-										justifyContent: 'center',
-										alignItems: 'center'
-									}}
-								>
-									<hr
-										className='mt-5'
-										style={{
-											width: '50%',
-											borderWidth: '1px',
-											borderRadius: '20px',
-											borderColor: '#F8BF3A'
-										}}
-									/>
-								</div>
-							</div>
-						)
-					})}
+			)
+		}
 
-					{addNewTerm ? (
-						<>
-							<h1 className='mb-2 mt-5 text-start text-xl font-bold text-black md:text-xl'>
-								{newTermName}
-							</h1>
-							<div className='flex flex-col'>
-								<div className='-m-1.5 overflow-x-auto'>
-									<div className='inline-block min-w-full p-1.5 align-middle'>
-										<div className='overflow-hidden'>
-											<table className='min-w-full divide-y divide-gray-200 dark:divide-gray-700'>
-												<thead>
-													<tr>
-														<th
-															scope='col'
-															className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500'
-														>
-															className
-														</th>
-														<th
-															scope='col'
-															className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500'
-														>
-															Section
-														</th>
-														<th
-															scope='col'
-															className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500'
-														>
-															Instructor
-														</th>
-														<th
-															scope='col'
-															className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500'
-														>
-															Location
-														</th>
-														<th
-															scope='col'
-															className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500'
-														>
-															Time
-														</th>
-														<th
-															scope='col'
-															className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500'
-														>
-															Date
-														</th>
-														<th
-															scope='col'
-															className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500'
-														>
-															Type
-														</th>
-														<th
-															scope='col'
-															className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500'
-														>
-															Grade
-														</th>
-														<th></th>
-													</tr>
-												</thead>
-												<tbody className='divide-y divide-gray-200 dark:divide-gray-700'>
-													<tr>
-														<td>
-															<input
-																type='text'
-																id='class_name'
-																className='mt-3 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																placeholder='BU111'
-																onChange={handleNewClassChange}
-																required
-															/>
-														</td>
-														<td>
-															<input
-																type='text'
-																id='section_name'
-																className='mt-3 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																placeholder='B7'
-																onChange={handleNewSectionChange}
-																required
-															/>
-														</td>
-														<td>
-															<input
-																type='text'
-																id='instructor_name'
-																className='mt-3 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																placeholder='Dave Swanston'
-																onChange={handleNewInstructorChange}
-																required
-															/>
-														</td>
-														<td>
-															<input
-																type='text'
-																id='location_name'
-																className='mt-3 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																placeholder='LH3094'
-																onChange={handleNewLocationChange}
-																required
-															/>
-														</td>
-														<td>
-															<input
-																type='text'
-																id='new_time'
-																className='mt-3 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																placeholder='8:30 AM - 9:30 AM'
-																onChange={handleNewTimeChange}
-																required
-															/>
-														</td>
-														<td>
-															<div className='ml-2 mr-2 mt-1 flex flex-row'>
-																<p
-																	onClick={() => {
-																		handleAddDateChange('Monday')
-																	}}
-																	className={`text-sm font-medium text-gray-${addClassDatesDisplay?.monday ? 100 : 200} dark:text-gray-${addClassDatesDisplay.monday ? 200 : 500}`}
-																>
-																	M
-																</p>
-																<p
-																	onClick={() => {
-																		handleAddDateChange('Tuesday')
-																	}}
-																	className={`text-sm font-medium text-gray-${addClassDatesDisplay?.tuesday ? 100 : 200} dark:text-gray-${addClassDatesDisplay.tuesday ? 200 : 500} pl-1`}
-																>
-																	T
-																</p>
-																<p
-																	onClick={() => {
-																		handleAddDateChange('Wednesday')
-																	}}
-																	className={`text-sm font-medium text-gray-${addClassDatesDisplay?.wednesday ? 100 : 200} dark:text-gray-${addClassDatesDisplay.wednesday ? 200 : 500} pl-1`}
-																>
-																	W
-																</p>
-																<p
-																	onClick={() => {
-																		handleAddDateChange('Thursday')
-																	}}
-																	className={`text-sm font-medium text-gray-${addClassDatesDisplay?.thursday ? 100 : 200} dark:text-gray-${addClassDatesDisplay.thursday ? 200 : 500} pl-1`}
-																>
-																	T
-																</p>
-																<p
-																	onClick={() => {
-																		handleAddDateChange('Friday')
-																	}}
-																	className={`text-sm font-medium text-gray-${addClassDatesDisplay?.friday ? 100 : 200} dark:text-gray-${addClassDatesDisplay.friday ? 200 : 500} pl-1`}
-																>
-																	F
-																</p>
-																<p
-																	onClick={() => {
-																		handleAddDateChange('Saturday')
-																	}}
-																	className={`text-sm font-medium text-gray-${addClassDatesDisplay?.saturday ? 100 : 200} dark:text-gray-${addClassDatesDisplay.saturday ? 200 : 500} pl-1`}
-																>
-																	S
-																</p>
-																<p
-																	onClick={() => {
-																		handleAddDateChange('Sunday')
-																	}}
-																	className={`text-sm font-medium text-gray-${addClassDatesDisplay?.sunday ? 100 : 200} dark:text-gray-${addClassDatesDisplay.sunday ? 200 : 500} pl-1`}
-																>
-																	Su
-																</p>
-															</div>
-														</td>
-														<td>
-															<input
-																type='text'
-																id='new_type'
-																className='mt-3 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																placeholder='Lecture'
-																onChange={handleNewTypeChange}
-																required
-															/>
-														</td>
-														<td>
-															<input
-																type='text'
-																id='new_grade'
-																className='mt-3 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-																placeholder='9'
-																onChange={handleNewGradeChange}
-																required
-															/>
-														</td>
-														<td>
-															<button
-																onClick={(e) => {
-																	e.preventDefault()
-																	setAddCourse(false)
-																	setAddNewTerm(false)
-																	setNewClass(initialClassStatus)
-																}}
-																type='button'
-																className='mb-2 me-2 ml-6 mt-4 rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900'
-															>
-																Cancel
-															</button>
-														</td>
-													</tr>
+		if (addCourseStep === 'pick-section') {
+			return (
+				<div className='pf-add-flow'>
+					<p className='pf-add-flow-course'>{selectedCourseCode}</p>
+					<SectionPicker
+						sections={availableSections}
+						loading={sectionsLoading}
+						onSelect={handleSectionSelect}
+						onManual={handleGoManual}
+					/>
+					<button type='button' className='pf-btn-ghost' onClick={resetAddState} style={{ marginTop: 8 }}>
+						Cancel
+					</button>
+				</div>
+			)
+		}
 
-													<button
-														type='button'
-														onClick={(e) => {
-															e.preventDefault()
-															handleSubmitNewClasses(newTermName!)
-														}}
-														className='mb-2 me-2 mt-2 rounded-lg border border-transparent bg-secondary px-5 py-2.5 text-sm font-semibold text-black disabled:pointer-events-none disabled:opacity-50 dark:text-white'
-													>
-														{' '}
-														Submit Changes
-													</button>
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-							</div>
-						</>
-					) : (
-						<div>
-							<label>Add New Term</label>
+		if (addCourseStep === 'manual') {
+			return (
+				<div className='pf-add-flow'>
+					<p className='pf-add-flow-course'>{selectedCourseCode || 'New Course'}</p>
+					<div className='pf-manual-grid'>
+						<div className='pf-manual-field'>
+							<label className='pf-add-term-label'>Class</label>
 							<input
 								type='text'
-								id='class_name'
-								className='mt-5 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-								placeholder='1A'
-								onChange={handleNewTermNameChange}
-								required
+								className='pf-schedule-input'
+								value={newClass.class}
+								onChange={(e) => setNewClass({ ...newClass, class: e.target.value })}
+								placeholder='BU111'
 							/>
-							<button
-								type='button'
-								onClick={handleAddTermClick}
-								className='mb-2 me-2 mt-2 w-full rounded-lg border border-transparent bg-secondary px-5 py-2.5 text-sm font-semibold text-black disabled:pointer-events-none disabled:opacity-50 dark:text-white'
-							>
-								{' '}
-								Add Term
-							</button>
+						</div>
+						<div className='pf-manual-field'>
+							<label className='pf-add-term-label'>Section</label>
+							<input
+								type='text'
+								className='pf-schedule-input'
+								value={newClass.section}
+								onChange={(e) => setNewClass({ ...newClass, section: e.target.value })}
+								placeholder='A'
+							/>
+						</div>
+						<div className='pf-manual-field'>
+							<label className='pf-add-term-label'>Instructor</label>
+							<input
+								type='text'
+								className='pf-schedule-input'
+								value={newClass.instructor}
+								onChange={(e) => setNewClass({ ...newClass, instructor: e.target.value })}
+								placeholder='Dave Swanston'
+							/>
+						</div>
+						<div className='pf-manual-field'>
+							<label className='pf-add-term-label'>Location</label>
+							<input
+								type='text'
+								className='pf-schedule-input'
+								value={newClass.location}
+								onChange={(e) => setNewClass({ ...newClass, location: e.target.value })}
+								placeholder='LH3094'
+							/>
+						</div>
+						<div className='pf-manual-field'>
+							<label className='pf-add-term-label'>Time</label>
+							<input
+								type='text'
+								className='pf-schedule-input'
+								value={newClass.time}
+								onChange={(e) => setNewClass({ ...newClass, time: e.target.value })}
+								placeholder='8:30 AM - 9:30 AM'
+							/>
+						</div>
+						<div className='pf-manual-field'>
+							<label className='pf-add-term-label'>Type</label>
+							<input
+								type='text'
+								className='pf-schedule-input'
+								value={newClass.type}
+								onChange={(e) => setNewClass({ ...newClass, type: e.target.value })}
+								placeholder='Lecture'
+							/>
+						</div>
+						<div className='pf-manual-field'>
+							<label className='pf-add-term-label'>Grade</label>
+							<input
+								type='text'
+								className='pf-schedule-input'
+								value={newClass.grade}
+								onChange={(e) => setNewClass({ ...newClass, grade: e.target.value })}
+								placeholder='Optional'
+							/>
+						</div>
+						<div className='pf-manual-field'>
+							<label className='pf-add-term-label'>Days</label>
+							<DaySelector daysState={addClassDatesDisplay} onToggle={handleAddDateChange} />
+						</div>
+					</div>
+					<div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+						<button
+							type='button'
+							className='pf-btn-primary'
+							onClick={() => handleSubmitNewClass(termName)}
+						>
+							Add Course
+						</button>
+						<button type='button' className='pf-btn-ghost' onClick={resetAddState}>
+							Cancel
+						</button>
+					</div>
+				</div>
+			)
+		}
+
+		return null
+	}
+
+	const renderEditRow = () => (
+		<tr>
+			<td>
+				<input type='text' className='pf-schedule-input' value={editClass.class}
+					onChange={(e) => setEditClass({ ...editClass, class: e.target.value })} />
+			</td>
+			<td>
+				<input type='text' className='pf-schedule-input' value={editClass.section}
+					onChange={(e) => setEditClass({ ...editClass, section: e.target.value })} />
+			</td>
+			<td>
+				<input type='text' className='pf-schedule-input' value={editClass.instructor}
+					onChange={(e) => setEditClass({ ...editClass, instructor: e.target.value })} />
+			</td>
+			<td>
+				<input type='text' className='pf-schedule-input' value={editClass.location}
+					onChange={(e) => setEditClass({ ...editClass, location: e.target.value })} />
+			</td>
+			<td>
+				<input type='text' className='pf-schedule-input' value={editClass.time}
+					onChange={(e) => setEditClass({ ...editClass, time: e.target.value })} placeholder='8:30 AM - 9:30 AM' />
+			</td>
+			<td>
+				<DaySelector daysState={editClassDatesDisplay} onToggle={handleEditDateChange} />
+			</td>
+			<td>
+				<input type='text' className='pf-schedule-input' value={editClass.type}
+					onChange={(e) => setEditClass({ ...editClass, type: e.target.value })} />
+			</td>
+			<td>
+				<input type='text' className='pf-schedule-input' value={editClass.grade}
+					onChange={(e) => setEditClass({ ...editClass, grade: e.target.value })} />
+			</td>
+			<td>
+				<div style={{ display: 'flex', gap: 8 }}>
+					<button type='button' className='pf-btn-primary' onClick={handleSaveEdit}>Save</button>
+					<button type='button' className='pf-btn-danger' onClick={() => { setError(false); setEditSchedule(false) }}>Cancel</button>
+				</div>
+			</td>
+		</tr>
+	)
+
+	const renderDisplayRow = (userClass: UserClasses) => (
+		<tr key={userClass.id}>
+			<td>{userClass.class}</td>
+			<td>{userClass.section}</td>
+			<td>{userClass.instructor}</td>
+			<td>{userClass.location}</td>
+			<td>{userClass.time}</td>
+			<td>
+				<DaysDisplay
+					days={{
+						monday: userClass.date.includes('Monday'),
+						tuesday: userClass.date.includes('Tuesday'),
+						wednesday: userClass.date.includes('Wednesday'),
+						thursday: userClass.date.includes('Thursday'),
+						friday: userClass.date.includes('Friday'),
+						saturday: userClass.date.includes('Saturday'),
+						sunday: userClass.date.includes('Sunday')
+					}}
+				/>
+			</td>
+			<td>{userClass.type}</td>
+			<td>{userClass.grade}</td>
+			<td>
+				<div style={{ display: 'flex', gap: 8 }}>
+					<button type='button' className='pf-btn-ghost' onClick={() => handleStartEdit(userClass)}>
+						Edit
+					</button>
+					<button type='button' className='pf-btn-danger' onClick={() => handleDeleteClass(userClass.id)}>
+						Delete
+					</button>
+				</div>
+			</td>
+		</tr>
+	)
+
+	return (
+		<div>
+			{error && (
+				<div className='pf-alert-error'>
+					<strong>Error!</strong> {errorMsg}
+				</div>
+			)}
+			{pageLoaded ? (
+				<>
+					{userPreExistingSchedule?.map((term, index) => (
+						<div key={index} className='pf-schedule-term'>
+							<h3 className='pf-schedule-term-title'>{term.term}</h3>
+							<div style={{ overflowX: 'auto' }}>
+								<table className='pf-schedule-table'>
+									<ScheduleTableHeaders />
+									<tbody>
+										{term.classes.map((userClass) =>
+											editSchedule && editClass.id === userClass.id
+												? renderEditRow()
+												: renderDisplayRow(userClass)
+										)}
+									</tbody>
+								</table>
+							</div>
+
+							{renderAddFlow(term.term)}
+
+							{addCourseStep === 'idle' && (
+								<div style={{ marginTop: 16 }}>
+									<button
+										type='button'
+										className='pf-btn-ghost'
+										onClick={() => {
+											setAddForTerm(term.term)
+											setAddCourseStep('search')
+										}}
+									>
+										+ Add Course
+									</button>
+								</div>
+							)}
+
+							<hr className='pf-schedule-divider' />
+						</div>
+					))}
+
+					{addNewTerm ? (
+						<div className='pf-schedule-term'>
+							<h3 className='pf-schedule-term-title'>{newTermName}</h3>
+							{renderAddFlow(newTermName)}
+							{addCourseStep === 'idle' && (
+								<div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
+									<button
+										type='button'
+										className='pf-btn-ghost'
+										onClick={() => {
+											setAddForTerm(newTermName)
+											setAddCourseStep('search')
+										}}
+									>
+										+ Add Course
+									</button>
+									<button
+										type='button'
+										className='pf-btn-danger'
+										onClick={() => { setAddNewTerm(false); setNewTermName('') }}
+									>
+										Cancel
+									</button>
+								</div>
+							)}
+						</div>
+					) : (
+						<div className='pf-add-term-section'>
+							<label className='pf-add-term-label'>Add New Term</label>
+							<div className='pf-add-term-row'>
+								<input
+									type='text'
+									className='pf-schedule-input'
+									placeholder='1A'
+									value={newTermName}
+									onChange={(e) => setNewTermName(e.target.value)}
+								/>
+								<button
+									type='button'
+									className='pf-btn-primary'
+									onClick={() => {
+										if (newTermName.length > 0) {
+											setError(false)
+											setAddNewTerm(true)
+										} else {
+											setError(true)
+											setErrorMsg('Please enter a term name')
+										}
+									}}
+								>
+									Add Term
+								</button>
+							</div>
 						</div>
 					)}
 				</>
