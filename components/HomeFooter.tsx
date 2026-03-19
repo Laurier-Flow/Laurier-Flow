@@ -3,10 +3,10 @@ import Link from 'next/link'
 
 const HomeFooter = () => {
 	return (
-		<footer className='z-40 flex w-full items-center justify-center bg-transparent py-6 text-white'>
+		<footer className='z-40 flex w-full items-center justify-center bg-transparent py-6 text-white' style={{ fontFamily: "'DM Sans', sans-serif" }}>
 			<div className='flex flex-1 justify-between px-8'>
 				<p className='text-sm'>
-					© 2024 LaurierFlow.{' '}
+					© 2026 LaurierFlow.{' '}
 					<span className='hidden sm:inline'>All rights reserved.</span>
 				</p>
 				<nav className='flex'>

@@ -21,7 +21,12 @@ export default async function ExplorePage() {
 	await getAndIncrementPageVisits()
 
 	return (
-		<>
+		<div className='ex-root'>
+			<div className='ex-bg-layer'>
+				<div className='ex-orb ex-orb-1' />
+				<div className='ex-orb ex-orb-2' />
+				<div className='ex-noise' />
+			</div>
 			<Header user={user} />
 			<Suspense
 				fallback={
@@ -33,6 +38,6 @@ export default async function ExplorePage() {
 				<Explore />
 			</Suspense>
 			<Footer />
-		</>
+		</div>
 	)
 }

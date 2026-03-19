@@ -346,7 +346,7 @@ export default function Body({
 			if (instructor.total_reviews < instructorFilters.minRatings) return false
 			if (subject !== 'all') {
 				let codeLength = subject.length
-				let codes = []
+				let codes: string[] = []
 				instructor.coursesTaught.forEach((course: string) => {
 					let extractedCode = course.substring(0, codeLength)
 					if (extractedCode == subject) codes.push(extractedCode)
@@ -389,645 +389,279 @@ export default function Body({
 		}))
 	}
 
+	const minRatings = activeTab === 1 ? courseFilters.minRatings : instructorFilters.minRatings
+
+	const sortIndicator = (field: string, sortField: string, order: string) => {
+		if (sortField !== field) return null
+		if (order === 'desc') return <span className='ex-sort-arrow'>↓</span>
+		if (order === 'asc') return <span className='ex-sort-arrow'>↑</span>
+		return null
+	}
+
 	return (
 		<>
-			<div className="flex min-w-full flex-col bg-[url('/banner-sm-light.jpg')] p-4 dark:bg-[url('/banner-sm.jpg')] md:flex-row md:justify-center md:bg-[url('/banner-md-light.jpg')] md:dark:bg-[url('/banner-md.jpg')] lg:bg-[url('/banner-light.jpg')] lg:dark:bg-[url('/banner.jpg')]">
-				<div className='w-f flex max-w-6xl flex-1 flex-row justify-between pt-20'>
-					<div className='flex flex-1 flex-col justify-end pl-4'>
-						<h1 className='mb-2 text-2xl text-3xl font-bold text-white md:text-4xl'>{`Showing ${subject} courses and professors`}</h1>
-					</div>
-				</div>
+			{/* Page header */}
+			<div className='ex-page-header'>
+				<h1 className='ex-page-title'>{`Showing ${subject === 'all' ? 'all' : subject} courses and professors`}</h1>
+				<p className='ex-page-subtitle'>
+					{sortedCourses.length.toLocaleString()} courses · {sortedInstructors.length.toLocaleString()} instructors
+				</p>
 			</div>
 
-			<div className='exploreCard flex-1 lg:flex-row-reverse'>
-				<div
-					className={`flex flex-col p-6 lg:w-1/3 lg:p-12 lg:pt-8 ${activeTab === 1 ? '' : 'hidden'}`}
-				>
-					<h1 className='text-2xl font-semibold'>Filter your results</h1>
-					<h1 className='pt-8'>Course Code</h1>
-					<div className='flex flex-row flex-wrap pt-2'>
-						<button
-							onClick={() =>
-								setCourseFilters((prevFilters) => ({
-									...prevFilters,
-									firstYear: !courseFilters.firstYear
-								}))
-							}
-							className={`text-md inline-flex items-center gap-x-1.5 rounded-full border-2 border-amber-300 px-3 py-1.5 text-sm font-medium dark:border-secondary dark:text-white ${courseFilters.firstYear ? 'bg-amber-300 dark:bg-secondary' : null} mr-4 mt-2`}
-						>
-							1XX
-						</button>
-						<button
-							onClick={() =>
-								setCourseFilters((prevFilters) => ({
-									...prevFilters,
-									secondYear: !courseFilters.secondYear
-								}))
-							}
-							className={`text-md inline-flex items-center gap-x-1.5 rounded-full border-2 border-amber-300 px-3 py-1.5 text-sm font-medium dark:border-secondary dark:text-white ${courseFilters.secondYear ? 'bg-amber-300 dark:bg-secondary' : null} mr-4 mt-2`}
-						>
-							2XX
-						</button>
-						<button
-							onClick={() =>
-								setCourseFilters((prevFilters) => ({
-									...prevFilters,
-									thirdYear: !courseFilters.thirdYear
-								}))
-							}
-							className={`text-md inline-flex items-center gap-x-1.5 rounded-full border-2 border-amber-300 px-3 py-1.5 text-sm font-medium dark:border-secondary dark:text-white ${courseFilters.thirdYear ? 'bg-amber-300 dark:bg-secondary' : null} mr-4 mt-2`}
-						>
-							3XX
-						</button>
-						<button
-							onClick={() =>
-								setCourseFilters((prevFilters) => ({
-									...prevFilters,
-									fourthYear: !courseFilters.fourthYear
-								}))
-							}
-							className={`text-md inline-flex items-center gap-x-1.5 rounded-full border-2 border-amber-300 px-3 py-1.5 text-sm font-medium dark:border-secondary dark:text-white ${courseFilters.fourthYear ? 'bg-amber-300 dark:bg-secondary' : null} mr-4 mt-2`}
-						>
-							4XX
-						</button>
-						<button
-							onClick={() =>
-								setCourseFilters((prevFilters) => ({
-									...prevFilters,
-									seniorYear: !courseFilters.seniorYear
-								}))
-							}
-							className={`text-md inline-flex items-center gap-x-1.5 rounded-full border-2 border-amber-300 px-3 py-1.5 text-sm font-medium dark:border-secondary dark:text-white ${courseFilters.seniorYear ? 'bg-amber-300 dark:bg-secondary' : null} mt-2`}
-						>
-							5XX+
-						</button>
-					</div>
-					<div className='flex flex-row justify-between pt-8'>
-						<h1>Min # of ratings</h1>
-						<h1>≥ {courseFilters.minRatings} ratings</h1>
-					</div>
-					<input
-						type='range'
-						className='w-full cursor-pointer appearance-none bg-transparent pt-4 focus:outline-none disabled:pointer-events-none disabled:opacity-50
-[&::-moz-range-thumb]:h-2.5
-[&::-moz-range-thumb]:w-2.5
-[&::-moz-range-thumb]:appearance-none
-[&::-moz-range-thumb]:rounded-full
-[&::-moz-range-thumb]:border-4
-[&::-moz-range-thumb]:border-primary
-[&::-moz-range-thumb]:bg-white
-[&::-moz-range-thumb]:transition-all
-[&::-moz-range-thumb]:duration-150
-[&::-moz-range-thumb]:ease-in-out
-[&::-moz-range-track]:h-2
-[&::-moz-range-track]:w-full
+			{/* Main grid: sidebar + content */}
+			<div className='ex-grid'>
+				{/* Left sidebar — filters */}
+				<aside className='ex-sidebar'>
+					{/* Course-specific filters */}
+					{activeTab === 1 && (
+						<>
+							<div className='ex-filter-section'>
+								<h3 className='ex-filter-label'>Course Code</h3>
+								<div className='ex-pills'>
+									{[
+										{ key: 'firstYear', label: '1XX' },
+										{ key: 'secondYear', label: '2XX' },
+										{ key: 'thirdYear', label: '3XX' },
+										{ key: 'fourthYear', label: '4XX' },
+										{ key: 'seniorYear', label: '5XX+' }
+									].map(({ key, label }) => (
+										<button
+											key={key}
+											onClick={() =>
+												setCourseFilters((prev) => ({
+													...prev,
+													[key]: !(prev as any)[key]
+												}))
+											}
+											className={`ex-pill ${(courseFilters as any)[key] ? 'ex-pill-active' : ''}`}
+										>
+											{label}
+										</button>
+									))}
+								</div>
+							</div>
 
-[&::-moz-range-track]:rounded-full
-[&::-moz-range-track]:bg-gray-100
-[&::-webkit-slider-runnable-track]:h-2
-[&::-webkit-slider-runnable-track]:w-full
-[&::-webkit-slider-runnable-track]:rounded-full
-[&::-webkit-slider-runnable-track]:bg-gray-100
-[&::-webkit-slider-runnable-track]:dark:bg-gray-700
-[&::-webkit-slider-thumb]:-mt-0.5
-[&::-webkit-slider-thumb]:h-2.5
-[&::-webkit-slider-thumb]:w-2.5
+							<div className='ex-filter-section'>
+								<div className='ex-slider-header'>
+									<h3 className='ex-filter-label'>Min # of ratings</h3>
+									<span className='ex-slider-value'>≥ {courseFilters.minRatings} ratings</span>
+								</div>
+								<input
+									type='range'
+									className='ex-range'
+									min='0'
+									max='9'
+									step='1'
+									value={courseSlider}
+									onChange={handleSliderChange}
+								/>
+							</div>
 
-[&::-webkit-slider-thumb]:appearance-none
-[&::-webkit-slider-thumb]:rounded-full
-[&::-webkit-slider-thumb]:bg-white
-[&::-webkit-slider-thumb]:shadow-[0_0_0_4px_rgba(252,211,77,1)]
-[&::-webkit-slider-thumb]:transition-all
+							<div className='ex-filter-section'>
+								<h3 className='ex-filter-label'>Offered in</h3>
+								<div className='ex-checkboxes'>
+									<label className='ex-checkbox-label'>
+										<span
+											className={`ex-checkbox ${!courseFilters.springTerm && !courseFilters.fallTerm && !courseFilters.winterTerm && !courseFilters.nextSpringTerm ? 'ex-checkbox-checked' : ''}`}
+											onClick={() =>
+												setCourseFilters((prev) => ({
+													...prev,
+													springTerm: false,
+													fallTerm: false,
+													winterTerm: false,
+													nextSpringTerm: false
+												}))
+											}
+										>
+											{!courseFilters.springTerm && !courseFilters.fallTerm && !courseFilters.winterTerm && !courseFilters.nextSpringTerm && (
+												<svg width='10' height='8' viewBox='0 0 10 8' fill='none'><path d='M1 4L3.5 6.5L9 1' stroke='white' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round'/></svg>
+											)}
+										</span>
+										<span>All terms</span>
+									</label>
+									{[
+										{ handler: handleSpringTermChange, checked: courseFilters.springTerm, label: springTerm },
+										{ handler: handleFallTermChange, checked: courseFilters.fallTerm, label: fallTerm },
+										{ handler: handleWinterTermChange, checked: courseFilters.winterTerm, label: winterTerm },
+										{ handler: handleNextSpringTermChange, checked: courseFilters.nextSpringTerm, label: nextSpringTerm }
+									].map(({ handler, checked, label }) => (
+										<label key={label} className='ex-checkbox-label'>
+											<span
+												className={`ex-checkbox ${checked ? 'ex-checkbox-checked' : ''}`}
+												onClick={handler}
+											>
+												{checked && (
+													<svg width='10' height='8' viewBox='0 0 10 8' fill='none'><path d='M1 4L3.5 6.5L9 1' stroke='white' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round'/></svg>
+												)}
+											</span>
+											<span>{label}</span>
+										</label>
+									))}
+								</div>
+							</div>
+						</>
+					)}
 
-[&::-webkit-slider-thumb]:duration-150
-[&::-webkit-slider-thumb]:ease-in-out
-[&::-webkit-slider-thumb]:dark:bg-white
-[&::-webkit-slider-thumb]:dark:shadow-secondary'
-						id='steps-range-slider-usage'
-						min='0'
-						max='9'
-						step='1'
-						value={courseSlider}
-						onChange={handleSliderChange}
-					></input>
-
-					<h1 className='pt-8'>Offered in</h1>
-					<div className='ml-1 flex flex-row pt-4 lg:flex-col'>
-						<div className='flex flex-row items-center'>
+					{/* Instructor-specific filters */}
+					{activeTab === 2 && (
+						<div className='ex-filter-section'>
+							<div className='ex-slider-header'>
+								<h3 className='ex-filter-label'>Min # of ratings</h3>
+								<span className='ex-slider-value'>≥ {instructorFilters.minRatings} ratings</span>
+							</div>
 							<input
-								type='checkbox'
-								className='mt-0.5 shrink-0 scale-150 rounded border-gray-200 text-amber-400 focus:ring-amber-300 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-primary dark:checked:border-secondary dark:checked:bg-secondary dark:focus:ring-secondary dark:focus:ring-offset-gray-800'
-								id='hs-default-checkbox'
-								onChange={() =>
-									setCourseFilters((prevFilters) => ({
-										...prevFilters,
-										springTerm: false,
-										fallTerm: false,
-										winterTerm: false,
-										nextSpringTerm: false
-									}))
-								}
-								checked={!courseFilters.springTerm && !courseFilters.fallTerm && !courseFilters.winterTerm && !courseFilters.nextSpringTerm}
+								type='range'
+								className='ex-range'
+								min='0'
+								max='9'
+								step='1'
+								value={instructorSlider}
+								onChange={handleSliderChange}
 							/>
-							<h1 className='ms-4 text-sm text-gray-500 dark:text-gray-400'>
-								All terms
-							</h1>
 						</div>
+					)}
 
-						<div className='flex flex-row items-center'>
-							<input
-								type='checkbox'
-								className='ml-8 mt-0.5 shrink-0 scale-150 rounded border-gray-200 text-amber-400 focus:ring-amber-300 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-primary dark:checked:border-secondary dark:checked:bg-secondary dark:focus:ring-secondary dark:focus:ring-offset-gray-800 lg:ml-0 lg:mt-6'
-								id='hs-default-checkbox'
-								onChange={handleSpringTermChange}
-								checked={courseFilters.springTerm}
-							/>
-							<h1 className='ms-4 text-sm text-gray-500 dark:text-gray-400 lg:mt-6'>
-								({springTerm})
-							</h1>
-						</div>
-
-						<div className='flex flex-row items-center'>
-							<input
-								type='checkbox'
-								className='ml-8 mt-0.5 shrink-0 scale-150 rounded border-gray-200 text-amber-400 focus:ring-amber-300 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-primary dark:checked:border-secondary dark:checked:bg-secondary dark:focus:ring-secondary dark:focus:ring-offset-gray-800 lg:ml-0 lg:mt-6'
-								id='hs-default-checkbox'
-								onChange={handleFallTermChange}
-								checked={courseFilters.fallTerm}
-							/>
-							<h1 className='ms-4 text-sm text-gray-500 dark:text-gray-400 lg:mt-6'>
-								({fallTerm})
-							</h1>
-						</div>
-
-						<div className='flex flex-row items-center'>
-							<input
-								type='checkbox'
-								className='ml-8 mt-0.5 shrink-0 scale-150 rounded border-gray-200 text-amber-400 focus:ring-amber-300 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-primary dark:checked:border-secondary dark:checked:bg-secondary dark:focus:ring-secondary dark:focus:ring-offset-gray-800 lg:ml-0 lg:mt-6'
-								id='hs-default-checkbox'
-								onChange={handleWinterTermChange}
-								checked={courseFilters.winterTerm}
-							/>
-							<h1 className='ms-4 text-sm text-gray-500 dark:text-gray-400 lg:mt-6'>
-								({winterTerm})
-							</h1>
-						</div>
-
-						<div className='flex flex-row items-center'>
-							<input
-								type='checkbox'
-								className='ml-8 mt-0.5 shrink-0 scale-150 rounded border-gray-200 text-amber-400 focus:ring-amber-300 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-primary dark:checked:border-secondary dark:checked:bg-secondary dark:focus:ring-secondary dark:focus:ring-offset-gray-800 lg:ml-0 lg:mt-6'
-								id='hs-default-checkbox'
-								onChange={handleNextSpringTermChange}
-								checked={courseFilters.nextSpringTerm}
-							/>
-							<h1 className='ms-4 text-sm text-gray-500 dark:text-gray-400 lg:mt-6'>
-								({nextSpringTerm})
-							</h1>
-						</div>
-					</div>
-
-					<button
-						onClick={resetFilter}
-						type='button'
-						className='mt-12 gap-x-2 rounded-lg border border-transparent bg-amber-300 px-4 py-3 text-sm font-semibold disabled:pointer-events-none disabled:opacity-50 dark:bg-secondary dark:text-white dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600'
-					>
+					<button onClick={resetFilter} className='ex-reset-btn'>
 						Reset Filter
 					</button>
-				</div>
+				</aside>
 
-				<div
-					className={`flex flex-col p-6 lg:w-1/3 lg:p-12 lg:pt-8 ${activeTab === 2 ? '' : 'hidden'}`}
-				>
-					<h1 className='text-2xl font-semibold'>Filter your results</h1>
-					<div className='flex flex-row justify-between pt-8'>
-						<h1>Min # of ratings</h1>
-						<h1>≥ {instructorFilters.minRatings} ratings</h1>
-					</div>
-					<input
-						type='range'
-						className='w-full cursor-pointer appearance-none bg-transparent pt-4 focus:outline-none disabled:pointer-events-none disabled:opacity-50
-[&::-moz-range-thumb]:h-2.5
-[&::-moz-range-thumb]:w-2.5
-[&::-moz-range-thumb]:appearance-none
-[&::-moz-range-thumb]:rounded-full
-[&::-moz-range-thumb]:border-4
-[&::-moz-range-thumb]:border-primary
-[&::-moz-range-thumb]:bg-white
-[&::-moz-range-thumb]:transition-all
-[&::-moz-range-thumb]:duration-150
-[&::-moz-range-thumb]:ease-in-out
-[&::-moz-range-track]:h-2
-[&::-moz-range-track]:w-full
-
-[&::-moz-range-track]:rounded-full
-[&::-moz-range-track]:bg-gray-100
-[&::-webkit-slider-runnable-track]:h-2
-[&::-webkit-slider-runnable-track]:w-full
-[&::-webkit-slider-runnable-track]:rounded-full
-[&::-webkit-slider-runnable-track]:bg-gray-100
-[&::-webkit-slider-runnable-track]:dark:bg-gray-700
-[&::-webkit-slider-thumb]:-mt-0.5
-[&::-webkit-slider-thumb]:h-2.5
-[&::-webkit-slider-thumb]:w-2.5
-
-[&::-webkit-slider-thumb]:appearance-none
-[&::-webkit-slider-thumb]:rounded-full
-[&::-webkit-slider-thumb]:bg-white
-[&::-webkit-slider-thumb]:shadow-[0_0_0_4px_rgba(252,211,77,1)]
-[&::-webkit-slider-thumb]:transition-all
-
-[&::-webkit-slider-thumb]:duration-150
-[&::-webkit-slider-thumb]:ease-in-out
-[&::-webkit-slider-thumb]:dark:bg-white
-[&::-webkit-slider-thumb]:dark:shadow-secondary'
-						id='steps-range-slider-usage'
-						min='0'
-						max='9'
-						step='1'
-						value={instructorSlider}
-						onChange={handleSliderChange}
-					></input>
-					<button
-						onClick={resetFilter}
-						type='button'
-						className='mt-12 gap-x-2 rounded-lg border border-transparent bg-amber-300 px-4 py-3 text-sm font-semibold disabled:pointer-events-none disabled:opacity-50 dark:bg-secondary dark:text-white dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600'
-					>
-						Reset Filter
-					</button>
-				</div>
-				<hr className='mb-8 mt-8 border-gray-300 dark:border-gray-800'></hr>
-
-				<div className='flex-1 lg:flex lg:flex-col lg:pt-6'>
-					<nav
-						suppressHydrationWarning
-						className='flex space-x-2'
-						aria-label='Tabs'
-						role='tablist'
-					>
+				{/* Main content */}
+				<main className='ex-main'>
+					{/* Tabs */}
+					<nav className='ex-tabs' aria-label='Tabs' role='tablist' suppressHydrationWarning>
 						<button
 							suppressHydrationWarning
-							onClick={() => {
-								setActiveTab(1)
-								setVisibleCourseCount(50)
-							}}
-							type='button'
-							className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white inline-flex grow basis-0 items-center justify-center gap-x-2 bg-transparent px-4 py-3 text-center text-center text-lg font-medium ${activeTab === 1 ? 'text-slate-900' : 'text-gray-200'} rounded-lg hover:text-slate-800 disabled:pointer-events-none disabled:opacity-50 ${activeTab === 1 ? 'dark:text-white' : 'text-gray-400'} dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 1 ? 'active' : ''}`}
-							id='equal-width-elements-item-1'
-							data-hs-tab='#equal-width-elements-1'
-							aria-controls='equal-width-elements-1'
+							onClick={() => { setActiveTab(1); setVisibleCourseCount(50) }}
+							className={`ex-tab ${activeTab === 1 ? 'ex-tab-active' : ''}`}
 							role='tab'
 						>
-							Courses ({sortedCourses.length})
+							Courses <span className='ex-tab-count'>{sortedCourses.length.toLocaleString()}</span>
 						</button>
 						<button
 							suppressHydrationWarning
-							onClick={() => {
-								setActiveTab(2)
-								setVisibleInstructorCount(50)
-							}}
-							type='button'
-							className={`hs-tab-active:bg-blue-600 hs-tab-active:text-white hs-tab-active:hover:text-white hs-tab-active:dark:text-white inline-flex grow basis-0 items-center justify-center gap-x-2 bg-transparent px-4 py-3 text-center text-center text-lg font-medium ${activeTab === 2 ? 'text-slate-900' : 'text-gray-200'} rounded-lg hover:text-slate-800 disabled:pointer-events-none disabled:opacity-50 ${activeTab === 2 ? 'dark:text-white' : 'text-gray-400'} dark:text-gray-400 dark:hover:text-gray-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ${activeTab === 2 ? 'active' : ''}`}
-							data-hs-tab='#equal-width-elements-2'
-							aria-controls='equal-width-elements-2'
+							onClick={() => { setActiveTab(2); setVisibleInstructorCount(50) }}
+							className={`ex-tab ${activeTab === 2 ? 'ex-tab-active' : ''}`}
 							role='tab'
 						>
-							Instructors ({sortedInstructors.length})
+							Instructors <span className='ex-tab-count'>{sortedInstructors.length.toLocaleString()}</span>
 						</button>
 					</nav>
 
-					<div
-						id='equal-width-elements-1'
-						className={activeTab === 1 ? '' : 'hidden'}
-						role='tabpanel'
-						aria-labelledby='equal-width-elements-item-1'
-					>
-						<div className='flex flex-col pt-6'>
-							<div className='overflow-x-auto'>
-								<div className='inline-block min-w-full align-middle'>
-									<div className='overflow-hidden'>
-										<table className='min-w-full divide-y divide-gray-200 dark:divide-gray-700'>
-											<thead>
-												<tr>
-													<th
-														onClick={() => {
-															handleCourseSort('course_code')
-														}}
-														scope='col'
-														className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500 underline hover:cursor-pointer'
-													>
-														Course Code{' '}
-														{courseSortField === 'course_code' &&
-															courseOrder === 'desc'
-															? '˅'
-															: null}{' '}
-														{courseSortField === 'course_code' &&
-															courseOrder === 'asc'
-															? '˄'
-															: null}
-													</th>
-													<th
-														onClick={() => {
-															handleCourseSort('course_title')
-														}}
-														scope='col'
-														className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500 underline hover:cursor-pointer'
-													>
-														Course Name{' '}
-														{courseSortField === 'course_title' &&
-															courseOrder === 'desc'
-															? '˅'
-															: null}{' '}
-														{courseSortField === 'course_title' &&
-															courseOrder === 'asc'
-															? '˄'
-															: null}
-													</th>
-													<th
-														onClick={() => {
-															handleCourseSort('total_reviews')
-														}}
-														scope='col'
-														className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500 underline hover:cursor-pointer'
-													>
-														Ratings{' '}
-														{courseSortField === 'total_reviews' &&
-															courseOrder === 'desc'
-															? '˅'
-															: null}{' '}
-														{courseSortField === 'total_reviews' &&
-															courseOrder === 'asc'
-															? '˄'
-															: null}
-													</th>
-													<th
-														onClick={() => {
-															handleCourseSort('useful')
-														}}
-														scope='col'
-														className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500 underline hover:cursor-pointer'
-													>
-														Useful{' '}
-														{courseSortField === 'useful' &&
-															courseOrder === 'desc'
-															? '˅'
-															: null}{' '}
-														{courseSortField === 'useful' &&
-															courseOrder === 'asc'
-															? '˄'
-															: null}
-													</th>
-													<th
-														onClick={() => {
-															handleCourseSort('easy')
-														}}
-														scope='col'
-														className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500 underline hover:cursor-pointer'
-													>
-														Easy{' '}
-														{courseSortField === 'easy' &&
-															courseOrder === 'desc'
-															? '˅'
-															: null}{' '}
-														{courseSortField === 'easy' && courseOrder === 'asc'
-															? '˄'
-															: null}
-													</th>
-													<th
-														onClick={() => {
-															handleCourseSort('liked')
-														}}
-														scope='col'
-														className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500 underline hover:cursor-pointer'
-													>
-														Liked{' '}
-														{courseSortField === 'liked' &&
-															courseOrder === 'desc'
-															? '˅'
-															: null}{' '}
-														{courseSortField === 'liked' &&
-															courseOrder === 'asc'
-															? '˄'
-															: null}
-													</th>
-												</tr>
-											</thead>
-											<tbody>
-												{sortedCourses
-													.slice(0, visibleCourseCount)
-													.map((course, index) => (
-														<tr
-															key={index}
-															className='odd:bg-white even:bg-gray-100 dark:odd:bg-slate-950 dark:even:bg-slate-900'
-														>
-															<td className='whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-800 underline dark:text-gray-200'>
-																<Link
-																	href={`/course/${course.course_code.replace(/\s+/g, '%20')}`}
-																>
-																	{course.course_code}
-																</Link>
-															</td>
-															<td className='whitespace-nowrap px-6 py-4 text-sm text-gray-800 dark:text-gray-200'>
-																{course.course_title}
-															</td>
-															<td className='whitespace-nowrap px-6 py-4 text-sm text-gray-800 dark:text-gray-200'>
-																{course.total_reviews}
-															</td>
-															<td className='whitespace-nowrap px-6 py-4 text-sm text-gray-800 dark:text-gray-200'>
-																{course.useful || course.useful === 0
-																	? course.useful + '%'
-																	: 'N/A'}
-															</td>
-															<td className='whitespace-nowrap px-6 py-4 text-sm text-gray-800 dark:text-gray-200'>
-																{course.easy || course.easy === 0
-																	? course.easy + '%'
-																	: 'N/A'}
-															</td>
-															<td className='whitespace-nowrap px-6 py-4 text-sm text-gray-800 dark:text-gray-200'>
-																{course.liked || course.liked === 0
-																	? course.liked + '%'
-																	: 'N/A'}
-															</td>
-														</tr>
-													))}
-											</tbody>
-										</table>
-										<div ref={courseLoaderRef} style={{ height: '20px' }}></div>
-									</div>
-								</div>
-							</div>
-							<h1
-								className={`flex-1 p-6 ${filteredCourses.length !== 0 ? 'hidden' : null}`}
-							>
-								No courses found matching your criteria. Try adjusting your
-								course filters to broaden your search. Consider using less
-								specific terms.
-							</h1>
+					{/* Courses table */}
+					<div className={activeTab === 1 ? '' : 'hidden'} role='tabpanel'>
+						<div className='ex-table-wrap'>
+							<table className='ex-table'>
+								<thead>
+									<tr className='ex-thead-row'>
+										<th onClick={() => handleCourseSort('course_code')} className='ex-th'>
+											Course Code {sortIndicator('course_code', courseSortField, courseOrder)}
+										</th>
+										<th onClick={() => handleCourseSort('course_title')} className='ex-th'>
+											Course Name {sortIndicator('course_title', courseSortField, courseOrder)}
+										</th>
+										<th onClick={() => handleCourseSort('total_reviews')} className='ex-th'>
+											Ratings {sortIndicator('total_reviews', courseSortField, courseOrder)}
+										</th>
+										<th onClick={() => handleCourseSort('useful')} className='ex-th'>
+											Useful {sortIndicator('useful', courseSortField, courseOrder)}
+										</th>
+										<th onClick={() => handleCourseSort('easy')} className='ex-th'>
+											Easy {sortIndicator('easy', courseSortField, courseOrder)}
+										</th>
+										<th onClick={() => handleCourseSort('liked')} className='ex-th'>
+											Liked {sortIndicator('liked', courseSortField, courseOrder)}
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									{sortedCourses.slice(0, visibleCourseCount).map((course, index) => (
+										<tr key={index} className='ex-row'>
+											<td className='ex-td ex-td-code'>
+												<Link href={`/course/${course.course_code.replace(/\s+/g, '%20')}`}>
+													{course.course_code}
+												</Link>
+											</td>
+											<td className='ex-td ex-td-name'>{course.course_title}</td>
+											<td className='ex-td ex-td-num'>{course.total_reviews}</td>
+											<td className={`ex-td ${course.useful || course.useful === 0 ? 'ex-td-num' : 'ex-td-na'}`}>
+												{course.useful || course.useful === 0 ? course.useful + '%' : 'N/A'}
+											</td>
+											<td className={`ex-td ${course.easy || course.easy === 0 ? 'ex-td-num' : 'ex-td-na'}`}>
+												{course.easy || course.easy === 0 ? course.easy + '%' : 'N/A'}
+											</td>
+											<td className={`ex-td ${course.liked || course.liked === 0 ? 'ex-td-num' : 'ex-td-na'}`}>
+												{course.liked || course.liked === 0 ? course.liked + '%' : 'N/A'}
+											</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+							<div ref={courseLoaderRef} style={{ height: '20px' }} />
 						</div>
+						{filteredCourses.length === 0 && (
+							<p className='ex-empty'>
+								No courses found matching your criteria. Try adjusting your
+								filters to broaden your search.
+							</p>
+						)}
 					</div>
 
-					<div
-						id='equal-width-elements-1'
-						className={activeTab === 2 ? '' : 'hidden'}
-						role='tabpanel'
-						aria-labelledby='equal-width-elements-item-1'
-					>
-						<div className='flex flex-col pt-6'>
-							<div className='overflow-x-auto'>
-								<div className='inline-block min-w-full align-middle'>
-									<div className='overflow-hidden'>
-										<table className='min-w-full divide-y divide-gray-200 dark:divide-gray-700'>
-											<thead>
-												<tr>
-													<th
-														onClick={() => {
-															handleInstructorSort('instructor_name')
-														}}
-														scope='col'
-														className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500 underline hover:cursor-pointer'
-													>
-														Instructor Name{' '}
-														{instructorSortField === 'instructor_name' &&
-															instructorOrder === 'desc'
-															? '˅'
-															: null}{' '}
-														{instructorSortField === 'instructor_name' &&
-															instructorOrder === 'asc'
-															? '˄'
-															: null}
-													</th>
-													<th
-														onClick={() => {
-															handleInstructorSort('total_reviews')
-														}}
-														scope='col'
-														className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500 underline hover:cursor-pointer'
-													>
-														Ratings{' '}
-														{instructorSortField === 'total_reviews' &&
-															instructorOrder === 'desc'
-															? '˅'
-															: null}{' '}
-														{instructorSortField === 'total_reviews' &&
-															instructorOrder === 'asc'
-															? '˄'
-															: null}
-													</th>
-													<th
-														onClick={() => {
-															handleInstructorSort('clear')
-														}}
-														scope='col'
-														className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500 underline hover:cursor-pointer'
-													>
-														Clear{' '}
-														{instructorSortField === 'clear' &&
-															instructorOrder === 'desc'
-															? '˅'
-															: null}{' '}
-														{instructorSortField === 'clear' &&
-															instructorOrder === 'asc'
-															? '˄'
-															: null}
-													</th>
-													<th
-														onClick={() => {
-															handleInstructorSort('engaging')
-														}}
-														scope='col'
-														className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500 underline hover:cursor-pointer'
-													>
-														Engaging{' '}
-														{instructorSortField === 'engaging' &&
-															instructorOrder === 'desc'
-															? '˅'
-															: null}{' '}
-														{instructorSortField === 'engaging' &&
-															instructorOrder === 'asc'
-															? '˄'
-															: null}
-													</th>
-													<th
-														onClick={() => {
-															handleInstructorSort('liked')
-														}}
-														scope='col'
-														className='px-6 py-3 text-start text-xs font-medium uppercase text-gray-500 underline hover:cursor-pointer'
-													>
-														Liked{' '}
-														{instructorSortField === 'liked' &&
-															instructorOrder === 'desc'
-															? '˅'
-															: null}{' '}
-														{instructorSortField === 'liked' &&
-															instructorOrder === 'asc'
-															? '˄'
-															: null}
-													</th>
-												</tr>
-											</thead>
-											<tbody>
-												{sortedInstructors
-													.slice(0, visibleInstructorCount)
-													.map((instructor, index) => (
-														<tr
-															key={index}
-															className='odd:bg-white even:bg-gray-100 dark:odd:bg-slate-950 dark:even:bg-slate-900'
-														>
-															<td className='whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-800 underline dark:text-gray-200'>
-																<Link
-																	href={`/instructor/${instructor.instructor_name.replace(/\s+/g, '%20')}`}
-																>
-																	{instructor.instructor_name}
-																</Link>
-															</td>
-															<td className='whitespace-nowrap px-6 py-4 text-sm text-gray-800 dark:text-gray-200'>
-																{instructor.total_reviews}
-															</td>
-															<td className='whitespace-nowrap px-6 py-4 text-sm text-gray-800 dark:text-gray-200'>
-																{instructor.clear || instructor.clear === 0
-																	? instructor.clear + '%'
-																	: 'N/A'}
-															</td>
-															<td className='whitespace-nowrap px-6 py-4 text-sm text-gray-800 dark:text-gray-200'>
-																{instructor.engaging ||
-																	instructor.engaging === 0
-																	? instructor.engaging + '%'
-																	: 'N/A'}
-															</td>
-															<td className='whitespace-nowrap px-6 py-4 text-sm text-gray-800 dark:text-gray-200'>
-																{instructor.liked || instructor.liked === 0
-																	? instructor.liked + '%'
-																	: 'N/A'}
-															</td>
-														</tr>
-													))}
-											</tbody>
-										</table>
-										<div
-											ref={instructorLoaderRef}
-											style={{ height: '20px' }}
-										></div>
-									</div>
-									<h1
-										className={`flex-1 p-6 ${filteredInstructors.length !== 0 ? 'hidden' : null}`}
-									>
-										No instructors found matching your criteria. Try adjusting your
-										instructor filters to broaden your search. Consider using less
-										specific terms.
-									</h1>
-								</div>
-							</div>
-							<h1
-								className={`flex-1 p-6 ${filteredCourses.length !== 0 ? 'hidden' : null}`}
-							>
-								No instructors found matching your criteria. Try adjusting your
-								instructor filters to broaden your search. Consider using less
-								specific terms.
-							</h1>
+					{/* Instructors table */}
+					<div className={activeTab === 2 ? '' : 'hidden'} role='tabpanel'>
+						<div className='ex-table-wrap'>
+							<table className='ex-table'>
+								<thead>
+									<tr className='ex-thead-row'>
+										<th onClick={() => handleInstructorSort('instructor_name')} className='ex-th'>
+											Instructor Name {sortIndicator('instructor_name', instructorSortField, instructorOrder)}
+										</th>
+										<th onClick={() => handleInstructorSort('total_reviews')} className='ex-th'>
+											Ratings {sortIndicator('total_reviews', instructorSortField, instructorOrder)}
+										</th>
+										<th onClick={() => handleInstructorSort('clear')} className='ex-th'>
+											Clear {sortIndicator('clear', instructorSortField, instructorOrder)}
+										</th>
+										<th onClick={() => handleInstructorSort('engaging')} className='ex-th'>
+											Engaging {sortIndicator('engaging', instructorSortField, instructorOrder)}
+										</th>
+										<th onClick={() => handleInstructorSort('liked')} className='ex-th'>
+											Liked {sortIndicator('liked', instructorSortField, instructorOrder)}
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									{sortedInstructors.slice(0, visibleInstructorCount).map((instructor, index) => (
+										<tr key={index} className='ex-row'>
+											<td className='ex-td ex-td-code'>
+												<Link href={`/instructor/${instructor.instructor_name.replace(/\s+/g, '%20')}`}>
+													{instructor.instructor_name}
+												</Link>
+											</td>
+											<td className='ex-td ex-td-num'>{instructor.total_reviews}</td>
+											<td className={`ex-td ${instructor.clear || instructor.clear === 0 ? 'ex-td-num' : 'ex-td-na'}`}>
+												{instructor.clear || instructor.clear === 0 ? instructor.clear + '%' : 'N/A'}
+											</td>
+											<td className={`ex-td ${instructor.engaging || instructor.engaging === 0 ? 'ex-td-num' : 'ex-td-na'}`}>
+												{instructor.engaging || instructor.engaging === 0 ? instructor.engaging + '%' : 'N/A'}
+											</td>
+											<td className={`ex-td ${instructor.liked || instructor.liked === 0 ? 'ex-td-num' : 'ex-td-na'}`}>
+												{instructor.liked || instructor.liked === 0 ? instructor.liked + '%' : 'N/A'}
+											</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+							<div ref={instructorLoaderRef} style={{ height: '20px' }} />
 						</div>
+						{filteredInstructors.length === 0 && (
+							<p className='ex-empty'>
+								No instructors found matching your criteria. Try adjusting your
+								filters to broaden your search.
+							</p>
+						)}
 					</div>
-				</div>
+				</main>
 			</div>
 		</>
 	)

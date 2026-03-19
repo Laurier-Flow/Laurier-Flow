@@ -10,7 +10,7 @@ const FormWidget = () => {
 			buttonHeight='125'
 			buttonTextSize='12'
 			buttonWidth='25'
-			buttonColor='#5c1188'
+			buttonColor='#b07030'
 		/>
 	)
 }

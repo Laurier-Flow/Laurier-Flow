@@ -18,6 +18,7 @@ import { fetchUser, signOut } from '@/utils/supabase/authActions'
 import SearchBar from '@/components/SearchBar'
 import { UserNav } from './UserProfileNav'
 import Image from 'next/image'
+import { LogIn } from 'lucide-react'
 
 export const useManageBodyScroll = (condition: boolean) => {
 	useEffect(() => {
@@ -81,44 +82,35 @@ export default function Header({
 
 	return (
 		<>
-			<header className='sticky top-0 z-50 w-full self-center border-b border-border/40 bg-white dark:bg-background/95 dark:backdrop-blur dark:supports-[backdrop-filter]:bg-background/60'>
-				<div className='container flex h-14 items-center lg:max-w-6xl'>
-					<div className='mr-4 flex flex-1 gap-2'>
-						<Link href='/' className='hidden md:inline'>
-							<Image
-								className='mr-4'
-								src='/icon.png'
-								width={50}
-								height={50}
-								alt='Laurier Flow'
-							/>
-						</Link>
-						<nav className='flex flex-1 items-center gap-6 text-sm'>
-							<SearchBar />
-							{/* {!user && (
-                <button
-                  onClick={toggleLoginPopup}
-                  className="text-sm text-foreground hover:underline cursor-pointer"
-                >
-                  Login
-                </button>
-              )} */}
-						</nav>
-					</div>
-					<div className='flex items-center justify-between space-x-2 md:justify-end'>
-						<ThemeToggleButton />
-						{user ? (
-							<UserNav user={user} />
-						) : (
-							<Button onClick={toggleLoginPopup} variant='outline'>
-								Login
-							</Button>
-						)}
-					</div>
+			<header className='nav-bar'>
+				<Link href='/' className='nav-bar-logo'>
+					<Image
+						src='/icon.png'
+						width={56}
+						height={56}
+						alt='Laurier Flow'
+						style={{ borderRadius: 7 }}
+					/>
+				</Link>
+
+				<div className='nav-bar-search'>
+					<SearchBar />
+				</div>
+
+				<div className='nav-bar-actions'>
+					<ThemeToggleButton />
+					{user ? (
+						<UserNav user={user} />
+					) : (
+						<button onClick={toggleLoginPopup} className='hp-nav-login'>
+							Log In
+						</button>
+					)}
 				</div>
 			</header>
+
 			{showLoginPopup && !showSignUpPopup && !showPasswordPopup && (
-				<div className='fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-50'>
+				<div className='hp-popup-overlay'>
 					<LoginPopup
 						searchParams={{ message: '' }}
 						onClose={toggleLoginPopup}
@@ -128,7 +120,7 @@ export default function Header({
 				</div>
 			)}
 			{showSignUpPopup && !showLoginPopup && !showPasswordPopup && (
-				<div className='fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-50'>
+				<div className='hp-popup-overlay'>
 					<SignUpPopup
 						searchParams={{ message: '' }}
 						onClose={toggleSignUpPopup}
@@ -137,7 +129,7 @@ export default function Header({
 				</div>
 			)}
 			{showPasswordPopup && !showLoginPopup && !showLoginPopup && (
-				<div className='fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-50'>
+				<div className='hp-popup-overlay'>
 					<PasswordPopup
 						searchParams={{ message: '' }}
 						onClose={togglePasswordPopup}
