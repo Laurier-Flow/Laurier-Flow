@@ -104,10 +104,10 @@ export async function getCourseSections(
 	supabase: SupabaseClient<any, 'public', any>,
 	user: User | null
 ) {
-	const { data: sectionData, error: sectionError } = await supabase
+	const { data: sectionData, error: sectionError } = await (supabase
 		.from('sections')
 		.select()
-		.eq(filterCol, colValue)
+		.eq(filterCol, colValue) as any)
 
 	const courseSections: sections = {
 		springTerm: [],
@@ -116,7 +116,7 @@ export async function getCourseSections(
 		nextSpringTerm: []
 	}
 
-	const sectionDataRequests = sectionData?.map((data) => fetchSectionData(data))
+	const sectionDataRequests = sectionData?.map((data: any) => fetchSectionData(data))
 
 	if (sectionDataRequests) {
 		const sectionDataResponses = await Promise.all(sectionDataRequests)
