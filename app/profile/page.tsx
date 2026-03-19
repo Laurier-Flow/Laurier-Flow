@@ -16,21 +16,28 @@ export default async function Profile() {
 	const supabase = createClient(cookieStore)
 
 	return (
-		<>
+		<div className='pf-root cp-root'>
+			<div className='cp-bg-layer'>
+				<div className='cp-orb pf-orb-1 cp-orb-1' />
+				<div className='cp-orb pf-orb-2 cp-orb-2' />
+				<div className='pf-noise cp-noise' />
+			</div>
 			<Header user={user} />
-			<Suspense
-				fallback={
-					<div className='h-full w-full'>
-						<Spinner />
-					</div>
-				}
-			>
-				<PageContent
-					userReviews={<UserReviews user={user} supabase={supabase} />}
-					user={user}
-				/>
-			</Suspense>
+			<div className='pf-content'>
+				<Suspense
+					fallback={
+						<div className='h-full w-full'>
+							<Spinner />
+						</div>
+					}
+				>
+					<PageContent
+						userReviews={<UserReviews user={user} supabase={supabase} />}
+						user={user}
+					/>
+				</Suspense>
+			</div>
 			<Footer />
-		</>
+		</div>
 	)
 }

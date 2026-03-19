@@ -110,7 +110,7 @@ export default function Header({
 				</div>
 			</header>
 
-			{showLoginPopup && !showSignUpPopup && !showPasswordPopup && (
+			{showLoginPopup && !showSignUpPopup && !showPasswordPopup && createPortal(
 				<div className='hp-popup-overlay'>
 					<LoginPopup
 						searchParams={{ message: '' }}
@@ -118,25 +118,28 @@ export default function Header({
 						toggleSignUp={toggleSignUpPopup}
 						togglePasswordReset={togglePasswordPopup}
 					/>
-				</div>
+				</div>,
+				document.body
 			)}
-			{showSignUpPopup && !showLoginPopup && !showPasswordPopup && (
+			{showSignUpPopup && !showLoginPopup && !showPasswordPopup && createPortal(
 				<div className='hp-popup-overlay'>
 					<SignUpPopup
 						searchParams={{ message: '' }}
 						onClose={toggleSignUpPopup}
 						toggleLogIn={toggleLoginPopup}
 					/>
-				</div>
+				</div>,
+				document.body
 			)}
-			{showPasswordPopup && !showLoginPopup && !showLoginPopup && (
+			{showPasswordPopup && !showLoginPopup && !showLoginPopup && createPortal(
 				<div className='hp-popup-overlay'>
 					<PasswordPopup
 						searchParams={{ message: '' }}
 						onClose={togglePasswordPopup}
 						toggleLogIn={toggleLoginPopup}
 					/>
-				</div>
+				</div>,
+				document.body
 			)}
 		</>
 	)

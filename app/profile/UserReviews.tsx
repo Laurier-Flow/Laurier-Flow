@@ -48,51 +48,50 @@ const UserReviews: React.FC<getUserReviewsInterface> = async ({
 	const userReviews = await getUserReviews(supabase, user)
 
 	return (
-		<div className='card flex-1 justify-start'>
-			<div className='p-4'>
-				<h2 className='pt-4 text-xl font-semibold'>Your Reviews</h2>
-				<h2 className='text-md py-2 pt-4 font-semibold'>Course Reviews</h2>
-				{userReviews.courseReviews.map(
-					async (review: courseReview, index: any) => {
-						return (
-							<CourseProfileReview
-								instructors={await getInstructors(
-									supabase,
-									review.course_code_fk,
-									false,
-									user
-								)}
-								review={review}
-								index={index}
-							/>
-						)
-					}
-				)}
-				{userReviews.courseReviews.length === 0 ? (
-					<h1>No course reviews</h1>
-				) : null}
-				<hr className='mb-8 mt-8 border-gray-300 dark:border-gray-800 md:mb-0'></hr>
-				<h2 className='text-md py-2 pt-4 font-semibold'>Instructor Reviews</h2>
-				{userReviews.instructorReviews.map(
-					async (review: instructorReview, index: any) => {
-						return (
-							<InstructorProfileReview
-								courses={await getInstructors(
-									supabase,
-									review.instructor_name_fk,
-									true,
-									user
-								)}
-								review={review}
-								index={index}
-							/>
-						)
-					}
-				)}
-				{userReviews.instructorReviews.length === 0 ? (
-					<h1>No instructor reviews</h1>
-				) : null}
-			</div>
+		<div>
+			<p className='pf-section-label'>Course Reviews</p>
+			{userReviews.courseReviews.map(
+				async (review: courseReview, index: any) => {
+					return (
+						<CourseProfileReview
+							instructors={await getInstructors(
+								supabase,
+								review.course_code_fk,
+								false,
+								user
+							)}
+							review={review}
+							index={index}
+						/>
+					)
+				}
+			)}
+			{userReviews.courseReviews.length === 0 ? (
+				<p className='pf-no-reviews'>No course reviews yet</p>
+			) : null}
+
+			<hr className='pf-schedule-divider' style={{ margin: '32px 0' }} />
+
+			<p className='pf-section-label'>Instructor Reviews</p>
+			{userReviews.instructorReviews.map(
+				async (review: instructorReview, index: any) => {
+					return (
+						<InstructorProfileReview
+							courses={await getInstructors(
+								supabase,
+								review.instructor_name_fk,
+								true,
+								user
+							)}
+							review={review}
+							index={index}
+						/>
+					)
+				}
+			)}
+			{userReviews.instructorReviews.length === 0 ? (
+				<p className='pf-no-reviews'>No instructor reviews yet</p>
+			) : null}
 		</div>
 	)
 }

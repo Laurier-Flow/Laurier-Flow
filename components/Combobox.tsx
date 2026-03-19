@@ -78,23 +78,23 @@ export function ProgramDropdownUserDetails({value, setValue}: {value: string, se
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="secondary"
+          variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between overflow-hidden border-neutral-300 dark:border-slate-800 border"
+          className="pf-combo-trigger w-full justify-between overflow-hidden"
         >
-          <span className={`truncate font-normal ${value ? "text-stone-950 dark:text-gray-50" : "text-stone-400 dark:text-gray-400"}`}>
+          <span className={`truncate font-normal ${value ? "pf-combo-value" : "pf-combo-placeholder"}`}>
             {value
               ? programOptions.find((program) => program.value === value)?.label
               : "Select program..."}
           </span>
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 pf-combo-chevron" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[--radix-popover-trigger-width] max-h-[--radix-popover-content-available-height] p-0 border-neutral-300 dark:border-slate-800 border">
-        <Command>
-          <CommandInput className="focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400" placeholder="Search programs..." />
-          <CommandEmpty>No program found.</CommandEmpty>
+      <PopoverContent className="pf-combo-content w-[--radix-popover-trigger-width] max-h-[--radix-popover-content-available-height] p-0">
+        <Command className="pf-combo-command">
+          <CommandInput className="pf-combo-search" placeholder="Search programs..." />
+          <CommandEmpty className="pf-combo-empty">No program found.</CommandEmpty>
           <CommandGroup>
             <CommandList>
               {programOptions.map((program) => (
