@@ -1759,6 +1759,44 @@
   padding: 40px 16px;
 }
 
+/* --- Filter toggle (mobile only) --- */
+.ex-filter-toggle {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 0;
+  background: none;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #8A8AAA;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.ex-filter-toggle:hover {
+  color: #F0EFFB;
+}
+.ex-filter-toggle:focus {
+  outline: none;
+}
+.ex-filter-toggle:active {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.ex-filter-chevron {
+  margin-left: auto;
+  transition: transform 200ms ease;
+}
+.ex-filter-chevron-open {
+  transform: rotate(180deg);
+}
+.ex-filter-body {
+  /* Desktop: always visible */
+}
+
 /* --- Responsive --- */
 @media (max-width: 768px) {
   .ex-page-header {
@@ -1775,11 +1813,33 @@
     position: static;
     border-right: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-    padding: 0 0 24px;
+    padding: 0 0 8px;
     margin-bottom: 24px;
+  }
+  .ex-filter-toggle {
+    display: flex;
+  }
+  .ex-filter-body {
+    display: none;
+    padding-bottom: 16px;
+  }
+  .ex-filter-body-open {
+    display: block;
   }
   .ex-main {
     padding-left: 0;
+  }
+  .ex-tabs {
+    gap: 20px;
+  }
+  .ex-tab {
+    font-size: 14px;
+  }
+  .ex-tabs {
+    gap: 20px;
+  }
+  .ex-tab {
+    font-size: 14px;
   }
 }
 
@@ -4063,6 +4123,12 @@
   :root:not(.dark) .ex-sidebar {
     border-bottom-color: rgba(176, 112, 48, 0.08);
   }
+  :root:not(.dark) .ex-filter-toggle {
+    color: #8C7A68;
+  }
+  :root:not(.dark) .ex-filter-toggle:hover {
+    color: #5A4533;
+  }
 }
 
 /* ── Course / Instructor Pages ── */
@@ -5131,10 +5197,29 @@
 
   /* Explore page */
   .ex-page-header {
-    padding: 32px 0 0;
+    padding: 28px 16px 24px;
   }
   .ex-page-title {
-    font-size: 24px;
+    font-size: 22px;
+  }
+  .ex-page-subtitle {
+    font-size: 12px;
+  }
+  .ex-grid {
+    padding: 0 16px 32px;
+  }
+  .ex-tabs {
+    gap: 16px;
+  }
+  .ex-tab {
+    font-size: 13px;
+  }
+  .ex-pill {
+    padding: 5px 12px;
+    font-size: 11px;
+  }
+  .ex-filter-section {
+    margin-bottom: 24px;
   }
 
   /* Profile */

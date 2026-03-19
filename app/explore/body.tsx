@@ -1,7 +1,8 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { SetStateAction, use, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { SlidersHorizontal, ChevronDown } from 'lucide-react'
 import {
 	courseInfoDBResponseExplore,
 	instructorInfoDBResponseExplore
@@ -389,6 +390,7 @@ export default function Body({
 		}))
 	}
 
+	const [filtersOpen, setFiltersOpen] = useState(false)
 	const minRatings = activeTab === 1 ? courseFilters.minRatings : instructorFilters.minRatings
 
 	const sortIndicator = (field: string, sortField: string, order: string) => {
@@ -412,6 +414,12 @@ export default function Body({
 			<div className='ex-grid'>
 				{/* Left sidebar — filters */}
 				<aside className='ex-sidebar'>
+					<button className='ex-filter-toggle' onClick={() => setFiltersOpen(v => !v)}>
+						<SlidersHorizontal size={16} />
+						<span>Filters</span>
+						<ChevronDown size={16} className={`ex-filter-chevron ${filtersOpen ? 'ex-filter-chevron-open' : ''}`} />
+					</button>
+					<div className={`ex-filter-body ${filtersOpen ? 'ex-filter-body-open' : ''}`}>
 					{/* Course-specific filters */}
 					{activeTab === 1 && (
 						<>
@@ -524,6 +532,7 @@ export default function Body({
 					<button onClick={resetFilter} className='ex-reset-btn'>
 						Reset Filter
 					</button>
+					</div>
 				</aside>
 
 				{/* Main content */}
