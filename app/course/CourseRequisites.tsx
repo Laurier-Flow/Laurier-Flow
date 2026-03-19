@@ -149,9 +149,8 @@ async function CourseRequisites({
 						? restrictions.map((restriction: restriction, index) => (
 								<span
 									key={index}
+									className={restriction.bold ? 'cp-req-bold' : ''}
 									style={{
-										fontWeight: restriction.bold ? 500 : 400,
-										color: restriction.bold ? '#F0EFFB' : undefined,
 										display: restriction.bold && index !== 0 ? 'block' : undefined,
 										marginTop: restriction.bold && index !== 0 ? '8px' : undefined,
 									}}
