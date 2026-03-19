@@ -2665,15 +2665,101 @@
   .cp-hero {
     padding: 40px 0 0;
   }
+  .cp-hero-top {
+    flex-direction: column;
+    gap: 0;
+  }
+  .cp-course-code {
+    font-size: 12px;
+  }
+  .cp-course-title {
+    font-size: clamp(24px, 6vw, 36px);
+  }
+  .cp-course-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-top: 16px;
+  }
+  .cp-stats {
+    margin-top: 32px;
+  }
   .cp-stats-metrics {
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
   }
   .cp-metric {
     max-width: none;
   }
+  .cp-metric-value {
+    font-size: 26px;
+  }
+  .cp-metric-label {
+    font-size: 11px;
+  }
+  .cp-divider {
+    margin: 28px 0;
+  }
+  /* Schedule */
+  .cp-schedule-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cp-schedule-tab {
+    font-size: 12px;
+    padding: 10px 14px;
+    white-space: nowrap;
+  }
+  .cp-sched-table th {
+    font-size: 10px;
+    padding: 10px 10px 8px;
+  }
+  .cp-sched-table td {
+    font-size: 12px;
+    padding: 10px 10px;
+  }
+  /* Two-column stacked */
+  .cp-two-col {
+    gap: 0;
+  }
+  .cp-requisites-col {
+    padding-top: 24px;
+  }
+  /* Reviews */
   .cp-review-body {
     flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+  }
+  .cp-review-text {
+    font-size: 13px;
+  }
+  .cp-review-footer {
+    padding: 10px 20px;
+  }
+  .cp-review-card + .cp-review-card {
+    margin-top: 12px;
+  }
+  /* Add review */
+  .cp-add-review-btn {
+    height: 44px;
+    font-size: 13px;
+  }
+  .cp-add-review-title {
+    font-size: 18px;
+  }
+  /* Requisites */
+  .cp-req-content {
+    font-size: 13px;
+  }
+  /* Pagination */
+  .cp-page-btn {
+    min-width: 32px;
+    height: 32px;
+    font-size: 11px;
+  }
+  .cp-pagination {
+    gap: 2px;
+    flex-wrap: wrap;
   }
 }
 
@@ -5181,18 +5267,118 @@
     font-size: 12px;
   }
 
-  /* Course page */
+  /* Course / Instructor page */
   .cp-content {
     padding: 0 16px 32px;
   }
   .cp-hero {
-    padding: 32px 0 0;
+    padding: 24px 0 0;
   }
-  .cp-hero-code {
-    font-size: clamp(28px, 8vw, 40px);
+  .cp-course-code {
+    font-size: 11px;
   }
-  .cp-hero-title {
-    font-size: 14px;
+  .cp-course-title {
+    font-size: clamp(22px, 6vw, 28px);
+  }
+  .cp-course-desc {
+    font-size: 13px;
+    margin-top: 12px;
+  }
+  .cp-stats {
+    margin-top: 24px;
+  }
+  .cp-stats-metrics {
+    gap: 16px;
+  }
+  .cp-metric-value {
+    font-size: 22px;
+  }
+  .cp-metric-label {
+    font-size: 10px;
+  }
+  .cp-stats-count {
+    font-size: 11px;
+    margin-top: 14px;
+  }
+  .cp-divider {
+    margin: 20px 0;
+  }
+  .cp-section-label {
+    font-size: 10px;
+    margin-bottom: 14px;
+  }
+  .cp-section-title {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  .cp-schedule-tab {
+    font-size: 11px;
+    padding: 8px 12px;
+  }
+  .cp-sched-table th {
+    font-size: 9px;
+    padding: 8px 8px 6px;
+  }
+  .cp-sched-table td {
+    font-size: 11px;
+    padding: 8px;
+  }
+  .cp-review-body {
+    padding: 16px;
+    gap: 12px;
+  }
+  .cp-review-text {
+    font-size: 12px;
+    line-height: 1.55;
+  }
+  .cp-review-star {
+    width: 14px;
+    height: 14px;
+  }
+  .cp-review-rating-label {
+    font-size: 10px;
+  }
+  .cp-review-thumb {
+    width: 24px;
+    height: 24px;
+  }
+  .cp-review-thumb svg {
+    width: 12px;
+    height: 12px;
+  }
+  .cp-review-footer {
+    padding: 8px 16px;
+  }
+  .cp-review-meta {
+    font-size: 11px;
+  }
+  .cp-add-review-btn {
+    height: 40px;
+    font-size: 12px;
+    border-radius: 10px;
+  }
+  .cp-add-review-title {
+    font-size: 16px;
+  }
+  .cp-req-block {
+    margin-bottom: 24px;
+  }
+  .cp-req-title {
+    font-size: 10px;
+    margin-bottom: 8px;
+  }
+  .cp-req-content {
+    font-size: 12px;
+    line-height: 1.55;
+  }
+  .cp-page-btn {
+    min-width: 28px;
+    height: 28px;
+    font-size: 10px;
+    border-radius: 6px;
+  }
+  .cp-alert {
+    font-size: 12px;
   }
 
   /* Explore page */
