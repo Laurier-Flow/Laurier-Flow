@@ -75,18 +75,15 @@ async function AddReview({
 	)
 
 	return reviewed ? null : (
-		<>
-			<div className='flex flex-col p-4'>
-				<h1 className='pb-4 text-xl'>What do you think of {courseName}?</h1>
-				<ReviewButton
-					instructor={instructor}
-					user={user}
-					instructors={instructors}
-					courseName={courseName}
-				/>
-			</div>
-			<hr className='mb-8 mt-8 border-gray-300 dark:border-gray-800'></hr>
-		</>
+		<div className='cp-add-review'>
+			<h2 className='cp-add-review-title'>What do you think of {courseName}?</h2>
+			<ReviewButton
+				instructor={instructor}
+				user={user}
+				instructors={instructors}
+				courseName={courseName}
+			/>
+		</div>
 	)
 }
 

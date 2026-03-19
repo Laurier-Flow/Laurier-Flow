@@ -63,25 +63,32 @@ async function CoursePage({ params }: CoursePageProps) {
 	await getAndIncrementPageVisits()
 
 	return (
-		<>
+		<div className='cp-root'>
+			{/* Background layer */}
+			<div className='cp-bg-layer'>
+				<div className='cp-orb cp-orb-1' />
+				<div className='cp-orb cp-orb-2' />
+				<div className='cp-noise' />
+			</div>
+
 			<Header user={user} />
-			<Suspense
-				fallback={
-					<div className='h-full w-full'>
-						<Spinner />
-					</div>
-				}
-			>
-				<div className='hidden min-w-full lg:inline'>
+
+			<div className='cp-content'>
+				<Suspense
+					fallback={
+						<div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+							<Spinner />
+						</div>
+					}
+				>
+					{/* @ts-expect-error Server Component */}
 					<CourseInfo supabase={supabase} courseName={courseCode} />
-				</div>
-				<div className='card'>
-					<div className='lg:hidden'>
-						<CourseInfo supabase={supabase} courseName={courseCode} />
-					</div>
+
+					<hr className='cp-divider' />
+
 					<Suspense
 						fallback={
-							<div className='h-full w-full p-8'>
+							<div style={{ padding: '32px 0' }}>
 								<Spinner />
 							</div>
 						}
@@ -92,11 +99,11 @@ async function CoursePage({ params }: CoursePageProps) {
 							user={user}
 						/>
 					</Suspense>
-					<hr className='mb-8 mt-8 border-gray-300 dark:border-gray-800'></hr>
-					<div className='lg:flex lg:flex-row-reverse lg:justify-around'>
-						<CourseRequisites supabase={supabase} courseName={courseCode} />
-						<hr className='mb-8 mt-8 border-gray-300 dark:border-gray-800'></hr>
-						<div className='lg:flex lg:flex-1 lg:flex-col lg:pr-4'>
+
+					<hr className='cp-divider' />
+
+					<div className='cp-two-col'>
+						<div className='cp-reviews-col'>
 							<AddReview
 								courseName={courseCode}
 								supabase={supabase}
@@ -104,20 +111,21 @@ async function CoursePage({ params }: CoursePageProps) {
 							/>
 							<Suspense
 								fallback={
-									<div className='h-full w-full p-8'>
+									<div style={{ padding: '32px 0' }}>
 										<Spinner />
 									</div>
 								}
 							>
 								<CourseReviews supabase={supabase} courseName={courseCode} />
 							</Suspense>
-							<hr className='mb-8 mt-8 border-0'></hr>
 						</div>
+						<CourseRequisites supabase={supabase} courseName={courseCode} />
 					</div>
-				</div>
-			</Suspense>
+				</Suspense>
+			</div>
+
 			<Footer />
-		</>
+		</div>
 	)
 }
 

@@ -4,7 +4,6 @@ import { SupabaseClient } from '@supabase/supabase-js'
 import axios from 'axios'
 import * as cheerio from 'cheerio'
 import { disciplineCodes } from '@/utils/lib/disciplineCodes'
-import { Link } from '@nextui-org/react'
 
 export interface prerequisite {
 	andOr: string
@@ -97,51 +96,45 @@ async function CourseRequisites({
 	const restrictions: restriction[] = requisites.restrictions
 
 	return (
-		<div className='flex flex-col p-4 lg:w-1/3 lg:border-l lg:border-gray-300 lg:pl-8 lg:dark:border-gray-800'>
-			<div>
-				<h1 className='text-xl'>{courseData[0].course_code} Prerequisites</h1>
-				<h2 className='pt-2'>
+		<div className='cp-requisites-col'>
+			<div className='cp-req-block'>
+				<h3 className='cp-req-title'>Prerequisites</h3>
+				<div className='cp-req-content'>
 					{prerequisites.length > 0
 						? prerequisites.map((prerequisite: prerequisite, index) => (
 								<React.Fragment key={index}>
 									{' ' + prerequisite?.andOr} {prerequisite?.leftParentheses}
-									<b>
+									<strong>
 										{prerequisite?.subject in disciplineCodes ? (
-											<Link
-												className='text-black underline underline-offset-2 dark:text-white'
+											<a
 												href={`/course/${disciplineCodes[prerequisite?.subject] + '%20' + prerequisite?.courseNumber}`}
 											>
 												{disciplineCodes[prerequisite?.subject]}{' '}
 												{prerequisite?.courseNumber}
-											</Link>
+											</a>
 										) : (
 											<>
 												{prerequisite?.subject} {prerequisite?.courseNumber}
 											</>
 										)}
-									</b>{' '}
+									</strong>{' '}
 									(Min. Grade {prerequisite?.grade}){' '}
 									{prerequisite?.rightParentheses}
 								</React.Fragment>
 							))
 						: 'No Prerequisite Information Available'}
-				</h2>
+				</div>
 			</div>
 
-			<div className='mt-8'>
-				<h1 className='text-xl'>{courseData[0].course_code} Leads To</h1>
-				<div className='pt-2'>
+			<div className='cp-req-block'>
+				<h3 className='cp-req-title'>Leads To</h3>
+				<div className='cp-req-content'>
 					{leadsTo && leadsTo.length > 0
 						? leadsTo.map((courseName: string, index: any) => (
 								<React.Fragment key={index}>
-									<b>
-										<Link
-											className='text-black underline underline-offset-2 dark:text-white'
-											href={`/course/${courseName}`}
-										>
-											{courseName}
-										</Link>
-									</b>
+									<a href={`/course/${courseName}`}>
+										{courseName}
+									</a>
 									{index === leadsTo.length - 1 ? '' : ', '}
 								</React.Fragment>
 							))
@@ -149,17 +142,22 @@ async function CourseRequisites({
 				</div>
 			</div>
 
-			<div className='mt-8'>
-				<h1 className='text-xl'>{courseData[0].course_code} Restrictions</h1>
-				<div className='pt-2'>
+			<div className='cp-req-block'>
+				<h3 className='cp-req-title'>Restrictions</h3>
+				<div className='cp-req-content'>
 					{restrictions.length > 0
 						? restrictions.map((restriction: restriction, index) => (
-								<h3
-									className={`${restriction.bold ? 'font-bold' : ''} ${restriction.bold && index != 0 ? 'mt-2' : ''}`}
+								<span
 									key={index}
+									style={{
+										fontWeight: restriction.bold ? 500 : 400,
+										color: restriction.bold ? '#F0EFFB' : undefined,
+										display: restriction.bold && index !== 0 ? 'block' : undefined,
+										marginTop: restriction.bold && index !== 0 ? '8px' : undefined,
+									}}
 								>
 									{restriction.text}
-								</h3>
+								</span>
 							))
 						: 'No Restriction Information Available'}
 				</div>

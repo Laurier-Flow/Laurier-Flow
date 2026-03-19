@@ -228,8 +228,8 @@ async function CourseSchedule({
 	const nextSpringTermSections: section[] = termSections['nextSpringTerm']
 
 	return (
-		<div className='flex flex-col p-4 lg:mt-8'>
-			<h1 className='text-xl'>Course Schedule</h1>
+		<div className='cp-schedule'>
+			<h2 className='cp-section-label'>Schedule</h2>
 			<ScheduleTable
 				springTerm={prettyTerms.springTerm}
 				fallTerm={prettyTerms.fallTerm}
