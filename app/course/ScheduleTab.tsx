@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { section } from './CourseSchedule'
 import DaysDisplay from './DaysDisplay'
 import React from 'react'
@@ -181,7 +182,7 @@ function ScheduleTab({
 					</div>
 				) : null}
 			</div>
-			{showLoginPopup && !showSignUpPopup && (
+			{showLoginPopup && !showSignUpPopup && createPortal(
 				<div className='hp-popup-overlay'>
 					<LoginPopup
 						searchParams={{ message: '' }}
@@ -189,16 +190,18 @@ function ScheduleTab({
 						toggleSignUp={toggleSignUpPopup}
 						togglePasswordReset={togglePasswordPopup}
 					/>
-				</div>
+				</div>,
+				document.body
 			)}
-			{showSignUpPopup && !showLoginPopup && (
+			{showSignUpPopup && !showLoginPopup && createPortal(
 				<div className='hp-popup-overlay'>
 					<SignUpPopup
 						searchParams={{ message: '' }}
 						onClose={toggleSignUpPopup}
 						toggleLogIn={toggleLoginPopup}
 					/>
-				</div>
+				</div>,
+				document.body
 			)}
 		</>
 	)

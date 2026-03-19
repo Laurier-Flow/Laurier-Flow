@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 const HomeFooter = () => {
 	return (
-		<footer className='z-40 flex w-full items-center justify-center bg-transparent py-6 text-white' style={{ fontFamily: "'DM Sans', sans-serif" }}>
+		<footer className='z-40 flex w-full items-center justify-center bg-transparent py-6 text-[#8C7A68] dark:text-[#3F3F5A]' style={{ fontFamily: "'DM Sans', sans-serif" }}>
 			<div className='flex flex-1 justify-between px-8'>
 				<p className='text-sm'>
 					© 2026 LaurierFlow.{' '}

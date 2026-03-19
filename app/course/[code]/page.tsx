@@ -81,7 +81,7 @@ async function CoursePage({ params }: CoursePageProps) {
 						</div>
 					}
 				>
-					{/* @ts-expect-error Server Component */}
+					{/* @ts-ignore */}
 					<CourseInfo supabase={supabase} courseName={courseCode} />
 
 					<hr className='cp-divider' />

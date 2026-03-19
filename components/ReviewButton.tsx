@@ -2,6 +2,7 @@
 
 import { SupabaseClient, User } from '@supabase/supabase-js'
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import LoginPopup from './LoginPopup'
 import SignUpPopup from './SignUpPopup'
 import { useManageBodyScroll, usePopupManager } from './Header'
@@ -45,7 +46,7 @@ export default function ReviewButton({
 				>
 					Add your review
 				</button>
-				{showAddReviewPopup ? (
+				{showAddReviewPopup ? createPortal(
 					<div className='hp-popup-overlay'>
 						<AddReviewPopup
 							isInstructor={instructor}
@@ -54,7 +55,8 @@ export default function ReviewButton({
 							onClose={toggleAddReviewPopup}
 							courseName={courseName}
 						/>
-					</div>
+					</div>,
+					document.body
 				) : null}
 			</>
 		) : (
@@ -94,7 +96,7 @@ export default function ReviewButton({
 			>
 				Add your review
 			</button>
-			{showLoginPopup && !showSignUpPopup && (
+			{showLoginPopup && !showSignUpPopup && createPortal(
 				<div className='hp-popup-overlay'>
 					<LoginPopup
 						searchParams={{ message: '' }}
@@ -102,16 +104,18 @@ export default function ReviewButton({
 						toggleSignUp={toggleSignUpPopup}
 						togglePasswordReset={togglePasswordPopup}
 					/>
-				</div>
+				</div>,
+				document.body
 			)}
-			{showSignUpPopup && !showLoginPopup && (
+			{showSignUpPopup && !showLoginPopup && createPortal(
 				<div className='hp-popup-overlay'>
 					<SignUpPopup
 						searchParams={{ message: '' }}
 						onClose={toggleSignUpPopup}
 						toggleLogIn={toggleLoginPopup}
 					/>
-				</div>
+				</div>,
+				document.body
 			)}
 		</>
 	)

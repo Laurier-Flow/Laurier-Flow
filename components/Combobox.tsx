@@ -31,20 +31,20 @@ export const ProgramDropdown = React.forwardRef<HTMLDivElement, { value: string,
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-full mb-2 justify-between overflow-hidden border-neutral-300 dark:border-slate-800 border"
+            className="auth-combo-trigger w-full justify-between overflow-hidden"
           >
-            <span className={`truncate font-normal ${value ? "text-stone-950 dark:text-gray-50" : "text-stone-400 dark:text-gray-400"}`}>
+            <span className={`truncate font-normal ${value ? "text-[#F0EFFB]" : "text-[#3F3F5A]"}`}>
               {value
                 ? programOptions.find((program) => program.value === value)?.label
                 : "Select program..."}
             </span>
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 text-[#3F3F5A]" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent ref={ref} className="w-[--radix-popover-trigger-width] max-h-[--radix-popover-content-available-height] p-0 border-neutral-300 dark:border-slate-800 border">
-          <Command>
-            <CommandInput className="focus:outline-none focus:ring-0 placeholder-stone-400 dark:placeholder-gray-400" placeholder="Search programs..." />
-            <CommandEmpty>No program found.</CommandEmpty>
+        <PopoverContent ref={ref} className="auth-combo-content w-[--radix-popover-trigger-width] max-h-[--radix-popover-content-available-height] p-0">
+          <Command className="auth-combo-command">
+            <CommandInput className="auth-combo-search" placeholder="Search programs..." />
+            <CommandEmpty className="auth-combo-empty">No program found.</CommandEmpty>
             <CommandGroup>
               <CommandList>
                 {programOptions.map((program) => (

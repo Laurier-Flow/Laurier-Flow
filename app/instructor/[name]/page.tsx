@@ -59,7 +59,7 @@ async function InstructorPage({ params }: InstructorPageProps) {
 						</div>
 					}
 				>
-					{/* @ts-expect-error Server Component */}
+					{/* @ts-ignore */}
 					<InstructorInfo supabase={supabase} instructorName={decodedName} />
 
 					<hr className='cp-divider' />
