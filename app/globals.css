@@ -4816,3 +4816,395 @@
 :root:not(.dark) .pf-section-empty {
     color: #6B5744;
   }
+
+/* ============================================================
+   RESPONSIVE — comprehensive mobile / tablet overrides
+   ============================================================ */
+
+/* ── 1024px — Tablet landscape ── */
+@media (max-width: 1024px) {
+  /* Homepage */
+  .hp-nav {
+    padding: 20px 32px;
+  }
+  .hp-hero {
+    padding: 0 32px;
+  }
+  .hp-stats {
+    gap: 36px;
+  }
+
+  /* Navbar (inner pages) */
+  .nav-bar {
+    padding: 0 24px;
+    gap: 16px;
+  }
+}
+
+/* ── 768px — Tablet portrait ── */
+@media (max-width: 768px) {
+  /* Homepage nav */
+  .hp-nav {
+    padding: 16px 20px;
+  }
+  .hp-logo-icon {
+    width: 48px !important;
+    height: 48px !important;
+  }
+  .hp-nav-login {
+    font-size: 13px;
+    padding: 8px 16px 8px 12px;
+  }
+
+  /* Homepage hero */
+  .hp-hero {
+    padding: 0 20px;
+  }
+  .hp-headline {
+    font-size: clamp(36px, 8vw, 58px);
+  }
+  .hp-tagline {
+    font-size: 14px;
+  }
+  .hp-search-wrap {
+    margin-top: 28px;
+  }
+  .hp-stats {
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .hp-stat-number {
+    font-size: 22px;
+  }
+  .hp-stat-label {
+    font-size: 11px;
+  }
+  .hp-stat-sep {
+    font-size: 14px;
+  }
+
+  /* Navbar (inner pages) */
+  .nav-bar {
+    height: 64px;
+    padding: 0 16px;
+    gap: 12px;
+  }
+  .nav-bar-logo img {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  .nav-bar-search {
+    flex: 1;
+    min-width: 0;
+  }
+  .nav-bar-search .sb-input-wrap {
+    height: 40px;
+  }
+  .nav-bar-search .sb-input {
+    font-size: 12px;
+  }
+  .nav-bar .hp-nav-login {
+    font-size: 12px;
+    padding: 5px 12px 5px 10px;
+  }
+
+  /* Search bar (homepage) */
+  .sb-input-wrap {
+    height: 52px;
+    border-radius: 16px;
+  }
+  .sb-input {
+    font-size: 14px;
+    padding: 0 16px 0 44px;
+  }
+  .sb-search-icon {
+    left: 16px;
+  }
+  .sb-kbd {
+    display: none;
+  }
+  .sb-open {
+    border-radius: 16px 16px 0 0;
+  }
+  .sb-dropdown {
+    border-radius: 0 0 16px 16px;
+  }
+  .sb-item {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  .sb-footer {
+    font-size: 10px;
+    padding: 8px 16px;
+  }
+
+  /* Review modal */
+  .rv-modal {
+    width: 96%;
+    max-width: none;
+    max-height: 85vh;
+  }
+  .rv-header {
+    padding: 16px 20px 12px;
+  }
+  .rv-title {
+    font-size: 18px;
+  }
+  .rv-body {
+    padding: 16px 20px 20px;
+  }
+  .rv-ratings-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .rv-select {
+    font-size: 13px;
+  }
+  .rv-footer {
+    padding: 0 20px 16px;
+  }
+  .rv-submit {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* User nav dropdown */
+  .un-dropdown {
+    min-width: 200px;
+  }
+
+  /* Profile enhancements */
+  .pf-hero-name {
+    font-size: clamp(28px, 6vw, 48px);
+  }
+  .pf-hero-program,
+  .pf-hero-email {
+    font-size: 13px;
+  }
+  .pf-form-card {
+    max-width: 100%;
+  }
+  .pf-schedule-grid {
+    grid-template-columns: 1fr;
+  }
+  .pf-add-course-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .pf-add-course-form .pf-schedule-input {
+    max-width: 100%;
+  }
+  .pf-manual-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ── 480px — Small mobile ── */
+@media (max-width: 480px) {
+  /* Homepage */
+  .hp-nav {
+    padding: 12px 16px;
+  }
+  .hp-logo-icon {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  .hp-hero {
+    padding: 0 16px;
+  }
+  .hp-headline {
+    font-size: clamp(28px, 9vw, 36px);
+  }
+  .hp-tagline {
+    font-size: 13px;
+    margin-top: 14px;
+  }
+  .hp-search-wrap {
+    margin-top: 24px;
+  }
+  .hp-stats {
+    gap: 16px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .hp-stat-number {
+    font-size: 18px;
+  }
+  .hp-stat-label {
+    font-size: 10px;
+  }
+
+  /* Navbar */
+  .nav-bar {
+    height: 56px;
+    padding: 0 12px;
+    gap: 8px;
+  }
+  .nav-bar-logo img {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .nav-bar-search .sb-input-wrap {
+    height: 36px;
+  }
+  .nav-bar-search .sb-input {
+    font-size: 11px;
+  }
+  .nav-bar-search .sb-input::placeholder {
+    font-size: 11px;
+  }
+  .nav-bar .hp-nav-login {
+    font-size: 11px;
+    padding: 4px 10px;
+    gap: 4px;
+  }
+  .nav-bar .hp-nav-login svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Search bar */
+  .sb-input-wrap {
+    height: 46px;
+    border-radius: 14px;
+  }
+  .sb-input {
+    font-size: 13px;
+    padding: 0 12px 0 40px;
+  }
+  .sb-open {
+    border-radius: 14px 14px 0 0;
+  }
+  .sb-dropdown {
+    border-radius: 0 0 14px 14px;
+  }
+  .sb-item {
+    padding: 8px 12px;
+    font-size: 12px;
+    gap: 8px;
+  }
+
+  /* Review modal */
+  .rv-modal {
+    width: 100%;
+    border-radius: 16px 16px 0 0;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    transform: none;
+    max-height: 90vh;
+  }
+  .rv-header {
+    padding: 14px 16px 10px;
+  }
+  .rv-body {
+    padding: 12px 16px 16px;
+  }
+  .rv-label {
+    font-size: 11px;
+  }
+  .rv-footer {
+    padding: 0 16px 16px;
+  }
+
+  /* User nav */
+  .un-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  /* Course page */
+  .cp-content {
+    padding: 0 16px 32px;
+  }
+  .cp-hero {
+    padding: 32px 0 0;
+  }
+  .cp-hero-code {
+    font-size: clamp(28px, 8vw, 40px);
+  }
+  .cp-hero-title {
+    font-size: 14px;
+  }
+
+  /* Explore page */
+  .ex-page-header {
+    padding: 32px 0 0;
+  }
+  .ex-page-title {
+    font-size: 24px;
+  }
+
+  /* Profile */
+  .pf-content {
+    padding: 0 16px 40px;
+  }
+  .pf-hero-greeting {
+    font-size: 11px;
+  }
+  .pf-hero-name {
+    font-size: clamp(24px, 8vw, 32px);
+  }
+  .pf-tabs {
+    gap: 0;
+  }
+  .pf-tab {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  .pf-form-card {
+    padding: 20px;
+  }
+  .pf-form-label {
+    font-size: 11px;
+  }
+  .pf-form-input {
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+  .pf-review-card {
+    padding: 16px;
+  }
+  .pf-schedule-table {
+    font-size: 11px;
+  }
+  .pf-schedule-term {
+    padding: 16px;
+  }
+  .pf-btn-primary,
+  .pf-btn-danger,
+  .pf-btn-ghost {
+    font-size: 12px;
+    padding: 8px 14px;
+  }
+  .pf-manual-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* About page */
+  .ab-content {
+    padding: 0 16px 32px;
+  }
+  .ab-hero {
+    padding: 32px 0 0;
+  }
+
+  /* Privacy page */
+  .pv-content {
+    padding: 0 16px 32px;
+  }
+  .pv-hero {
+    padding: 32px 0 0;
+  }
+
+  /* Auth modal */
+  .auth-modal {
+    padding: 28px 20px 24px;
+    max-width: calc(100vw - 32px);
+  }
+  .auth-title {
+    font-size: 24px;
+  }
+}
