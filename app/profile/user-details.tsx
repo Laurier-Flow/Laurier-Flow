@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
-import { programOptions } from '@/utils/programOptions'
 import { useManageBodyScroll } from '@/components/Header'
 import { ProgramDropdownUserDetails } from '@/components/Combobox'
 import { useRef } from 'react'
@@ -26,8 +25,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 }) => {
 	const [newFirstName, setNewFirstName] = useState<string>()
 	const [newLastName, setNewLastName] = useState<string>()
-
-	const [newProgram, setNewProgram] = React.useState("")
+	const [newProgram, setNewProgram] = React.useState('')
 
 	const [isVisible, setIsVisible] = useState<boolean>(false)
 
@@ -37,14 +35,11 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 
 	const [errorMsg, setErrorMsg] = useState<string>('Error! ')
 	const [error, setError] = useState<boolean>(false)
-
 	const [update, setUpdate] = useState<boolean>(false)
-
-	const [sizeOfInputFields, setSizeOfInputFields] = useState<number>(50)
 
 	const [showDeleteProfilePopup, setShowDeleteProfilePopup] =
 		useState<boolean>(false)
-		
+
 	const popupRef = useRef<HTMLDivElement | null>(null)
 
 	useManageBodyScroll(showDeleteProfilePopup)
@@ -68,20 +63,6 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 			setOriginalFirstName(fName)
 			setOriginalLastName(lName)
 			setOriginalProgram(program)
-			var max: number = fName.length
-
-			if (max < lName.length) {
-				max = lName.length
-			}
-			if (max < program.length) {
-				max = program.length
-			}
-			if (max < email.length) {
-				max = email.length
-			}
-
-			max *= 1.5
-			setSizeOfInputFields(max)
 		}
 		getUserData()
 	}, [update])
@@ -97,12 +78,10 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 	}
 
 	const handleClickOutside = (event: MouseEvent) => {
-		console.log(12321)
 		if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
 			setShowDeleteProfilePopup(false)
 			document.body.classList.remove('overflow-hidden')
 		}
-		console.log(showDeleteProfilePopup)
 	}
 
 	useEffect(() => {
@@ -120,7 +99,6 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 	const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 
-		// Determine what changed and update it accordingly
 		if (
 			originalFirstName !== newFirstName &&
 			newFirstName !== undefined &&
@@ -194,136 +172,121 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 	}
 
 	return (
-		<div className="flex sm:w-1/2 w-5/6 justify-center">
-		<div className='card'>
-			<div>
-				{update ? (
-					error ? (
-						<div
-							className='mt-8 rounded-lg bg-red-500 p-4 text-sm text-white dark:bg-red-800'
-							role='alert'
-						>
-							<span className='font-bold'>
-								An error occurred in changing your information
-							</span>{' '}
-							{errorMsg}
-						</div>
-					) : (
-						<div
-							className='mt-8 rounded-lg bg-teal-500 p-4 text-sm text-white'
-							role='alert'
-						>
-							<span className='font-bold'>Success!</span> Your information has
-							been updated
-						</div>
-					)
-				) : null}
+		<div>
+			{update ? (
+				error ? (
+					<div className='pf-alert-error'>
+						<strong>An error occurred in changing your information.</strong>{' '}
+						{errorMsg}
+					</div>
+				) : (
+					<div className='pf-alert-success'>
+						<strong>Success!</strong> Your information has been updated.
+					</div>
+				)
+			) : null}
 
+			<div className='pf-form-card'>
 				<form onSubmit={handleFormSubmit}>
-					<div className='mt-4 p-4'>
-						<h1 className='mb-2 block text-lg font-medium dark:text-white'>
-							First Name
-						</h1>
-						<input
-							onChange={handleFirstNameChange}
-							type='text'
-							className='mb-4 w-full rounded-md px-4 py-2 bg-gray-100 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400'
-							value={newFirstName}
-						/>
-						<h1 className='mb-2 block text-lg font-medium dark:text-white'>
-							Last Name
-						</h1>
-						<input
-							onChange={handleLastNameChange}
-							type='text'
-							className='mb-4 w-full rounded-md px-4 py-2 bg-gray-100 dark:bg-gray-900 border-neutral-300 dark:border-slate-800 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 placeholder-gray-400'
-							value={newLastName}
-						/>
-						<h1 className='mb-2 block text-lg font-medium dark:text-white'>
-							Program
-						</h1>
-						<ProgramDropdownUserDetails
-							value = {newProgram}
-							setValue = {setNewProgram}
-						/>
+					<label className='pf-form-label'>Email</label>
+					<input
+						type='email'
+						className='pf-form-input'
+						value={email}
+						disabled
+						style={{ opacity: 0.5, cursor: 'not-allowed' }}
+					/>
+
+					<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 20px' }}>
+						<div>
+							<label className='pf-form-label'>First Name</label>
+							<input
+								onChange={handleFirstNameChange}
+								type='text'
+								className='pf-form-input'
+								value={newFirstName}
+							/>
+						</div>
+						<div>
+							<label className='pf-form-label'>Last Name</label>
+							<input
+								onChange={handleLastNameChange}
+								type='text'
+								className='pf-form-input'
+								value={newLastName}
+							/>
+						</div>
 					</div>
 
-					<div className='p-4'>
-						<button
-							type='submit'
-							className='mb-4 inline-flex w-full items-center justify-center gap-x-2 rounded-lg border border-transparent bg-secondary px-4 py-3 text-sm font-semibold text-black disabled:pointer-events-none disabled:opacity-50 dark:text-white'
-						>
-							Save Changes
-						</button>
-					</div>
+					<label className='pf-form-label'>Program</label>
+					<ProgramDropdownUserDetails
+						value={newProgram}
+						setValue={setNewProgram}
+					/>
+
+					<button type='submit' className='pf-form-submit' style={{ marginTop: 4 }}>
+						Save Changes
+					</button>
 				</form>
 
-				<hr className='mb-4 border-gray-300 dark:border-gray-800'></hr>
+				<hr className='pf-form-divider' />
 
-				<div className='p-4'>
-					{/* <button
-						type='submit'
+				<div style={{ textAlign: 'center' }}>
+					<button
+						type='button'
 						onClick={(e) => {
 							e.preventDefault()
 							toggleDeleteReviewPopup()
 						}}
-						className='text-md mb-5 flex w-full flex-row items-center justify-center gap-2 rounded-lg bg-red-500 px-6 py-3 font-semibold text-white dark:bg-red-800 dark:text-white'
+						className='pf-delete-link'
 					>
-						<h1>Delete Account</h1>
-					</button> */}
-					<div className="flex justify-center text-foreground mb-4">
-						<h1><span onClick={(e) => { e.preventDefault(); toggleDeleteReviewPopup() }} className="cursor-pointer underline text-red-500 underline-offset-2 decoration-1">Delete your account</span></h1>
-					</div>
+						Delete your account
+					</button>
 				</div>
 			</div>
 
 			{showDeleteProfilePopup ? (
 				<div className='fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-60'>
-					<div
-						className={`transform transition-all duration-500 ${isVisible ? '-translate-y-1/2 opacity-100' : '-translate-y-2/3 opacity-0'} fixed left-1/2 top-1/2 max-h-[90vh] w-11/12 max-w-md -translate-x-1/2 -translate-y-1/2 transform overflow-y-auto rounded-md border-2 bg-white p-8 backdrop-blur dark:border-red-800 dark:bg-background/80`}
-					>
-						<form className='flex flex-col gap-4 text-foreground'>
-							<label className='mb-2 flex flex-row items-center justify-between text-3xl font-bold text-foreground'>
-								<h1>Delete Account</h1>
-								<X
-									className='cursor-pointer'
-									onClick={() => {
-										toggleDeleteReviewPopup()
-									}}
-								/>
-							</label>
-							<h2 className='text-md'>
-								Are you sure you want to delete your account? This action cannot
-								be undone and will remove all your reviews and user data.
-							</h2>
-							<div className='flex flex-row gap-6'>
-								<button
-									type='submit'
-									onClick={(e) => {
-										e.preventDefault()
-										handleAccountDeletion()
-									}}
-									className='text-md mb-5 mt-4 flex w-full flex-row items-center justify-center gap-2 rounded-lg bg-teal-500 px-6 py-3 font-semibold text-white dark:text-white'
-								>
-									<h1>Yes</h1>
-								</button>
-
-								<button
-									type='submit'
-									onClick={(e) => {
-										e.preventDefault()
-										toggleDeleteReviewPopup()
-									}}
-									className='text-md mb-5 mt-4 flex w-full flex-row items-center justify-center gap-2 rounded-lg bg-red-500 px-6 py-3 font-semibold text-white dark:text-white'
-								>
-									<h1>No</h1>
-								</button>
-							</div>
-						</form>
+					<div ref={popupRef} className='pf-delete-popup'>
+						<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+							<h2 className='pf-delete-popup-title'>Delete Account</h2>
+							<button
+								type='button'
+								onClick={toggleDeleteReviewPopup}
+								style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8A8AAA', padding: 4 }}
+							>
+								<X size={20} />
+							</button>
+						</div>
+						<p className='pf-delete-popup-text'>
+							Are you sure you want to delete your account? This action cannot
+							be undone and will remove all your reviews and user data.
+						</p>
+						<div className='pf-delete-popup-actions'>
+							<button
+								type='button'
+								onClick={(e) => {
+									e.preventDefault()
+									handleAccountDeletion()
+								}}
+								className='pf-popup-btn pf-popup-btn-confirm'
+							>
+								Yes, Delete
+							</button>
+							<button
+								type='button'
+								onClick={(e) => {
+									e.preventDefault()
+									toggleDeleteReviewPopup()
+								}}
+								className='pf-popup-btn pf-popup-btn-cancel'
+							>
+								Cancel
+							</button>
+						</div>
 					</div>
 				</div>
 			) : null}
-		</div>
 		</div>
 	)
 }

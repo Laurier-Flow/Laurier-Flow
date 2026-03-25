@@ -27,32 +27,27 @@ async function getCurrentCourses(
 	supabase: SupabaseClient<any, 'public', any>,
 	instructorName: string
 ) {
-	const { data, error } = await supabase
-		.from('sections')
-		.select()
-		.eq('instructor_name_fk', instructorName)
-
 	const currentDate = new Date()
 	const currentMonth = currentDate.getMonth()
 	const currentYear = currentDate.getFullYear()
 	let currentTerm = ''
 
-	if (0 <= currentMonth && currentMonth <= 3) {
+	if (currentMonth <= 3) {
 		currentTerm = `${currentYear}01`
-	} else if (4 <= currentMonth && currentMonth <= 7) {
+	} else if (currentMonth <= 7) {
 		currentTerm = `${currentYear}05`
-	} else if (8 <= currentMonth && currentMonth <= 11) {
+	} else {
 		currentTerm = `${currentYear}09`
 	}
 
+	const { data } = await supabase
+		.from('sections')
+		.select('course_code_fk')
+		.eq('instructor_name_fk', instructorName)
+		.eq('term', currentTerm)
+
 	const courses = new Set<string>()
-
-	data?.forEach((section) => {
-		if (section.term === currentTerm) {
-			courses.add(section.course_code_fk)
-		}
-	})
-
+	data?.forEach((section) => courses.add(section.course_code_fk))
 	return courses
 }
 
@@ -69,50 +64,34 @@ async function InstructorInfo({
 	])
 
 	return (
-		<div className='md:bg-white md:dark:bg-slate-950'>
-			<div className="flex flex-col bg-[url('/banner-sm-light.jpg')] p-4 dark:bg-[url('/banner-sm.jpg')] md:flex-row md:justify-center md:bg-[url('/banner-md-light.jpg')] md:dark:bg-[url('/banner-md.jpg')] lg:bg-[url('/banner-light.jpg')] lg:dark:bg-[url('/banner.jpg')]">
-				<div className='flex max-w-6xl flex-1 flex-row justify-between pt-20'>
-					<div className='flex flex-1 flex-col justify-end pl-4'>
-						<h1 className='text-2xl font-bold text-white md:text-5xl'>
-							{instructorData[0].instructor_name}
-						</h1>
-						<h2 className='pt-2 text-xl text-white md:text-3xl'>
-							{instructorData[0].instructor_email}
-						</h2>
-					</div>
-					<div className='hidden w-1/2 translate-y-28 md:inline'>
-						<InstructorStats
-							instructorData={instructorData}
-							currentCourses={currentCourses}
-						/>
-					</div>
-				</div>
-			</div>
-
-			<div className='mx-auto hidden max-w-6xl pl-4 pr-10 pt-8 md:flex'>
-				{currentCourses.size > 0 ? (
-					<h3 className='w-1/3 pt-4 text-lg font-medium'>
-						Currently teaches{' '}
-						{Array.from(currentCourses).map((course, index) => (
-							<React.Fragment key={index}>
-								{index === currentCourses.size - 1 ? course : `${course}, `}
-							</React.Fragment>
-						))}
-					</h3>
-				) : (
-					<h3 className='w-1/3 pt-4 text-lg font-medium'>
-						Not currently teaching anything
-					</h3>
-				)}
-			</div>
-
-			<div className='md:hidden'>
-				<InstructorStats
-					instructorData={instructorData}
-					currentCourses={currentCourses}
-				/>
-			</div>
-			<hr className='mb-8 mt-8 border-gray-300 dark:border-gray-800 md:mb-0'></hr>
+		<div className='cp-hero'>
+			<p className='cp-course-code'>{instructorData[0].instructor_name}</p>
+			<h1 className='cp-course-title' style={{ fontSize: 'clamp(28px, 3.5vw, 42px)' }}>
+				{instructorData[0].instructor_email || 'Instructor'}
+			</h1>
+			{currentCourses.size > 0 && (
+				<p className='cp-course-desc'>
+					Currently teaches{' '}
+					{Array.from(currentCourses).map((course, index) => (
+						<React.Fragment key={index}>
+							<a
+								href={`/course/${course.replace(/\s+/g, '%20')}`}
+								style={{ color: '#b07030', textDecoration: 'none' }}
+							>
+								{course}
+							</a>
+							{index < currentCourses.size - 1 ? ', ' : ''}
+						</React.Fragment>
+					))}
+				</p>
+			)}
+			{currentCourses.size === 0 && (
+				<p className='cp-course-desc'>Not currently teaching any courses</p>
+			)}
+			<InstructorStats
+				instructorData={instructorData}
+				currentCourses={currentCourses}
+			/>
 		</div>
 	)
 }

@@ -41,29 +41,46 @@ async function InstructorPage({ params }: InstructorPageProps) {
 	await getAndIncrementPageVisits()
 
 	return (
-		<>
+		<div className='cp-root'>
+			{/* Background layer */}
+			<div className='cp-bg-layer'>
+				<div className='cp-orb cp-orb-1' />
+				<div className='cp-orb cp-orb-2' />
+				<div className='cp-noise' />
+			</div>
+
 			<Header user={user} />
-			<Suspense
-				fallback={
-					<div className='h-full w-full'>
-						<Spinner />
-					</div>
-				}
-			>
-				<div className='hidden min-w-full lg:inline'>
+
+			<div className='cp-content'>
+				<Suspense
+					fallback={
+						<div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+							<Spinner />
+						</div>
+					}
+				>
+					{/* @ts-ignore */}
 					<InstructorInfo supabase={supabase} instructorName={decodedName} />
-				</div>
-				<div className='card'>
-					<div className='lg:hidden'>
-						<InstructorInfo supabase={supabase} instructorName={decodedName} />
-					</div>
-					<InstructorSchedule
-						supabase={supabase}
-						instructorName={decodedName}
-						user={user}
-					/>
-					<hr className='mb-8 mt-8 border-gray-300 dark:border-gray-800'></hr>
-					<div className='lg:flex lg:flex-1 lg:flex-col lg:pr-4'>
+
+					<hr className='cp-divider' />
+
+					<Suspense
+						fallback={
+							<div style={{ padding: '32px 0' }}>
+								<Spinner />
+							</div>
+						}
+					>
+						<InstructorSchedule
+							supabase={supabase}
+							instructorName={decodedName}
+							user={user}
+						/>
+					</Suspense>
+
+					<hr className='cp-divider' />
+
+					<div>
 						<AddReview
 							courseName={decodedName}
 							supabase={supabase}
@@ -73,12 +90,12 @@ async function InstructorPage({ params }: InstructorPageProps) {
 							supabase={supabase}
 							instructorName={decodedName}
 						/>
-						<hr className='mb-8 mt-8 border-0'></hr>
 					</div>
-				</div>
-			</Suspense>
+				</Suspense>
+			</div>
+
 			<Footer />
-		</>
+		</div>
 	)
 }
 

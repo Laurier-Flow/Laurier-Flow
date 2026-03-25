@@ -23,51 +23,27 @@ async function getCourseReviews(
 			.select()
 			.eq('course_code_fk', courseName)
 
-		let reviews = []
+		if (!data || data.length === 0) return []
 
-		if (data !== null && data !== undefined) {
-			for (const s of data) {
-				const id = s.id
-				const createdAt = s.created_at
-				const easy = s.easy
-				const useful = s.useful
-				const liked = s.liked
-				const instructor = s.instructor_name_fk
-				const body = s.body
-				const course = s.course_code_fk
+		const userIds = Array.from(new Set(data.map((r: any) => r.user_id_fk)))
+		const { data: profiles } = await supabase
+			.from('profiles')
+			.select('user_id, program')
+			.in('user_id', userIds)
 
-				try {
-					const { data, error } = await supabase
-						.from('profiles')
-						.select()
-						.eq('user_id', s.user_id_fk)
+		const profileMap = new Map((profiles || []).map((p: any) => [p.user_id, p.program]))
 
-					let userData = null
-
-					if (data !== null && data !== undefined && data.length > 0) {
-						userData = data[0].program
-					}
-
-					const review = {
-						id: id,
-						course_code_fk: course,
-						created_at: createdAt,
-						easy: easy,
-						useful: useful,
-						liked: liked,
-						instructor_name_fk: instructor,
-						program: userData,
-						body: body
-					}
-
-					reviews.push(review)
-				} catch (error) {
-					console.error(error)
-				}
-			}
-
-			return reviews || []
-		}
+		return data.map((s: any) => ({
+			id: s.id,
+			course_code_fk: s.course_code_fk,
+			created_at: s.created_at,
+			easy: s.easy,
+			useful: s.useful,
+			liked: s.liked,
+			instructor_name_fk: s.instructor_name_fk,
+			program: profileMap.get(s.user_id_fk) ?? null,
+			body: s.body
+		}))
 	} catch (error) {
 		console.error(error)
 		return []

@@ -1,13 +1,7 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuGroup,
 	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuShortcut,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { signOut } from '@/utils/supabase/authActions'
@@ -20,55 +14,49 @@ export function UserNav({ user }: { user: User }) {
 		const result = await signOut()
 	}
 
+	const initials =
+		(user.user_metadata.first_name?.charAt(0) || '') +
+		(user.user_metadata.last_name?.charAt(0) || '')
+
 	return (
 		<div className='z-[200]'>
 			<DropdownMenu modal={false}>
-				{' '}
-				{/* Add modal=false to the DropdownMenu component to keep scrolling enabled */}
 				<DropdownMenuTrigger asChild>
-					<Button variant='ghost' className='relative h-8 w-8 rounded-full'>
-						<Avatar className='h-8 w-8'>
-							<AvatarFallback>
-								{user.user_metadata.first_name?.charAt(0)}
-								{user.user_metadata.last_name?.charAt(0)}
-							</AvatarFallback>
-						</Avatar>
-					</Button>
+					<button className='un-avatar-btn'>
+						<span className='un-avatar'>
+							{initials}
+						</span>
+					</button>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent className='z-[200] w-56' align='end' forceMount>
-					<DropdownMenuLabel className='font-normal'>
-						<div className='flex flex-col space-y-1'>
-							<p className='text-sm font-medium leading-none'>
-								{user.user_metadata.first_name} {user.user_metadata.last_name}
-							</p>
-							<p className='text-xs leading-none text-muted-foreground'>
-								{user.email}
-							</p>
-						</div>
-					</DropdownMenuLabel>
-					<DropdownMenuSeparator />
-					<Link href={'/profile'} className='z-[200]'>
-						<DropdownMenuGroup className='z-[200]'>
-							<DropdownMenuItem className='z-[200] cursor-pointer hover:bg-accent'>
-								Profile
-							</DropdownMenuItem>
-						</DropdownMenuGroup>
+				<DropdownMenuContent
+					className='un-dropdown'
+					align='end'
+					sideOffset={8}
+					forceMount
+				>
+					<div className='un-header'>
+						<p className='un-header-name'>
+							{user.user_metadata.first_name} {user.user_metadata.last_name}
+						</p>
+						<p className='un-header-email'>
+							{user.email}
+						</p>
+					</div>
+					<div className='un-divider' />
+					<Link href='/profile'>
+						<DropdownMenuItem className='un-item'>
+							Profile
+						</DropdownMenuItem>
 					</Link>
-
-					<DropdownMenuSeparator />
-					<Link href={'/change-password'} className='z-[200]'>
-						<DropdownMenuGroup className='z-[200]'>
-							<DropdownMenuItem className='z-[200] cursor-pointer hover:bg-accent'>
-								Change Password
-							</DropdownMenuItem>
-						</DropdownMenuGroup>
+					<Link href='/change-password'>
+						<DropdownMenuItem className='un-item'>
+							Change Password
+						</DropdownMenuItem>
 					</Link>
-
-					<DropdownMenuSeparator />
-
+					<div className='un-divider' />
 					<DropdownMenuItem
 						onClick={handleSignOut}
-						className='z-[200] cursor-pointer hover:bg-destructive'
+						className='un-item'
 					>
 						Log out
 					</DropdownMenuItem>

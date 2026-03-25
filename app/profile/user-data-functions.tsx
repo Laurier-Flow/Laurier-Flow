@@ -4,7 +4,8 @@ import { cookies } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
 import { fetchUser } from '@/utils/supabase/authActions'
 import { SupabaseClient, User } from '@supabase/supabase-js'
-import { section } from '../course/CourseSchedule'
+import { section, getCourseSections } from '../course/CourseSchedule'
+import { getTerms } from '../course/getTerms'
 
 export const updateUserFirstName = async (
 	first_name: string
@@ -292,4 +293,101 @@ export const deleteSpecificClassFromSchedule = async (
 	}
 
 	return data
+}
+
+export const searchCourses = async (
+	query: string
+): Promise<{ course_code: string; course_title: string }[]> => {
+	'use server'
+
+	if (!query || query.length < 2) return []
+
+	const cookieStore = cookies()
+	const supabase = createClient(cookieStore)
+
+	const fuzzy = query.replace(/\s+/g, '%')
+
+	const { data, error } = await supabase
+		.from('courses')
+		.select('course_code, course_title')
+		.or(`course_code.ilike.%${fuzzy}%,course_title.ilike.%${fuzzy}%`)
+		.is('is_uwaterloo_course', false)
+		.order('course_code', { ascending: true })
+		.limit(8)
+
+	if (error || !data) return []
+	return data
+}
+
+export interface SectionOption {
+	section: string
+	type: string
+	instructor: string
+	location: string
+	time: string
+	days: string
+	crn: string
+}
+
+export const fetchSectionsForCourse = async (
+	courseCode: string
+): Promise<SectionOption[]> => {
+	'use server'
+
+	const user = await fetchUser()
+	const cookieStore = cookies()
+	const supabase = createClient(cookieStore)
+
+	const dataTerms = getTerms(false)
+
+	const termSections = await getCourseSections(
+		dataTerms.springTerm,
+		dataTerms.fallTerm,
+		dataTerms.winterTerm,
+		dataTerms.nextSpringTerm,
+		'course_code_fk',
+		courseCode,
+		supabase,
+		user
+	)
+
+	const allSections = [
+		...termSections.springTerm,
+		...termSections.fallTerm,
+		...termSections.winterTerm,
+		...termSections.nextSpringTerm
+	]
+
+	const convertTime = (t: string | null | undefined) => {
+		if (!t) return ''
+		const h = parseInt(t.slice(0, 2), 10)
+		const m = t.slice(2, 4)
+		if (h === 0) return `12:${m} AM`
+		if (h < 12) return `${h}:${m} AM`
+		if (h === 12) return `12:${m} PM`
+		return `${h - 12}:${m} PM`
+	}
+
+	const buildDaysString = (d: any) => {
+		if (!d) return ''
+		let str = ''
+		if (d.monday) str += 'Monday'
+		if (d.tuesday) str += 'Tuesday'
+		if (d.wednesday) str += 'Wednesday'
+		if (d.thursday) str += 'Thursday'
+		if (d.friday) str += 'Friday'
+		if (d.saturday) str += 'Saturday'
+		if (d.sunday) str += 'Sunday'
+		return str
+	}
+
+	return allSections.map((s) => ({
+		section: s.section || '',
+		type: s.type || '',
+		instructor: s.instructor || '',
+		location: s.location || '',
+		time: s.beginTime ? `${convertTime(s.beginTime)} - ${convertTime(s.endTime)}` : '',
+		days: buildDaysString(s.days),
+		crn: s.crn || ''
+	}))
 }

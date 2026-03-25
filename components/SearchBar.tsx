@@ -1,22 +1,12 @@
 'use client'
 
-import React, { useRef } from 'react'
+import React, { useRef, useState, useEffect, useMemo } from 'react'
 import { createClient } from '@/utils/supabase/client'
-import { Input } from '@/components/ui/input'
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { facultyCoursePrefix } from '@/utils/lib/facultyCoursePrefix'
 import { disciplineCodes } from '@/utils/lib/disciplineCodes'
-import { Bot } from 'lucide-react'
-import {
-	Search,
-	Telescope,
-	BookOpenText,
-	UserRound,
-	GalleryVerticalEnd
-} from 'lucide-react'
+import { Search, Telescope, BookOpenText, UserRound, GalleryVerticalEnd, Bot } from 'lucide-react'
 
-// Type for Course Result Object from Supabase
 type CourseResult = {
 	course_code: string
 	course_title: string | null
@@ -26,11 +16,6 @@ type CourseResult = {
 	useful: number | null
 }
 
-interface CourseResultProps extends React.AllHTMLAttributes<HTMLAnchorElement> {
-	params: CourseResult
-}
-
-// Type for Professor Result Object from Supabase
 type ProfResult = {
 	clear: number | null
 	engaging: number | null
@@ -40,257 +25,272 @@ type ProfResult = {
 	total_reviews: number | null
 }
 
-interface ProfResultProps extends React.AllHTMLAttributes<HTMLAnchorElement> {
-	params: ProfResult
-}
+type SearchItem =
+	| { type: 'course'; data: CourseResult; href: string }
+	| { type: 'prof'; data: ProfResult; href: string }
+	| { type: 'explore'; faculty: string; href: string }
+	| { type: 'exploreAll'; href: string }
+	| { type: 'chat'; query: string; href: string }
 
-interface ExploreResultProps
-	extends React.AllHTMLAttributes<HTMLAnchorElement> {
-	faculty: string
-}
-
-const slugify = (link: string) => {
-	return link.replaceAll(/\s/g, '%20')
-}
-
-const CourseResultListItem: React.FC<CourseResultProps> = ({
-	params,
-	...props
-}) => {
-	const courseLink = '/course/' + slugify(params.course_code)
-	return (
-		<Link
-			href={courseLink}
-			className='flex w-full flex-row bg-transparent p-2 pl-3 last:rounded-b-md hover:bg-stone-200 dark:hover:bg-stone-800'
-			{...props}
-		>
-			<BookOpenText />
-			<span className='pl-3'>
-				<span className='font-bold text-secondary'>{params.course_code}</span> -{' '}
-				<span className='font-bold'>{params.course_title}</span>
-			</span>
-		</Link>
-	)
-}
-
-const ProfResultListItem: React.FC<ProfResultProps> = ({
-	params,
-	...props
-}) => {
-	const profLink = '/instructor/' + slugify(params.instructor_name)
-
-	return (
-		<Link
-			href={profLink}
-			className='flex w-full flex-row bg-transparent p-2 pl-3 last:rounded-b-md hover:bg-stone-200 dark:hover:bg-stone-800'
-			{...props}
-		>
-			<UserRound />
-			<span className='pl-3 font-bold text-secondary'>
-				{params.instructor_name}
-			</span>
-		</Link>
-	)
-}
-
-const ExploreResultListItem: React.FC<ExploreResultProps> = ({
-	faculty,
-	...props
-}) => {
-	const facultyCode = disciplineCodes[faculty]
-
-	return (
-		<Link
-			href={{ pathname: '/explore', query: { subject: facultyCode } }}
-			className='flex w-full flex-row bg-transparent p-2 pl-3 last:rounded-b-md hover:bg-stone-200 dark:hover:bg-stone-800'
-			{...props}
-		>
-			<Telescope />
-			<span className='pl-3 font-bold'>
-				Search for all <span className='text-secondary'>{faculty}</span> courses
-			</span>
-		</Link>
-	)
-}
-
-const ExploreAllListItem = ({ ...props }) => {
-	return (
-		<Link
-			href={`/explore`}
-			className='flex w-full flex-row bg-transparent p-2 pl-3 last:rounded-b-md hover:bg-stone-200 dark:hover:bg-stone-800'
-			{...props}
-		>
-			<GalleryVerticalEnd />
-			<span className='pl-3 font-bold'>
-				Search for all <span className='text-secondary'>ALL</span> courses
-			</span>
-		</Link>
-	)
-}
-
-const ChatListItem = ({query}: {query: string}) => {
-	return (
-		<Link
-			href={`/chat?q=${query}`}
-			className='flex w-full flex-row bg-transparent p-2 pl-3 last:rounded-b-md hover:bg-stone-200 dark:hover:bg-stone-800'
-		>
-			<Bot />
-			<span className='pl-3 font-bold'>
-				Ask Flow Bot 🪄 - <span className='text-secondary'>{query}</span>
-			</span>
-		</Link>
-	)
-}
+const slugify = (s: string) => s.replaceAll(/\s/g, '%20')
 
 export default function SearchBar() {
-	const [searchQuery, setSearchQuery] = useState<string>('') // Search Query State
-	const [courseResults, setCourseResults] = useState<CourseResult[]>([]) // Course Results State
-	const [profResults, setProfResults] = useState<ProfResult[]>([]) // Professor Results State
-	const [exploreResults, setExploreResults] = useState<string[]>([]) // Explore Results State
-	const [isFocused, setIsFocused] = useState<boolean>(false) // Focus State for Div Rendering
-	const containerRef = useRef<HTMLDivElement | null>(null)
+	const router = useRouter()
+	const inputRef = useRef<HTMLInputElement>(null)
+	const containerRef = useRef<HTMLDivElement>(null)
+	const selectedRef = useRef<HTMLAnchorElement>(null)
 
-	const handleFocus = () => {
-		setIsFocused(true)
-	}
-	const handleBlur = (event: React.FocusEvent) => {
-		if (
-			containerRef.current &&
-			containerRef.current.contains(event.relatedTarget)
-		) {
-			return
-		}
-	}
+	const [searchQuery, setSearchQuery] = useState('')
+	const [courseResults, setCourseResults] = useState<CourseResult[]>([])
+	const [profResults, setProfResults] = useState<ProfResult[]>([])
+	const [exploreResults, setExploreResults] = useState<string[]>([])
+	const [isFocused, setIsFocused] = useState(false)
+	const [selectedIndex, setSelectedIndex] = useState(-1)
 
+	// Flat navigable list kept in sync with results
+	const items: SearchItem[] = useMemo(() => {
+		const list: SearchItem[] = []
+		courseResults.forEach(c =>
+			list.push({ type: 'course', data: c, href: '/course/' + slugify(c.course_code) })
+		)
+		profResults.forEach(p =>
+			list.push({ type: 'prof', data: p, href: '/instructor/' + slugify(p.instructor_name) })
+		)
+		exploreResults.forEach(f =>
+			list.push({ type: 'explore', faculty: f, href: `/explore?subject=${disciplineCodes[f]}` })
+		)
+		if (exploreResults.length === 0)
+			list.push({ type: 'exploreAll', href: '/explore' })
+		if (searchQuery.length > 0)
+			list.push({ type: 'chat', query: searchQuery, href: `/chat?q=${searchQuery}` })
+		return list
+	}, [courseResults, profResults, exploreResults, searchQuery])
+
+	// Reset selection when results change
+	useEffect(() => { setSelectedIndex(-1) }, [items])
+
+	// Scroll selected item into view
 	useEffect(() => {
-		const handleClick = (event: MouseEvent) => {
-			if (
-				containerRef.current &&
-				containerRef.current.contains(event.target as Node)
-			) {
-				setIsFocused(true)
-			} else {
-				setIsFocused(false)
-			}
-		}
+		selectedRef.current?.scrollIntoView({ block: 'nearest' })
+	}, [selectedIndex])
 
-		document.addEventListener('mousedown', handleClick)
-		return () => {
-			document.removeEventListener('mousedown', handleClick)
+	// Close on outside click
+	useEffect(() => {
+		const onMouseDown = (e: MouseEvent) => {
+			if (!containerRef.current?.contains(e.target as Node)) setIsFocused(false)
 		}
+		document.addEventListener('mousedown', onMouseDown)
+		return () => document.removeEventListener('mousedown', onMouseDown)
 	}, [])
 
-	// Use Effect Hook to fetch results from backend
+	// Global ⌘K / Ctrl+K shortcut
 	useEffect(() => {
-		/**
-		 * Failsafes to parse the raw user inputted search string
-		 * @param rawSearchQuery
-		 * @returns sanitizedString
-		 */
-		const sanitizeSearchQuery = (rawSearchQuery: string): string => {
-			if (searchQuery.trim() === '') {
-				return ''
+		const onKey = (e: KeyboardEvent) => {
+			if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+				e.preventDefault()
+				inputRef.current?.focus()
+				setIsFocused(true)
 			}
+		}
+		document.addEventListener('keydown', onKey)
+		return () => document.removeEventListener('keydown', onKey)
+	}, [])
 
-			// Removes All Non-Alphanumeric Characters apart from '&' amd \s in the string
-			let sanitizedString = rawSearchQuery.replace(/[^a-zA-Z0-9&\s]/g, '')
-			return sanitizedString
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'ArrowDown') {
+			e.preventDefault()
+			setSelectedIndex(i => Math.min(i + 1, items.length - 1))
+		} else if (e.key === 'ArrowUp') {
+			e.preventDefault()
+			setSelectedIndex(i => Math.max(i - 1, -1))
+		} else if (e.key === 'Enter') {
+			e.preventDefault()
+			if (selectedIndex >= 0 && items[selectedIndex]) {
+				router.push(items[selectedIndex].href)
+				setIsFocused(false)
+				inputRef.current?.blur()
+			}
+		} else if (e.key === 'Escape') {
+			setIsFocused(false)
+			inputRef.current?.blur()
+		}
+	}
+
+	// All Supabase fetching — logic identical to original
+	useEffect(() => {
+		const sanitize = (raw: string): string => {
+			if (raw.trim() === '') return ''
+			return raw.replace(/[^a-zA-Z0-9&\s]/g, '')
 		}
 
-		/**
-		 * Fetches the results from backend
-		 * @param query
-		 */
 		const fetchResults = async (query: string) => {
 			const supabase = createClient()
-			const COURSE_LIMIT = 4
-			const PROF_LIMIT = 2
-
-			// Remove whitespace and add '%' between all chars for COURSE CODE
-			const fuzzyCodeQuery = query.replace(/\s+/g, '').split('').join('%')
-
-			// Collapse multiple spaces into singular and only split on those (Used for searching by course title)
-			const fuzzyPhraseQuery = query.replace(/\s+/g, ' ').split(' ').join('%')
+			const fuzzyCode = query.replace(/\s+/g, '').split('').join('%')
+			const fuzzyPhrase = query.replace(/\s+/g, ' ').split(' ').join('%')
 			try {
-				const [courseResults, profResults] = await Promise.all([
+				const [courseRes, profRes] = await Promise.all([
 					supabase
 						.from('courses')
 						.select()
-						.or(
-							`course_code.ilike.%${fuzzyCodeQuery}%,course_title.ilike.%${fuzzyPhraseQuery}%`
-						) // Wack Syntax bc double .ilike() calls don't chain together properly
+						.or(`course_code.ilike.%${fuzzyCode}%,course_title.ilike.%${fuzzyPhrase}%`)
 						.is('is_uwaterloo_course', false)
 						.order('course_code', { ascending: true })
-						.limit(COURSE_LIMIT),
+						.limit(4),
 					supabase
 						.from('instructors')
 						.select()
-						.ilike('instructor_name', `%${fuzzyPhraseQuery}%`)
+						.ilike('instructor_name', `%${fuzzyPhrase}%`)
 						.order('instructor_name')
-						.limit(PROF_LIMIT)
+						.limit(2)
 				])
-				setCourseResults(courseResults.data as CourseResult[])
-				setProfResults(profResults.data as ProfResult[])
-			} catch (error) {
-				console.error(error)
+				setCourseResults(courseRes.data as CourseResult[])
+				setProfResults(profRes.data as ProfResult[])
+			} catch (err) {
+				console.error(err)
 			}
 		}
 
-		const sanitizedString = sanitizeSearchQuery(searchQuery)
-		if (sanitizedString === '') {
-			// If string is empty then simply set the result arrays to be empty and avoid fetch calls
+		const q = sanitize(searchQuery)
+		if (q === '') {
 			setCourseResults([])
 			setProfResults([])
 			setExploreResults([])
 		} else {
-			// console.log(sanitizedString)
-			fetchResults(sanitizedString)
+			fetchResults(q)
 		}
 
-		if (sanitizedString.length == 2 || sanitizedString.length == 4) {
-			const faculty = facultyCoursePrefix[sanitizedString.toUpperCase()]
-			if (faculty) {
-				setExploreResults([faculty])
-			}
+		if (q.length === 2 || q.length === 4) {
+			const faculty = facultyCoursePrefix[q.toUpperCase()]
+			if (faculty) setExploreResults([faculty])
 		}
 	}, [searchQuery])
 
+	const showDropdown = isFocused
+
 	return (
-		<div
-			className='relative z-[100] box-border block w-full text-base'
-			ref={containerRef}
-			onFocus={handleFocus}
-			onBlur={handleBlur}
-		>
-			<Search className='absolute left-2.5 top-2.5 z-[100] h-4 w-4 text-muted-foreground' />
-			<Input
-				type='search'
-				placeholder='Search for courses, professors or faculties'
-				name='q'
-				onInput={(e) => {
-					e.preventDefault()
-					setSearchQuery(e.currentTarget.value)
-				}}
-				autoComplete={'off'}
-				className={
-					isFocused
-						? 'relative box-border block w-full rounded-b-none border-[2px] border-b-0 border-secondary border-b-transparent bg-background pl-8 text-base'
-						: 'relative box-border block w-full border-[2px] bg-background pl-8 text-base'
-				}
-			/>
-			{isFocused && (
-				<div className={`rounded-t-transparent divide-{secondary} absolute z-[100] max-h-screen w-full flex-row divide-y overflow-y-auto rounded-b-md border-[2px] border-t-0 border-secondary bg-background text-base text-foreground`}>
-					{courseResults.map((course) => (
-						<CourseResultListItem params={course} />
-					))}
-					{profResults.map((prof) => (
-						<ProfResultListItem params={prof} />
-					))}
-					{exploreResults.map((faculty) => (
-						<ExploreResultListItem faculty={faculty} />
-					))}
-					{exploreResults.length == 0 && <ExploreAllListItem />}
-					{searchQuery.length > 0 && <ChatListItem query={searchQuery} />}
+		<div ref={containerRef} className='sb-root'>
+			{/* Input */}
+			<div className={`sb-input-wrap ${showDropdown ? 'sb-open' : ''}`}>
+				<Search className='sb-search-icon' size={18} />
+				<input
+					ref={inputRef}
+					type='text'
+					placeholder='Search for courses, professors or faculties'
+					className='sb-input'
+					value={searchQuery}
+					onChange={e => setSearchQuery(e.target.value)}
+					onFocus={() => setIsFocused(true)}
+					onKeyDown={handleKeyDown}
+					autoComplete='off'
+					autoCorrect='off'
+					spellCheck={false}
+				/>
+				{!showDropdown && (
+					<div className='sb-kbd' aria-hidden>
+						<kbd>⌘</kbd><kbd>K</kbd>
+					</div>
+				)}
+			</div>
+
+			{/* Dropdown */}
+			{showDropdown && (
+				<div className='sb-dropdown'>
+					{items.map((item, i) => {
+						const isSelected = selectedIndex === i
+						const ref = isSelected ? selectedRef : undefined
+
+						if (item.type === 'course') {
+							return (
+								<a
+									key={item.data.course_code}
+									href={item.href}
+									ref={ref}
+									className={`sb-item ${isSelected ? 'sb-selected' : ''}`}
+								>
+									<BookOpenText size={15} className='sb-item-icon' />
+									<span>
+										<span className='sb-accent'>{item.data.course_code}</span>
+										<span className='sb-dim'> — </span>
+										<span className='sb-title'>{item.data.course_title}</span>
+									</span>
+								</a>
+							)
+						}
+
+						if (item.type === 'prof') {
+							return (
+								<a
+									key={item.data.instructor_name}
+									href={item.href}
+									ref={ref}
+									className={`sb-item ${isSelected ? 'sb-selected' : ''}`}
+								>
+									<UserRound size={15} className='sb-item-icon' />
+									<span className='sb-accent'>{item.data.instructor_name}</span>
+								</a>
+							)
+						}
+
+						if (item.type === 'explore') {
+							return (
+								<a
+									key={item.faculty}
+									href={item.href}
+									ref={ref}
+									className={`sb-item ${isSelected ? 'sb-selected' : ''}`}
+								>
+									<Telescope size={15} className='sb-item-icon' />
+									<span>
+										Search for all{' '}
+										<span className='sb-accent'>{item.faculty}</span> courses
+									</span>
+								</a>
+							)
+						}
+
+						if (item.type === 'exploreAll') {
+							return (
+								<a
+									key='exploreAll'
+									href={item.href}
+									ref={ref}
+									className={`sb-item ${isSelected ? 'sb-selected' : ''}`}
+								>
+									<GalleryVerticalEnd size={15} className='sb-item-icon' />
+									<span>
+										Browse{' '}
+										<span className='sb-accent'>all courses</span>
+									</span>
+								</a>
+							)
+						}
+
+						if (item.type === 'chat') {
+							return (
+								<a
+									key='chat'
+									href={item.href}
+									ref={ref}
+									className={`sb-item ${isSelected ? 'sb-selected' : ''}`}
+								>
+									<Bot size={15} className='sb-item-icon' />
+									<span>
+										Ask Flow Bot{' '}
+										<span className='sb-dim'>about</span>{' '}
+										<span className='sb-accent'>{item.query}</span>
+									</span>
+								</a>
+							)
+						}
+
+						return null
+					})}
+
+					<div className='sb-footer'>
+						<span>↑↓ navigate</span>
+						<span>↵ open</span>
+						<span>esc close</span>
+					</div>
 				</div>
 			)}
 		</div>

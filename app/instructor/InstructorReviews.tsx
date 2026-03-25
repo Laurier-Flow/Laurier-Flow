@@ -23,57 +23,36 @@ async function getInstructorReviews(
 			.select()
 			.eq('instructor_name_fk', instructorName)
 
-		let reviews: Record<string, instructorReview[]> = {}
+		if (!data || data.length === 0) return {}
 
-		if (data !== null && data !== undefined) {
-			for (const s of data) {
-				const id = s.id
-				const instructorName = s.instructor_name_fk
-				const createdAt = s.created_at
-				const clear = s.clear
-				const engaging = s.engaging
-				const liked = s.liked
-				const course = s.course_code_fk
-				const body = s.body
+		const userIds = Array.from(new Set(data.map((r: any) => r.user_id_fk)))
+		const { data: profiles } = await supabase
+			.from('profiles')
+			.select('user_id, program')
+			.in('user_id', userIds)
 
-				try {
-					const { data, error } = await supabase
-						.from('profiles')
-						.select()
-						.eq('user_id', s.user_id_fk)
+		const profileMap = new Map((profiles || []).map((p: any) => [p.user_id, p.program]))
 
-					let userData = null
-
-					if (data !== null && data !== undefined && data.length > 0) {
-						userData = data[0].program
-					}
-
-					const review: instructorReview = {
-						id: id,
-						instructor_name_fk: instructorName,
-						created_at: createdAt,
-						clear: clear,
-						engaging: engaging,
-						liked: liked,
-						course_code_fk: course,
-						program: userData,
-						body: body
-					}
-
-					if (course in reviews) {
-						reviews[course].push(review)
-					} else {
-						reviews[course] = [review]
-					}
-				} catch (error) {
-					console.error(error)
-				}
+		const reviews: Record<string, instructorReview[]> = {}
+		for (const s of data) {
+			const review: instructorReview = {
+				id: s.id,
+				instructor_name_fk: s.instructor_name_fk,
+				created_at: s.created_at,
+				clear: s.clear,
+				engaging: s.engaging,
+				liked: s.liked,
+				course_code_fk: s.course_code_fk,
+				program: profileMap.get(s.user_id_fk) ?? null,
+				body: s.body
 			}
-
-			return reviews
-		} else {
-			return {}
+			if (s.course_code_fk in reviews) {
+				reviews[s.course_code_fk].push(review)
+			} else {
+				reviews[s.course_code_fk] = [review]
+			}
 		}
+		return reviews
 	} catch (error) {
 		console.error(error)
 		return {}

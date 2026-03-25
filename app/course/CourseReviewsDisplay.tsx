@@ -40,26 +40,20 @@ export default function CourseReviewsDisplay({
 	}, [])
 
 	return (
-		<div className='p-4'>
-			<h1 className='text-xl'>Course Reviews</h1>
+		<div>
+			<h2 className='cp-section-label'>Reviews</h2>
 			{courseReviews?.length != 0 && hasReviewsWithBody ? (
-				courseReviews
-					?.slice(0, visibleReviewCount)
-					.map((review: courseReview, index: any) =>
-						review.body && review.body != '' ? (
-							index === 0 ? (
-								<Review review={review} index={index} />
-							) : (
-								<div className='pt-4'>
-									<Review review={review} index={index} />
-								</div>
-							)
-						) : null
-					)
+				<div className='cp-reviews-list'>
+					{courseReviews
+						?.slice(0, visibleReviewCount)
+						.map((review: courseReview, index: any) =>
+							review.body && review.body != '' ? (
+								<Review key={review.id} review={review} index={index} />
+							) : null
+						)}
+				</div>
 			) : (
-				<p className='text-md mt-4 whitespace-nowrap text-gray-800 dark:text-gray-200'>
-					No Reviews With Body Yet
-				</p>
+				<p className='cp-no-reviews'>No Reviews With Body Yet</p>
 			)}
 			<div ref={reviewLoaderRef} style={{ height: '20px' }}></div>
 		</div>

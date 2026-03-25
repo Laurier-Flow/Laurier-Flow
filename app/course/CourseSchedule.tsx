@@ -104,10 +104,10 @@ export async function getCourseSections(
 	supabase: SupabaseClient<any, 'public', any>,
 	user: User | null
 ) {
-	const { data: sectionData, error: sectionError } = await supabase
+	const { data: sectionData, error: sectionError } = await (supabase
 		.from('sections')
 		.select()
-		.eq(filterCol, colValue)
+		.eq(filterCol, colValue) as any)
 
 	const courseSections: sections = {
 		springTerm: [],
@@ -116,7 +116,7 @@ export async function getCourseSections(
 		nextSpringTerm: []
 	}
 
-	const sectionDataRequests = sectionData?.map((data) => fetchSectionData(data))
+	const sectionDataRequests = sectionData?.map((data: any) => fetchSectionData(data))
 
 	if (sectionDataRequests) {
 		const sectionDataResponses = await Promise.all(sectionDataRequests)
@@ -228,8 +228,8 @@ async function CourseSchedule({
 	const nextSpringTermSections: section[] = termSections['nextSpringTerm']
 
 	return (
-		<div className='flex flex-col p-4 lg:mt-8'>
-			<h1 className='text-xl'>Course Schedule</h1>
+		<div className='cp-schedule'>
+			<h2 className='cp-section-label'>Schedule</h2>
 			<ScheduleTable
 				springTerm={prettyTerms.springTerm}
 				fallTerm={prettyTerms.fallTerm}

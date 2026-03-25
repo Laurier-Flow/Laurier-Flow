@@ -1,33 +1,8 @@
-// SignUpPopup.tsx
 import React, { useRef, useEffect, useState } from 'react'
 import { signUp } from '@/utils/supabase/authActions'
 import Link from 'next/link'
-import { X } from 'lucide-react'
-import { programOptions } from "@/utils/programOptions";
-import { Eye, EyeOff } from 'lucide-react'
-import { ProgramDropdown } from './Combobox';
-
-interface ToggleVisibilityButtonProps {
-	visible: boolean
-	toggleVisibility: () => void
-	className?: string
-}
-
-const ToggleVisibilityButton: React.FC<ToggleVisibilityButtonProps> = ({
-	visible,
-	toggleVisibility,
-	className
-}) => {
-	return (
-		<button
-			onClick={toggleVisibility}
-            type="button"
-			className={`focus:outline-none ${className}`}
-		>
-			{visible ? <EyeOff size={20} /> : <Eye size={20} />}
-		</button>
-	)
-}
+import { X, Eye, EyeOff } from 'lucide-react'
+import { ProgramDropdown } from './Combobox'
 
 export default function SignUpPopup({
 	searchParams,
@@ -38,13 +13,21 @@ export default function SignUpPopup({
 	onClose: () => void
 	toggleLogIn: () => void
 }): React.ReactElement {
-	const [program, setProgram] = React.useState("")
+	const [program, setProgram] = useState('')
 	const [signUpError, setSignUpError] = useState<string>('')
 	const [confirmMessage, setConfirmMessage] = useState(false)
-	const [showPassword, setShowPassword] = useState<boolean>(false)
+	const [showPassword, setShowPassword] = useState(false)
+	const [isVisible, setIsVisible] = useState(false)
 
 	const popupRef = useRef<HTMLDivElement | null>(null)
 	const dropdownRef = useRef<HTMLDivElement | null>(null)
+
+	useEffect(() => {
+		const id = requestAnimationFrame(() =>
+			requestAnimationFrame(() => setIsVisible(true))
+		)
+		return () => cancelAnimationFrame(id)
+	}, [])
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -57,29 +40,20 @@ export default function SignUpPopup({
 				document.body.classList.remove('overflow-hidden')
 			}
 		}
-
 		document.addEventListener('mousedown', handleClickOutside)
-
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutside)
-		}
+		return () => document.removeEventListener('mousedown', handleClickOutside)
 	}, [popupRef, dropdownRef, onClose])
-
 
 	const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
-
 		const formData = new FormData(event.currentTarget)
-
 		const emailRegex = /(@mylaurier\.ca|@wlu\.ca)$/i
-
 		const email = formData.get('email')?.toString()
 
 		if (email && !emailRegex.test(email)) {
-            setSignUpError('Email needs to be of type @mylaurier.ca or @wlu.ca')
+			setSignUpError('Email needs to be of type @mylaurier.ca or @wlu.ca')
 		} else {
 			const result = await signUp(formData, program)
-
 			if (result.success) {
 				setSignUpError('')
 				setConfirmMessage(true)
@@ -98,100 +72,101 @@ export default function SignUpPopup({
 	return (
 		<div
 			ref={popupRef}
-			className='fixed left-1/2 top-1/2 max-h-[90vh] w-11/12 max-w-md -translate-x-1/2 -translate-y-1/2 transform overflow-y-auto rounded-md border-2 bg-background p-8 backdrop-blur dark:border-secondary dark:bg-background/80'
+			className={`auth-modal ${isVisible ? 'auth-modal--visible' : ''}`}
 		>
 			<form
-				className='flex w-full flex-1 flex-col justify-center gap-2 text-foreground animate-in'
+				className='auth-form'
 				onSubmit={handleSignUp}
 				onChange={() => setSignUpError('')}
 			>
-				<label className='mb-5 flex flex-row items-center justify-between text-3xl font-bold text-foreground'>
-					<h1>Sign Up</h1>
-					<X className='cursor-pointer' onClick={() => onClose()} />
-				</label>
-				{signUpError && (
-					<p className='mb-2 rounded-md bg-red-500 p-4 text-center text-white'>
-						{signUpError}
-					</p>
-				)}
-				{confirmMessage &&
-                    <div className="my-2 bg-teal-500 text-md text-white rounded-lg p-4 text-center" role="alert">
-                        <span className="font-bold">Success!</span> Check your inbox for a verification link then <span onClick={() => { handleLogInClick() }} className="cursor-pointer underline underline-offset-2 decoration-1">login.</span> It may take a minute to arrive
-                    </div>
-                }
-				<div className='mb-2 flex flex-row gap-4'>
-					<input
-						className='w-1/2 rounded-md border-neutral-300 bg-stone-200 px-4 py-2 placeholder-stone-400 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-gray-900 dark:placeholder-gray-400'
-						name='first name'
-						placeholder='First Name'
-						required
-					/>
-					<input
-						className='w-1/2 rounded-md border-neutral-300 bg-stone-200 px-4 py-2 placeholder-stone-400 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-gray-900 dark:placeholder-gray-400'
-						name='last name'
-						placeholder='Last Name'
-						required
-					/>
+				<div className='auth-header'>
+					<h1 className='auth-title'>Create account</h1>
 				</div>
-				<div>
+
+				{signUpError && (
+					<div className='auth-alert auth-alert--error'>{signUpError}</div>
+				)}
+
+				{confirmMessage && (
+					<div className='auth-alert auth-alert--success'>
+						<strong>Success!</strong> Check your inbox for a verification link then{' '}
+						<button type='button' className='auth-inline-link' onClick={handleLogInClick}>
+							login.
+						</button>{' '}
+						It may take a minute to arrive
+					</div>
+				)}
+
+				<div className='auth-field-row'>
+					<div className='auth-field'>
+						<input
+							className='auth-input'
+							name='first name'
+							placeholder=' '
+							required
+						/>
+						<label className='auth-label'>First Name</label>
+					</div>
+					<div className='auth-field'>
+						<input
+							className='auth-input'
+							name='last name'
+							placeholder=' '
+							required
+						/>
+						<label className='auth-label'>Last Name</label>
+					</div>
+				</div>
+
+				<div className='auth-field'>
 					<ProgramDropdown
-						value = {program}
-						setValue = {setProgram}
+						value={program}
+						setValue={setProgram}
 						ref={dropdownRef}
 					/>
 				</div>
-				<input
-					className='mb-2 rounded-md border-neutral-300 bg-stone-200 px-4 py-2 placeholder-stone-400 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-gray-900 dark:placeholder-gray-400'
-					name='email'
-					placeholder='Email'
-					required
-				/>
-				<div className='relative flex mb-2'>
-                    <input
-                        className='flex-1 rounded-md border-neutral-300 bg-stone-200 px-4 py-2 placeholder-gray-400 focus:border-2 focus:border-secondary focus:outline-none focus:ring-0 dark:border-slate-800 dark:bg-gray-900'
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder='Password'
-                        name="password"
-                        style={{ paddingRight: '2rem' }}
-                        required
-                    />
-                    <ToggleVisibilityButton
-                        visible={showPassword}
-                        toggleVisibility={() => setShowPassword(!showPassword)}
-                        className='absolute inset-y-0 right-0 flex items-center pr-3'
-                    />
-                </div>
-				<button
-					className='mb-2 rounded-md bg-secondary px-4 py-2 text-foreground'
-				>
-					Sign Up
-				</button>
 
-				<div className='mb-4 flex justify-center text-sm text-gray-500'>
-					<h1>
-						Read our{' '}
-						<Link href='/privacy' className='underline underline-offset-2'>
-							Privacy Policy
-						</Link>
-					</h1>
+				<div className='auth-field'>
+					<input
+						className='auth-input'
+						name='email'
+						placeholder=' '
+						required
+					/>
+					<label className='auth-label'>Email</label>
 				</div>
 
-				<hr className='mb-6 border-gray-300 dark:border-gray-800'></hr>
-
-				<div
-					onClick={handleLogInClick}
-					className='flex justify-center text-foreground'
-				>
-					<h1>
-						Already have an account?{' '}
-						<span
-							onClick={handleLogInClick}
-							className='cursor-pointer underline decoration-1 underline-offset-2'
-						>
-							Log In
-						</span>
-					</h1>
+				<div className='auth-field'>
+					<input
+						className='auth-input auth-input--has-toggle'
+						type={showPassword ? 'text' : 'password'}
+						placeholder=' '
+						name='password'
+						required
+					/>
+					<label className='auth-label'>Password</label>
+					<button
+						type='button'
+						className='auth-eye'
+						onClick={() => setShowPassword(!showPassword)}
+					>
+						{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+					</button>
 				</div>
+
+				<button type='submit' className='auth-btn'>Create account</button>
+
+				<p className='auth-privacy'>
+					Read our{' '}
+					<Link href='/privacy'>Privacy Policy</Link>
+				</p>
+
+				<hr className='auth-divider' />
+
+				<p className='auth-switch'>
+					Already have an account?{' '}
+					<button type='button' onClick={handleLogInClick}>Log In</button>
+				</p>
 			</form>
 		</div>
 	)

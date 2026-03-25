@@ -3,7 +3,6 @@ import Header from '@/components/Header'
 import TeamMember from '@/components/TeamMember'
 import { fetchUser } from '@/utils/supabase/authActions'
 import { getAndIncrementPageVisits } from '@/utils/supabase/pageVisits'
-import { PopupButton } from '@typeform/embed-react'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -16,52 +15,64 @@ export default async function About() {
 	await getAndIncrementPageVisits()
 
 	return (
-		<>
-			<Header user={user} />
-			<div className="flex min-w-full flex-col bg-[url('/banner-sm-light.jpg')] p-4 dark:bg-[url('/banner-sm.jpg')] md:flex-row md:justify-center md:bg-[url('/banner-md-light.jpg')] md:dark:bg-[url('/banner-md.jpg')] lg:bg-[url('/banner-light.jpg')] lg:dark:bg-[url('/banner.jpg')]">
-				<div className='w-f flex max-w-6xl flex-1 flex-row justify-between pt-20'>
-					<div className='flex flex-1 flex-col justify-end pl-4'>
-						<h1 className='mb-2 text-2xl font-bold text-white md:text-5xl'>
-							About
-						</h1>
-					</div>
-				</div>
+		<div className='cp-root'>
+			<div className='cp-bg-layer'>
+				<div className='cp-orb cp-orb-1' />
+				<div className='cp-orb cp-orb-2' />
+				<div className='cp-noise' />
 			</div>
 
-			<div className='card'>
-				<div className='p-4'>
-					<h2 className='py-4 text-xl font-semibold'>
-						Welcome to Laurier Flow!
-					</h2>
-					<p className='pb-2'>
-						Flow is a course planning website for Wilfrid Laurier University
-						students. You can find everything from courses and professors to
-						prerequisites here.
+			<Header user={user} />
+
+			<div className='ab-content'>
+				<div className='ab-hero'>
+					<p className='ab-eyebrow'>About</p>
+					<h1 className='ab-headline'>
+						Built by Laurier students,<br />
+						for Laurier students
+					</h1>
+					<p className='ab-hero-desc'>
+						Flow is a course planning platform for Wilfrid Laurier University.
+						Find courses, read reviews, discover professors, and plan your
+						degree &mdash; all powered by real student experiences.
 					</p>
-					<p className='pb-2'>
-						Our mission is simple: to empower Laurier students through
-						uncensored and unfiltered course and professor reviews.
-					</p>
-					<p className='pb-2'>
-						Had a bad prof? We want to know. Had a great one? Tell us as well.
-						Found a course completely and utterly useless? Leave a review. Your
-						experiences help us help more than 20,000 students like you every
-						month choose great courses and avoid not so great ones.
-					</p>
-					<h2 className='pt-8 text-xl font-semibold'>Meet Our Founders</h2>
-					<div className='pt-4'>
+				</div>
+
+				<hr className='cp-divider' />
+
+				<div className='ab-section'>
+					<h2 className='ab-section-label'>Our Mission</h2>
+					<div className='ab-mission'>
+						<p>
+							Our mission is simple: to empower Laurier students through
+							uncensored and unfiltered course and professor reviews.
+						</p>
+						<p>
+							Had a bad prof? We want to know. Had a great one? Tell us as well.
+							Found a course completely and utterly useless? Leave a review. Your
+							experiences help more than 20,000 students like you every month
+							choose great courses and avoid not so great ones.
+						</p>
+					</div>
+				</div>
+
+				<hr className='cp-divider' />
+
+				<div className='ab-section'>
+					<h2 className='ab-section-label'>Meet the Founders</h2>
+					<div className='ab-team-grid'>
 						<TeamMember
 							name='Faizaan Qureshi'
-							role='Lead Software Engineer - Computer Science (UW) + Business Administration (BBA)'
+							role='Lead Software Engineer &mdash; Computer Science (UW) + Business Administration (BBA)'
 							imageUrl='./teampics/faizaan.jpeg'
 							linkedinUrl='https://www.linkedin.com/in/faizaan-qureshi/'
 							igUrl='https://www.instagram.com/faizaanqureshi_'
 							githubUrl='https://github.com/faizaanqureshi'
-							desc='Known for his visionary approach, Faizaan has not only architected the robust backend infrastructure but also played a key role in developing significant frontend components, including the entire Explore page, Courses, and Professors pages. He crafted the homepage, styled key authentication modals, and engineered database functions and triggers. He also acted as the project’s product manager. He adeptly handles daily standups and efficiently manages tasks using Jira. Outside of his technical and managerial roles, Faizaan enjoys coding, traveling, basketball, and maintaining a fit lifestyle, constantly pushing the boundaries of innovation and team leadership.'
+							desc='Known for his visionary approach, Faizaan has not only architected the robust backend infrastructure but also played a key role in developing significant frontend components, including the entire Explore page, Courses, and Professors pages. He crafted the homepage, styled key authentication modals, and engineered database functions and triggers. He also acted as the project manager. He adeptly handles daily standups and efficiently manages tasks using Jira. Outside of his technical and managerial roles, Faizaan enjoys coding, traveling, basketball, and maintaining a fit lifestyle, constantly pushing the boundaries of innovation and team leadership.'
 						/>
 						<TeamMember
 							name='Muhammad Mujtaba'
-							role='Co-Lead Software Engineer - Computer Science (UW) + Business Administration (BBA)'
+							role='Co-Lead Software Engineer &mdash; Computer Science (UW) + Business Administration (BBA)'
 							imageUrl='./teampics/mhmd.jpeg'
 							linkedinUrl='https://www.linkedin.com/in/mhmmd-m/'
 							igUrl='https://www.instagram.com/_.mh.mm.d._'
@@ -70,7 +81,7 @@ export default async function About() {
 						/>
 						<TeamMember
 							name='Abdullah Shahid'
-							role='Software Engineer - Computer Science (UW) + Business Administration (BBA)'
+							role='Software Engineer &mdash; Computer Science (UW) + Business Administration (BBA)'
 							imageUrl='./teampics/abdullah.jpg'
 							linkedinUrl='https://www.linkedin.com/in/abdullahshahid247/'
 							igUrl='https://www.instagram.com/abdshd.247'
@@ -79,7 +90,7 @@ export default async function About() {
 						/>
 						<TeamMember
 							name='Soham Nagi'
-							role='Front End Software Engineer — Computer Science @ University of Waterloo'
+							role='Front End Software Engineer &mdash; Computer Science @ University of Waterloo'
 							imageUrl='./teampics/soham.JPG'
 							linkedinUrl='https://www.linkedin.com/in/sohamnagi/'
 							igUrl='https://www.instagram.com/soham.nagi'
@@ -88,7 +99,7 @@ export default async function About() {
 						/>
 						<TeamMember
 							name='Shahrukh Qureshi'
-							role='Software Engineer - Computer Science (UW) + Business Administration (BBA)'
+							role='Software Engineer &mdash; Computer Science (UW) + Business Administration (BBA)'
 							imageUrl='./teampics/srk.jpeg'
 							linkedinUrl='https://www.linkedin.com/in/qureshishahrukh/'
 							igUrl='https://www.instagram.com/shahruk._h'
@@ -98,7 +109,8 @@ export default async function About() {
 					</div>
 				</div>
 			</div>
+
 			<Footer />
-		</>
+		</div>
 	)
 }
