@@ -4187,6 +4187,30 @@
     padding: 24px 16px;
   }
 }
+@media (max-width: 480px) {
+  .an-content {
+    padding: 36px 16px 40px;
+  }
+  .an-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .an-card {
+    padding: 22px 14px;
+  }
+  .an-card-value {
+    font-size: 28px;
+  }
+  .an-card-label {
+    font-size: 13px;
+  }
+  .an-title {
+    font-size: 36px;
+  }
+  .an-hero {
+    margin-bottom: 32px;
+  }
+}
 
 
 /* ============================================================
@@ -5665,7 +5689,7 @@
     font-size: 18px;
   }
   .hp-stat-label {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   /* Navbar */
@@ -5735,7 +5759,7 @@
     padding: 12px 16px 16px;
   }
   .rv-label {
-    font-size: 11px;
+    font-size: 12px;
   }
   .rv-footer {
     padding: 0 16px 16px;
@@ -5756,7 +5780,7 @@
     padding: 24px 0 0;
   }
   .cp-course-code {
-    font-size: 11px;
+    font-size: 12px;
   }
   .cp-course-title {
     font-size: clamp(22px, 6vw, 28px);
@@ -5775,17 +5799,17 @@
     font-size: 22px;
   }
   .cp-metric-label {
-    font-size: 10px;
+    font-size: 12px;
   }
   .cp-stats-count {
-    font-size: 11px;
+    font-size: 12px;
     margin-top: 14px;
   }
   .cp-divider {
     margin: 20px 0;
   }
   .cp-section-label {
-    font-size: 10px;
+    font-size: 11px;
     margin-bottom: 14px;
   }
   .cp-section-title {
@@ -5793,15 +5817,15 @@
     margin-bottom: 16px;
   }
   .cp-schedule-tab {
-    font-size: 11px;
+    font-size: 12px;
     padding: 8px 12px;
   }
   .cp-sched-table th {
-    font-size: 9px;
+    font-size: 11px;
     padding: 8px 8px 6px;
   }
   .cp-sched-table td {
-    font-size: 11px;
+    font-size: 12px;
     padding: 8px;
   }
   .cp-review-body {
@@ -5809,7 +5833,7 @@
     gap: 12px;
   }
   .cp-review-text {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.55;
   }
   .cp-review-star {
@@ -5817,7 +5841,7 @@
     height: 14px;
   }
   .cp-review-rating-label {
-    font-size: 10px;
+    font-size: 11px;
   }
   .cp-review-thumb {
     width: 24px;
@@ -5831,11 +5855,11 @@
     padding: 8px 16px;
   }
   .cp-review-meta {
-    font-size: 11px;
+    font-size: 12px;
   }
   .cp-add-review-btn {
-    height: 40px;
-    font-size: 12px;
+    height: 44px;
+    font-size: 13px;
     border-radius: 10px;
   }
   .cp-add-review-title {
@@ -5845,21 +5869,21 @@
     margin-bottom: 24px;
   }
   .cp-req-title {
-    font-size: 10px;
+    font-size: 11px;
     margin-bottom: 8px;
   }
   .cp-req-content {
-    font-size: 12px;
-    line-height: 1.55;
+    font-size: 13px;
+    line-height: 1.6;
   }
   .cp-page-btn {
-    min-width: 28px;
-    height: 28px;
-    font-size: 10px;
+    min-width: 32px;
+    height: 32px;
+    font-size: 12px;
     border-radius: 6px;
   }
   .cp-alert {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   /* Explore page */
@@ -5870,7 +5894,7 @@
     font-size: 22px;
   }
   .ex-page-subtitle {
-    font-size: 12px;
+    font-size: 13px;
   }
   .ex-grid {
     padding: 0 16px 32px;
@@ -5879,11 +5903,11 @@
     gap: 16px;
   }
   .ex-tab {
-    font-size: 13px;
+    font-size: 14px;
   }
   .ex-pill {
-    padding: 5px 12px;
-    font-size: 11px;
+    padding: 6px 14px;
+    font-size: 12px;
   }
   .ex-filter-section {
     margin-bottom: 24px;
@@ -5894,7 +5918,7 @@
     padding: 0 16px 40px;
   }
   .pf-hero-greeting {
-    font-size: 11px;
+    font-size: 12px;
   }
   .pf-hero-name {
     font-size: clamp(24px, 8vw, 32px);
@@ -5903,14 +5927,14 @@
     gap: 0;
   }
   .pf-tab {
-    padding: 8px 12px;
-    font-size: 12px;
+    padding: 8px 14px;
+    font-size: 13px;
   }
   .pf-form-card {
     padding: 20px;
   }
   .pf-form-label {
-    font-size: 11px;
+    font-size: 12px;
   }
   .pf-form-input {
     font-size: 16px;
@@ -5920,7 +5944,7 @@
     padding: 16px;
   }
   .pf-schedule-table {
-    font-size: 11px;
+    font-size: 12px;
   }
   .pf-schedule-term {
     padding: 16px;
@@ -5928,8 +5952,8 @@
   .pf-btn-primary,
   .pf-btn-danger,
   .pf-btn-ghost {
-    font-size: 12px;
-    padding: 8px 14px;
+    font-size: 13px;
+    padding: 10px 16px;
   }
   .pf-manual-grid {
     grid-template-columns: 1fr;
@@ -5985,75 +6009,3 @@
   }
 }
 
-/* ============================================================
-   Mobile readability — bump up smallest text
-   (anything under 11px on mobile reads as illegible)
-   ============================================================ */
-@media (max-width: 480px) {
-  /* Navbar search: keep visually compact but prevent iOS zoom */
-  .nav-bar-search .sb-input {
-    font-size: 16px !important;
-  }
-  .nav-bar-search .sb-input::placeholder {
-    font-size: 16px !important;
-  }
-
-  /* Stat labels */
-  .hp-stat-label {
-    font-size: 12px;
-  }
-
-  /* Section labels */
-  .cp-section-label {
-    font-size: 11px;
-  }
-
-  /* Schedule table header */
-  .cp-sched-table th {
-    font-size: 10px;
-    padding: 8px 6px 6px;
-  }
-
-  /* Review elements */
-  .rv-label {
-    font-size: 12px;
-  }
-  .cp-review-rating-label {
-    font-size: 11px;
-  }
-  .cp-review-meta {
-    font-size: 12px;
-  }
-
-  /* Pagination */
-  .cp-page-btn {
-    font-size: 11px;
-  }
-
-  /* Requirements */
-  .cp-req-title {
-    font-size: 11px;
-  }
-
-  /* Profile */
-  .pf-hero-greeting {
-    font-size: 12px;
-  }
-  .pf-form-label {
-    font-size: 12px;
-  }
-
-  /* Analytics cards */
-  .an-card-value {
-    font-size: 32px;
-  }
-  .an-card-label {
-    font-size: 13px;
-  }
-  .an-card {
-    padding: 28px 20px;
-  }
-  .an-hero {
-    margin-bottom: 40px;
-  }
-}
