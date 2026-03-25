@@ -60,19 +60,23 @@ async function fetchSectionData(
 				'https://loris.wlu.ca/register/ssb/searchResults/getClassDetails?term=' +
 				sectionData.term +
 				'&courseReferenceNumber=' +
-				sectionData.course_registration_number.toString()
+				sectionData.course_registration_number.toString(),
+				{ timeout: 10000 }
 			),
 			axios.post(
 				'https://loris.wlu.ca/register/ssb/searchResults/getEnrollmentInfo?term=' +
 				sectionData.term +
 				'&courseReferenceNumber=' +
-				sectionData.course_registration_number.toString()
+				sectionData.course_registration_number.toString(),
+				null,
+				{ timeout: 10000 }
 			),
 			axios.get(
 				'https://loris.wlu.ca/register/ssb/searchResults/getFacultyMeetingTimes?term=' +
 				sectionData.term +
 				'&courseReferenceNumber=' +
-				sectionData.course_registration_number.toString()
+				sectionData.course_registration_number.toString(),
+				{ timeout: 10000 }
 			)
 		])
 
@@ -116,10 +120,18 @@ export async function getCourseSections(
 		nextSpringTerm: []
 	}
 
-	const sectionDataRequests = sectionData?.map((data: any) => fetchSectionData(data))
+	const sectionDataResponses: any[] = []
+	const batchSize = 5
 
-	if (sectionDataRequests) {
-		const sectionDataResponses = await Promise.all(sectionDataRequests)
+	if (sectionData && sectionData.length > 0) {
+		for (let i = 0; i < sectionData.length; i += batchSize) {
+			const batch = sectionData.slice(i, i + batchSize)
+			const batchResults = await Promise.all(batch.map((data: any) => fetchSectionData(data)))
+			sectionDataResponses.push(...batchResults)
+		}
+	}
+
+	if (sectionDataResponses.length > 0) {
 
 		sectionDataResponses.forEach((element) => {
 			if (element) {
