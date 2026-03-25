@@ -25,7 +25,7 @@ async function getCourseReviews(
 
 		if (!data || data.length === 0) return []
 
-		const userIds = [...new Set(data.map((r: any) => r.user_id_fk))]
+		const userIds = Array.from(new Set(data.map((r: any) => r.user_id_fk)))
 		const { data: profiles } = await supabase
 			.from('profiles')
 			.select('user_id, program')
