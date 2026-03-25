@@ -49,9 +49,9 @@ export default function Body() {
 						onClick={handleVerifyClick}
 						disabled={loading}
 						type='button'
-						className='auth-btn pw-submit-btn'
+						className='auth-btn'
 					>
-						<ShieldCheck size={18} style={{ marginRight: 8 }} />
+						<ShieldCheck size={18} />
 						{loading ? 'Verifying…' : 'Verify email'}
 					</button>
 
