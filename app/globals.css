@@ -2913,107 +2913,188 @@
   }
 }
 @media (max-width: 768px) {
+  /* Layout */
   .cp-content {
-    padding: 0 24px 40px;
+    padding: 0 20px 48px;
   }
   .cp-hero {
-    padding: 40px 0 0;
+    padding: 36px 0 0;
   }
   .cp-hero-top {
     flex-direction: column;
     gap: 0;
   }
+
+  /* Hero text */
   .cp-course-code {
     font-size: 12px;
+    letter-spacing: 0.1em;
   }
   .cp-course-title {
-    font-size: clamp(24px, 6vw, 36px);
+    font-size: clamp(26px, 7vw, 38px);
+    line-height: 1.15;
+    margin-top: 6px;
   }
   .cp-course-desc {
-    font-size: 14px;
-    line-height: 1.6;
-    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.65;
+    margin-top: 14px;
+    color: #8A8AAA;
   }
+
+  /* Stats — keep as a row, just tighten gap */
   .cp-stats {
-    margin-top: 32px;
+    margin-top: 28px;
   }
   .cp-stats-metrics {
-    flex-direction: column;
-    gap: 20px;
+    flex-direction: row;
+    gap: 0;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
   }
   .cp-metric {
+    flex: 1;
     max-width: none;
+    padding: 16px 12px;
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+  }
+  .cp-metric:last-child {
+    border-right: none;
+  }
+  .cp-metric-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: 8px;
   }
   .cp-metric-value {
-    font-size: 26px;
+    font-size: 24px;
+    line-height: 1;
   }
   .cp-metric-label {
-    font-size: 11px;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+  .cp-metric-track {
+    height: 2px;
+  }
+  .cp-stats-count {
+    font-size: 12px;
+    margin-top: 12px;
+    text-align: center;
   }
   .cp-divider {
-    margin: 28px 0;
+    margin: 24px 0;
   }
+
+  /* Section labels & titles */
+  .cp-section-label {
+    font-size: 11px;
+    margin-bottom: 16px;
+  }
+  .cp-section-title {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
   /* Schedule */
   .cp-schedule-tabs {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
   .cp-schedule-tab {
-    font-size: 12px;
-    padding: 10px 14px;
+    font-size: 13px;
+    padding: 11px 16px;
     white-space: nowrap;
   }
   .cp-sched-table th {
-    font-size: 10px;
-    padding: 10px 10px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 12px 12px 10px;
+    letter-spacing: 0.06em;
   }
   .cp-sched-table td {
-    font-size: 12px;
-    padding: 10px 10px;
+    font-size: 13px;
+    padding: 11px 12px;
   }
-  /* Two-column stacked */
+
+  /* Two-column → single */
   .cp-two-col {
     gap: 0;
   }
   .cp-requisites-col {
     padding-top: 24px;
   }
+
   /* Reviews */
-  .cp-review-body {
-    flex-direction: column;
-    gap: 16px;
-    padding: 20px;
-  }
-  .cp-review-text {
-    font-size: 13px;
-  }
-  .cp-review-footer {
-    padding: 10px 20px;
-  }
-  .cp-review-card + .cp-review-card {
-    margin-top: 12px;
-  }
-  /* Add review */
-  .cp-add-review-btn {
-    height: 44px;
-    font-size: 13px;
-  }
   .cp-add-review-title {
     font-size: 18px;
   }
-  /* Requisites */
-  .cp-req-content {
+  .cp-add-review-btn {
+    height: 46px;
+    font-size: 14px;
+    border-radius: 12px;
+  }
+  .cp-reviews-list {
+    gap: 12px;
+  }
+  .cp-review-card {
+    border-radius: 14px;
+  }
+  .cp-review-body {
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px;
+  }
+  .cp-review-text {
+    font-size: 14px;
+    line-height: 1.65;
+    color: #A0A0B8;
+  }
+  .cp-review-ratings {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+  }
+  .cp-review-rating-row,
+  .cp-review-liked-row {
+    gap: 6px;
+  }
+  .cp-review-star {
+    width: 15px;
+    height: 15px;
+  }
+  .cp-review-rating-label {
+    font-size: 12px;
+  }
+  .cp-review-footer {
+    padding: 10px 18px 14px;
+  }
+  .cp-review-meta {
     font-size: 13px;
   }
-  /* Pagination */
-  .cp-page-btn {
-    min-width: 32px;
-    height: 32px;
+
+  /* Requisites */
+  .cp-req-title {
     font-size: 11px;
   }
+  .cp-req-content {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  /* Pagination */
   .cp-pagination {
-    gap: 2px;
+    gap: 4px;
     flex-wrap: wrap;
+    padding: 14px 0;
+  }
+  .cp-page-btn {
+    min-width: 36px;
+    height: 36px;
+    font-size: 13px;
   }
 }
 
@@ -4679,6 +4760,19 @@
 }
 :root:not(.dark) .cp-stats-count {
   color: #6B6B6B;
+}
+@media (max-width: 768px) {
+  :root:not(.dark) .cp-stats-metrics {
+    background: rgba(255, 255, 255, 0.60);
+    border-color: rgba(0, 0, 0, 0.07);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  }
+  :root:not(.dark) .cp-metric {
+    border-right-color: rgba(0, 0, 0, 0.06);
+  }
+  :root:not(.dark) .cp-review-text {
+    color: #4A4A4A;
+  }
 }
 :root:not(.dark) .cp-divider {
   border-top-color: rgba(0, 0, 0, 0.06);
