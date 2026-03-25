@@ -96,7 +96,7 @@ export const handleResetPassword = async (
 	const email = formData.get('email') as string
 
 	const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-		redirectTo: `${window_location}/change-password`
+		redirectTo: `${window_location}/confirm-reset-password`
 	})
 
 	if (error) {
