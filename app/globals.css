@@ -5534,7 +5534,7 @@
     height: 40px;
   }
   .nav-bar-search .sb-input {
-    font-size: 12px;
+    font-size: 16px;
   }
   .nav-bar .hp-nav-login {
     font-size: 12px;
@@ -5547,7 +5547,7 @@
     border-radius: 16px;
   }
   .sb-input {
-    font-size: 14px;
+    font-size: 16px;
     padding: 0 16px 0 44px;
   }
   .sb-search-icon {
@@ -5591,7 +5591,7 @@
     gap: 16px;
   }
   .rv-select {
-    font-size: 13px;
+    font-size: 16px;
   }
   .rv-footer {
     padding: 0 20px 16px;
@@ -5682,10 +5682,10 @@
     height: 36px;
   }
   .nav-bar-search .sb-input {
-    font-size: 11px;
+    font-size: 16px;
   }
   .nav-bar-search .sb-input::placeholder {
-    font-size: 11px;
+    font-size: 16px;
   }
   .nav-bar .hp-nav-login {
     font-size: 11px;
@@ -5703,7 +5703,7 @@
     border-radius: 14px;
   }
   .sb-input {
-    font-size: 13px;
+    font-size: 16px;
     padding: 0 12px 0 40px;
   }
   .sb-open {
@@ -5913,7 +5913,7 @@
     font-size: 11px;
   }
   .pf-form-input {
-    font-size: 13px;
+    font-size: 16px;
     padding: 10px 14px;
   }
   .pf-review-card {
@@ -5958,5 +5958,102 @@
   }
   .auth-title {
     font-size: 24px;
+  }
+}
+
+/* ============================================================
+   iOS Safari — prevent input zoom on focus
+   (-webkit-touch-callout) is only supported on iOS Safari,
+   so this block is iOS-only. Any input with font-size < 16px
+   triggers auto-zoom; this stops that without disabling
+   user-scalable.
+   ============================================================ */
+@supports (-webkit-touch-callout: none) {
+  .sb-input,
+  .auth-input,
+  .auth-combo-search,
+  .rv-select,
+  .rv-textarea,
+  .pf-form-input,
+  .pf-combo-trigger,
+  .pf-schedule-input,
+  .pw-input,
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* ============================================================
+   Mobile readability — bump up smallest text
+   (anything under 11px on mobile reads as illegible)
+   ============================================================ */
+@media (max-width: 480px) {
+  /* Navbar search: keep visually compact but prevent iOS zoom */
+  .nav-bar-search .sb-input {
+    font-size: 16px !important;
+  }
+  .nav-bar-search .sb-input::placeholder {
+    font-size: 16px !important;
+  }
+
+  /* Stat labels */
+  .hp-stat-label {
+    font-size: 12px;
+  }
+
+  /* Section labels */
+  .cp-section-label {
+    font-size: 11px;
+  }
+
+  /* Schedule table header */
+  .cp-sched-table th {
+    font-size: 10px;
+    padding: 8px 6px 6px;
+  }
+
+  /* Review elements */
+  .rv-label {
+    font-size: 12px;
+  }
+  .cp-review-rating-label {
+    font-size: 11px;
+  }
+  .cp-review-meta {
+    font-size: 12px;
+  }
+
+  /* Pagination */
+  .cp-page-btn {
+    font-size: 11px;
+  }
+
+  /* Requirements */
+  .cp-req-title {
+    font-size: 11px;
+  }
+
+  /* Profile */
+  .pf-hero-greeting {
+    font-size: 12px;
+  }
+  .pf-form-label {
+    font-size: 12px;
+  }
+
+  /* Analytics cards */
+  .an-card-value {
+    font-size: 32px;
+  }
+  .an-card-label {
+    font-size: 13px;
+  }
+  .an-card {
+    padding: 28px 20px;
+  }
+  .an-hero {
+    margin-bottom: 40px;
   }
 }
