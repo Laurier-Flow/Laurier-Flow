@@ -64,7 +64,7 @@ export default async function About() {
 						<TeamMember
 							name='Faizaan Qureshi'
 							role='Lead Software Engineer &mdash; Computer Science (UW) + Business Administration (BBA)'
-							imageUrl='./teampics/faizaan.jpeg'
+							imageUrl='/teampics/faizaan.jpeg'
 							linkedinUrl='https://www.linkedin.com/in/faizaan-qureshi/'
 							igUrl='https://www.instagram.com/faizaanqureshi_'
 							githubUrl='https://github.com/faizaanqureshi'
@@ -73,7 +73,7 @@ export default async function About() {
 						<TeamMember
 							name='Muhammad Mujtaba'
 							role='Co-Lead Software Engineer &mdash; Computer Science (UW) + Business Administration (BBA)'
-							imageUrl='./teampics/mhmd.jpeg'
+							imageUrl='/teampics/mhmd.jpeg'
 							linkedinUrl='https://www.linkedin.com/in/mhmmd-m/'
 							igUrl='https://www.instagram.com/_.mh.mm.d._'
 							githubUrl='https://github.com/mhmmd-03'
@@ -82,7 +82,7 @@ export default async function About() {
 						<TeamMember
 							name='Abdullah Shahid'
 							role='Software Engineer &mdash; Computer Science (UW) + Business Administration (BBA)'
-							imageUrl='./teampics/abdullah.jpg'
+							imageUrl='/teampics/abdullah.jpg'
 							linkedinUrl='https://www.linkedin.com/in/abdullahshahid247/'
 							igUrl='https://www.instagram.com/abdshd.247'
 							githubUrl='https://github.com/abdshd'
@@ -91,7 +91,7 @@ export default async function About() {
 						<TeamMember
 							name='Soham Nagi'
 							role='Front End Software Engineer &mdash; Computer Science @ University of Waterloo'
-							imageUrl='./teampics/soham.JPG'
+							imageUrl='/teampics/soham.JPG'
 							linkedinUrl='https://www.linkedin.com/in/sohamnagi/'
 							igUrl='https://www.instagram.com/soham.nagi'
 							githubUrl='https://github.com/SohamNagi'
@@ -100,7 +100,7 @@ export default async function About() {
 						<TeamMember
 							name='Shahrukh Qureshi'
 							role='Software Engineer &mdash; Computer Science (UW) + Business Administration (BBA)'
-							imageUrl='./teampics/srk.jpeg'
+							imageUrl='/teampics/srk.jpeg'
 							linkedinUrl='https://www.linkedin.com/in/qureshishahrukh/'
 							igUrl='https://www.instagram.com/shahruk._h'
 							githubUrl='https://github.com/ShaleeQureshi'
