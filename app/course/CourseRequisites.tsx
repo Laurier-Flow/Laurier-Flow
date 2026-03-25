@@ -1,5 +1,4 @@
 import React from 'react'
-import { getCourseData } from './CourseInfo'
 import { SupabaseClient } from '@supabase/supabase-js'
 import axios from 'axios'
 import * as cheerio from 'cheerio'
@@ -26,8 +25,8 @@ async function getPrerequisites(subjectCode: string, courseNumber: string) {
 		const restrictionsUrl = `https://loris.wlu.ca/register/ssb/courseSearchResults/getRestrictions?term=202401&subjectCode=${subjectCode}&courseNumber=${courseNumber}`
 
 		const [prerequisitesResponse, restrictionsResponse] = await Promise.all([
-			axios.get(prerequisitesUrl),
-			axios.get(restrictionsUrl)
+			axios.get(prerequisitesUrl, { timeout: 5000 }),
+			axios.get(restrictionsUrl, { timeout: 5000 })
 		])
 
 		let $ = cheerio.load(prerequisitesResponse.data)
@@ -87,10 +86,9 @@ async function CourseRequisites({
 	const parts = courseName.split(' ')
 	const subjectCode = parts[0]
 	const courseNumber = parts[1]
-	const [requisites, leadsTo, courseData] = await Promise.all([
+	const [requisites, leadsTo] = await Promise.all([
 		getPrerequisites(subjectCode, courseNumber),
-		getLeadsTo(courseName, supabase),
-		getCourseData(supabase, courseName)
+		getLeadsTo(courseName, supabase)
 	])
 	const prerequisites: prerequisite[] = requisites.prerequisites
 	const restrictions: restriction[] = requisites.restrictions

@@ -27,32 +27,27 @@ async function getCurrentCourses(
 	supabase: SupabaseClient<any, 'public', any>,
 	instructorName: string
 ) {
-	const { data, error } = await supabase
-		.from('sections')
-		.select()
-		.eq('instructor_name_fk', instructorName)
-
 	const currentDate = new Date()
 	const currentMonth = currentDate.getMonth()
 	const currentYear = currentDate.getFullYear()
 	let currentTerm = ''
 
-	if (0 <= currentMonth && currentMonth <= 3) {
+	if (currentMonth <= 3) {
 		currentTerm = `${currentYear}01`
-	} else if (4 <= currentMonth && currentMonth <= 7) {
+	} else if (currentMonth <= 7) {
 		currentTerm = `${currentYear}05`
-	} else if (8 <= currentMonth && currentMonth <= 11) {
+	} else {
 		currentTerm = `${currentYear}09`
 	}
 
+	const { data } = await supabase
+		.from('sections')
+		.select('course_code_fk')
+		.eq('instructor_name_fk', instructorName)
+		.eq('term', currentTerm)
+
 	const courses = new Set<string>()
-
-	data?.forEach((section) => {
-		if (section.term === currentTerm) {
-			courses.add(section.course_code_fk)
-		}
-	})
-
+	data?.forEach((section) => courses.add(section.course_code_fk))
 	return courses
 }
 

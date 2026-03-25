@@ -34,7 +34,8 @@ async function getCourseDescription(subjectCode: string, courseNumber: string) {
 			'https://loris.wlu.ca/register/ssb/courseSearchResults/getCourseDescription?term=202401&subjectCode=' +
 				subjectCode +
 				'&courseNumber=' +
-				courseNumber
+				courseNumber,
+			{ timeout: 5000 }
 		)
 		const $ = cheerio.load(response.data)
 		const sectionElement = $('section[aria-labelledby="courseDescription"]')

@@ -135,8 +135,10 @@ async function CoursePage({ params }: CoursePageProps) {
 	const cookieStore = cookies()
 	const supabase = createClient(cookieStore)
 	let courseCode = decodeURIComponent(params.code.toUpperCase())
-	const user = await fetchUser()
-	await getAndIncrementPageVisits()
+	const [user] = await Promise.all([
+		fetchUser(),
+		getAndIncrementPageVisits()
+	])
 
 	return (
 		<div className='cp-root'>
