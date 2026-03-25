@@ -725,6 +725,186 @@
   }
 }
 
+/* ─── Change Password Page ─── */
+.pw-root {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #07070E;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.pw-bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.pw-orb-1 {
+  position: absolute;
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(76, 29, 149, 0.45) 0%, transparent 65%);
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  filter: blur(40px);
+}
+
+.pw-orb-2 {
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(55, 48, 163, 0.25) 0%, transparent 65%);
+  bottom: -80px;
+  right: -60px;
+  filter: blur(80px);
+}
+
+@keyframes pw-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.pw-card {
+  position: relative;
+  z-index: 10;
+  width: 92%;
+  max-width: 440px;
+  background: rgba(5, 5, 12, 0.90);
+  backdrop-filter: blur(60px) saturate(200%);
+  -webkit-backdrop-filter: blur(60px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 28px;
+  padding: 52px 52px 48px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.6),
+    0 32px 80px rgba(0, 0, 0, 0.7),
+    0 0 100px rgba(99, 51, 189, 0.08);
+  animation: pw-card-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.pw-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(157, 92, 246, 0.8), transparent);
+  z-index: 1;
+}
+
+.pw-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 180px;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99, 51, 189, 0.1) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 28px 28px 0 0;
+}
+
+.pw-card-header {
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.pw-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 36px;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  padding-bottom: 0.05em;
+  background: linear-gradient(135deg, #F0EFFB 0%, rgba(190, 180, 225, 0.9) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 8px;
+}
+
+.pw-subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.3);
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.pw-form {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+.pw-submit-btn {
+  margin-top: 24px !important;
+}
+
+:root:not(.dark) .pw-root {
+  background: linear-gradient(160deg, #F7F0E4 0%, #EDE4D3 35%, #F2E8D8 65%, #F0E6D4 100%);
+}
+
+:root:not(.dark) .pw-card {
+  background: rgba(255, 253, 249, 0.88);
+  backdrop-filter: blur(60px) saturate(180%);
+  -webkit-backdrop-filter: blur(60px) saturate(180%);
+  border-color: rgba(200, 175, 140, 0.18);
+  box-shadow:
+    0 0 0 1px rgba(200, 175, 140, 0.1),
+    0 8px 24px rgba(120, 80, 30, 0.06),
+    0 32px 80px rgba(120, 80, 30, 0.12);
+}
+
+:root:not(.dark) .pw-card::before {
+  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.45), transparent);
+}
+
+:root:not(.dark) .pw-card::after {
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124, 58, 237, 0.06) 0%, transparent 100%);
+}
+
+:root:not(.dark) .pw-title {
+  background: linear-gradient(135deg, #1C1008 0%, #3D2010 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+:root:not(.dark) .pw-subtitle {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 480px) {
+  .pw-card {
+    padding: 36px 28px 32px;
+    border-radius: 22px;
+  }
+  .pw-title {
+    font-size: 30px;
+  }
+}
+
 /* --- Hero (centered column) --- */
 .hp-hero {
   position: relative;
@@ -3002,17 +3182,17 @@
 /* ─── Privacy Page ─── */
 .pv-content {
   position: relative;
-  z-index: 1;
+  z-index: 10;
   max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
-  padding: 0 48px 80px;
+  padding: 0 60px 100px;
 }
 
 .pv-hero {
-  padding: 60px 0 0;
-  text-align: center;
-  max-width: 700px;
-  margin: 0 auto;
+  padding: 80px 0 0;
+  opacity: 0;
+  animation: hp-fadeUp 0.6s ease-out 0s forwards;
 }
 
 .pv-section {

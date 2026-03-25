@@ -1,4 +1,3 @@
-import Spinner from '@/components/Spinner'
 import { Suspense } from 'react'
 import Body from './body'
 import { Metadata } from 'next'
@@ -10,13 +9,7 @@ export const metadata: Metadata = {
 
 export default function ChangePassword() {
 	return (
-		<Suspense
-			fallback={
-				<div className='h-full w-full'>
-					<Spinner />
-				</div>
-			}
-		>
+		<Suspense fallback={<div className='pw-root' />}>
 			<Body />
 		</Suspense>
 	)
