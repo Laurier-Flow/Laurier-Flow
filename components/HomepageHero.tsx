@@ -50,7 +50,7 @@ export default function HomepageHero({ user }: { user: User | null }) {
 			{/* Hero — centered column */}
 			<div className='hp-hero'>
 				<h1 className='hp-headline'>
-					Explore <em className='hp-italic-purple'>thousands</em> of course &amp; professor reviews from{' '}
+					Explore course &amp; professor <em className='hp-italic-purple'>reviews</em> from{' '}
 					<strong className='hp-bold-primary'>Laurier students</strong>
 				</h1>
 
@@ -74,7 +74,7 @@ export default function HomepageHero({ user }: { user: User | null }) {
 					</div>
 					<span className='hp-stat-sep'>·</span>
 					<div className='hp-stat'>
-						<span className='hp-stat-number'>12,400+</span>
+						<span className='hp-stat-number'>150+</span>
 						<span className='hp-stat-label'>Reviews</span>
 					</div>
 				</div>

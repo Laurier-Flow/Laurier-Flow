@@ -4091,6 +4091,103 @@
   text-underline-offset: 3px;
 }
 
+/* ============================================================
+   Analytics Page
+   ============================================================ */
+.an-content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80px 32px 64px;
+}
+.an-hero {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.an-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: #b07030;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 12px;
+}
+.an-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 600;
+  color: #F0EFFB;
+  margin: 0 0 12px;
+  line-height: 1.1;
+}
+.an-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  color: #8A8AAA;
+  margin: 0;
+}
+.an-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+  max-width: 820px;
+}
+.an-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: border-color 200ms ease, background 200ms ease;
+}
+.an-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.an-card-value {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(28px, 3.5vw, 40px);
+  font-weight: 600;
+  color: #F0EFFB;
+  margin: 0 0 6px;
+  line-height: 1.2;
+}
+.an-card-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #8A8AAA;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+/* 5-card: last row spans center 2 columns */
+
+@media (max-width: 768px) {
+  .an-content {
+    padding: 48px 20px 48px;
+  }
+  .an-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .an-grid .an-card:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+  .an-grid::after {
+    display: none;
+  }
+  .an-card {
+    padding: 24px 16px;
+  }
+}
+
 
 /* ============================================================
    LIGHT MODE — crisp, cool overrides
@@ -5323,6 +5420,33 @@
   color: #A0A0A0;
 }
 :root:not(.dark) .site-footer-nav a:hover {
+  color: #6B6B6B;
+}
+
+/* ── Analytics — light mode ── */
+:root:not(.dark) .an-label {
+  color: #7C3AED;
+}
+:root:not(.dark) .an-title {
+  color: #111111;
+}
+:root:not(.dark) .an-desc {
+  color: #6B6B6B;
+}
+:root:not(.dark) .an-card {
+  background: rgba(255, 255, 255, 0.70);
+  border-color: rgba(0, 0, 0, 0.07);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+:root:not(.dark) .an-card:hover {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.10);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+:root:not(.dark) .an-card-value {
+  color: #111111;
+}
+:root:not(.dark) .an-card-label {
   color: #6B6B6B;
 }
 
