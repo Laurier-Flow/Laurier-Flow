@@ -22,13 +22,13 @@ export async function GET(request: NextRequest) {
 			token_hash
 		})
 
-		console.log(error)
-
 		if (!error) {
 			return NextResponse.redirect(redirectTo)
 		}
 	}
 
-	redirectTo.pathname = '/'
-	return NextResponse.redirect(redirectTo)
+	const errorUrl = request.nextUrl.clone()
+	errorUrl.pathname = '/'
+	errorUrl.search = ''
+	return NextResponse.redirect(errorUrl)
 }

@@ -4,14 +4,14 @@ import { redirect } from 'next/navigation'
 import { KeyRound } from 'lucide-react'
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { handleVerifyReset } from './ConfirmResetAction'
 
 export default function Body() {
 	const searchParams = useSearchParams()
 	const token_hash = searchParams.get('token_hash')
 	const [loading, setLoading] = useState(false)
-	const router = useRouter()
+	const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
 	if (!token_hash) {
 		redirect('/')
@@ -19,7 +19,12 @@ export default function Body() {
 
 	const handleResetClick = async () => {
 		setLoading(true)
-		router.push(`/auth/confirm?token_hash=${token_hash}&type=recovery&next=/change-password`)
+		setErrorMessage(null)
+		const error = await handleVerifyReset(token_hash)
+		if (error) {
+			setErrorMessage(error)
+			setLoading(false)
+		}
 	}
 
 	return (
@@ -36,14 +41,18 @@ export default function Body() {
 				</div>
 
 				<div className='pw-form'>
+					{errorMessage && (
+						<div className='auth-alert auth-alert--error'>{errorMessage}</div>
+					)}
+
 					<button
 						onClick={handleResetClick}
 						disabled={loading}
 						type='button'
-						className='auth-btn pw-submit-btn'
+						className='auth-btn'
 					>
-						<KeyRound size={18} style={{ marginRight: 8 }} />
-						{loading ? 'Redirecting…' : 'Continue to reset'}
+						<KeyRound size={18} />
+						{loading ? 'Verifying…' : 'Continue to reset'}
 					</button>
 
 					<hr className='auth-divider' />
