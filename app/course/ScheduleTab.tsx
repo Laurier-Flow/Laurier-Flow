@@ -77,7 +77,7 @@ function ScheduleTab({
 	return (
 		<>
 			<div className={activeTab === tabNumber ? '' : 'hidden'}>
-				<div style={{ overflowX: 'auto' }}>
+				<div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
 					<table className='cp-sched-table'>
 						<thead>
 							<tr>
