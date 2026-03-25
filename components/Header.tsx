@@ -24,12 +24,15 @@ import { LogIn } from 'lucide-react'
 export const useManageBodyScroll = (condition: boolean) => {
 	useEffect(() => {
 		if (condition) {
+			document.documentElement.classList.add('overflow-hidden')
 			document.body.classList.add('overflow-hidden')
 		} else {
+			document.documentElement.classList.remove('overflow-hidden')
 			document.body.classList.remove('overflow-hidden')
 		}
 
 		return () => {
+			document.documentElement.classList.remove('overflow-hidden')
 			document.body.classList.remove('overflow-hidden')
 		}
 	}, [condition])

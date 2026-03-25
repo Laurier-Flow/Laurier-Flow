@@ -9,6 +9,7 @@ import LoginPopup from './LoginPopup'
 import SignUpPopup from './SignUpPopup'
 import PasswordPopup from './PasswordPopup'
 import { LogIn } from 'lucide-react'
+import { useManageBodyScroll } from './Header'
 
 export default function HomepageHero({ user }: { user: User | null }) {
 	const [showLogin, setShowLogin] = useState(false)
@@ -18,6 +19,8 @@ export default function HomepageHero({ user }: { user: User | null }) {
 	const toggleLogin = () => setShowLogin(v => !v)
 	const toggleSignUp = () => setShowSignUp(v => !v)
 	const togglePassword = () => setShowPassword(v => !v)
+
+	useManageBodyScroll(showLogin || showSignUp || showPassword)
 
 	return (
 		<div className='hp-above-fold'>

@@ -33,12 +33,12 @@ export const ProgramDropdown = React.forwardRef<HTMLDivElement, { value: string,
             aria-expanded={open}
             className="auth-combo-trigger w-full justify-between overflow-hidden"
           >
-            <span className={`truncate font-normal ${value ? "text-[#F0EFFB]" : "text-[#3F3F5A]"}`}>
+            <span className={`truncate font-normal ${value ? "auth-combo-value" : "auth-combo-placeholder"}`}>
               {value
                 ? programOptions.find((program) => program.value === value)?.label
                 : "Select program..."}
             </span>
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 text-[#3F3F5A]" />
+            <ChevronsUpDown className="auth-combo-chevron ml-2 h-4 w-4 shrink-0" />
           </Button>
         </PopoverTrigger>
         <PopoverContent ref={ref} className="auth-combo-content w-[--radix-popover-trigger-width] max-h-[--radix-popover-content-available-height] p-0">

@@ -1,4 +1,3 @@
-import Spinner from '@/components/Spinner'
 import { Suspense } from 'react'
 import { cookies } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
@@ -6,7 +5,7 @@ import { fetchUser } from '@/utils/supabase/authActions'
 import Header from '@/components/Header'
 import { Metadata } from 'next'
 import Footer from '@/components/Footer'
-import Explore from './Explore'
+import Explore, { ExploreSkeleton } from './Explore'
 import { getAndIncrementPageVisits } from '@/utils/supabase/pageVisits'
 
 export const metadata: Metadata = {
@@ -28,15 +27,11 @@ export default async function ExplorePage() {
 				<div className='ex-noise' />
 			</div>
 			<Header user={user} />
-			<Suspense
-				fallback={
-					<div className='h-full w-full'>
-						<Spinner />
-					</div>
-				}
-			>
-				<Explore />
-			</Suspense>
+			<div style={{ flex: 1 }}>
+				<Suspense fallback={<ExploreSkeleton />}>
+					<Explore />
+				</Suspense>
+			</div>
 			<Footer />
 		</div>
 	)

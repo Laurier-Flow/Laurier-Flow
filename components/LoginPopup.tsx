@@ -19,7 +19,10 @@ export default function LoginPopup({
 	const [showPassword, setShowPassword] = useState(false)
 
 	useEffect(() => {
-		requestAnimationFrame(() => setIsVisible(true))
+		const id = requestAnimationFrame(() =>
+			requestAnimationFrame(() => setIsVisible(true))
+		)
+		return () => cancelAnimationFrame(id)
 	}, [])
 
 	const popupRef = useRef<HTMLDivElement | null>(null)

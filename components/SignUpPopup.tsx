@@ -23,7 +23,10 @@ export default function SignUpPopup({
 	const dropdownRef = useRef<HTMLDivElement | null>(null)
 
 	useEffect(() => {
-		requestAnimationFrame(() => setIsVisible(true))
+		const id = requestAnimationFrame(() =>
+			requestAnimationFrame(() => setIsVisible(true))
+		)
+		return () => cancelAnimationFrame(id)
 	}, [])
 
 	useEffect(() => {

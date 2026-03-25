@@ -19,7 +19,10 @@ export default function PasswordPopup({
 	const popupRef = useRef<HTMLDivElement | null>(null)
 
 	useEffect(() => {
-		requestAnimationFrame(() => setIsVisible(true))
+		const id = requestAnimationFrame(() =>
+			requestAnimationFrame(() => setIsVisible(true))
+		)
+		return () => cancelAnimationFrame(id)
 	}, [])
 
 	useEffect(() => {
