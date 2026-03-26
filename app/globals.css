@@ -176,6 +176,7 @@
 /* --- Above fold wrapper --- */
 .hp-above-fold {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   width: 100%;
