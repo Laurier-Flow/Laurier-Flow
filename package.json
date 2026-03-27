@@ -6,6 +6,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1018.0",
+    "@aws-sdk/s3-request-presigner": "^3.1018.0",
     "@nextui-org/react": "^2.2.9",
     "@preline/overlay": "^2.0.2",
     "@preline/select": "^2.0.2",

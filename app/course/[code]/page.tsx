@@ -8,6 +8,7 @@ import CourseReviews from '../CourseReviews'
 import { Suspense } from 'react'
 import CourseSchedule from '../CourseSchedule'
 import CourseRequisites from '../CourseRequisites'
+import CourseOutlines from '../CourseOutlines'
 import Header from '@/components/Header'
 import { fetchUser } from '@/utils/supabase/authActions'
 import { Metadata, ResolvingMetadata } from 'next'
@@ -165,6 +166,10 @@ async function CoursePage({ params }: CoursePageProps) {
 							user={user}
 						/>
 					</Suspense>
+
+					<hr className='cp-divider' />
+
+					<CourseOutlines supabase={supabase} courseCode={courseCode} user={user} />
 
 					<hr className='cp-divider' />
 
