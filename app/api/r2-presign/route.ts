@@ -27,8 +27,9 @@ export async function POST(req: NextRequest) {
 	if (!fileName || !contentType || !courseCode) {
 		return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
 	}
-	if (contentType !== 'application/pdf') {
-		return NextResponse.json({ error: 'Only PDFs are allowed' }, { status: 400 })
+	const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+	if (!allowedTypes.includes(contentType)) {
+		return NextResponse.json({ error: 'Only PDF and DOCX files are allowed' }, { status: 400 })
 	}
 
 	const ext = fileName.split('.').pop() ?? 'pdf'

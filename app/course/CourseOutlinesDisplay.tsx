@@ -110,6 +110,7 @@ function PdfViewer({ outline, onClose }: { outline: Outline; onClose: () => void
 	}, [onClose])
 
 	const isMock = outline.file_url === '#'
+	const isDocx = outline.file_name.toLowerCase().endsWith('.docx')
 
 	return (
 		<div ref={modalRef} className='co-viewer'>
@@ -139,8 +140,14 @@ function PdfViewer({ outline, onClose }: { outline: Outline; onClose: () => void
 				{isMock ? (
 					<div className='co-viewer-placeholder'>
 						<PdfIcon size={36} />
-						<span>PDF preview will appear here once real files are uploaded</span>
+						<span>Preview will appear here once real files are uploaded</span>
 					</div>
+				) : isDocx ? (
+					<iframe
+						src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(outline.file_url)}`}
+						className='co-viewer-frame'
+						title={outline.file_name}
+					/>
 				) : (
 					<iframe
 						src={`${outline.file_url}#toolbar=0&navpanes=0`}
@@ -181,11 +188,12 @@ function UploadModal({ onClose, courseCode }: { onClose: () => void; courseCode:
 		setDragging(true)
 	}
 	const handleDragLeave = () => setDragging(false)
+	const ALLOWED_TYPES = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
 	const handleDrop = (e: React.DragEvent) => {
 		e.preventDefault()
 		setDragging(false)
 		const file = e.dataTransfer.files[0]
-		if (file?.type === 'application/pdf') setSelectedFile(file)
+		if (file && ALLOWED_TYPES.includes(file.type)) setSelectedFile(file)
 	}
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
@@ -264,7 +272,7 @@ function UploadModal({ onClose, courseCode }: { onClose: () => void; courseCode:
 							{terms.map(t => <option key={t}>{t}</option>)}
 						</select>
 
-						<label className='rv-label' style={{ marginTop: 20 }}>Course outline (PDF, max 10 MB)</label>
+						<label className='rv-label' style={{ marginTop: 20 }}>Course outline (PDF or DOCX, max 10 MB)</label>
 
 						{selectedFile ? (
 							<div className='co-file-badge'>
@@ -294,12 +302,12 @@ function UploadModal({ onClose, courseCode }: { onClose: () => void; courseCode:
 										<polyline points='9 15 12 12 15 15' />
 									</svg>
 								</div>
-								<p className='co-dropzone-text'>Drop your PDF here or <span>browse</span></p>
-								<p className='co-dropzone-hint'>PDF · max 10 MB</p>
+								<p className='co-dropzone-text'>Drop your file here or <span>browse</span></p>
+								<p className='co-dropzone-hint'>PDF · DOCX · max 10 MB</p>
 								<input
 									ref={fileInputRef}
 									type='file'
-									accept='.pdf,application/pdf'
+									accept='.pdf,application/pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document'
 									style={{ display: 'none' }}
 									onChange={handleFileChange}
 								/>
