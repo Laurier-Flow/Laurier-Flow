@@ -6,7 +6,7 @@ import { cookies } from 'next/headers'
 export async function insertOutline(
 	courseCode: string,
 	fileUrl: string,
-	fileName: string,
+	_fileName: string,
 	term: string,
 ) {
 	const supabase = createClient(cookies())
@@ -22,11 +22,15 @@ export async function insertOutline(
 		.eq('user_id', user.id)
 		.single()
 
+	const cleanCode = courseCode.replace(/\s+/g, '_')
+	const cleanTerm = term.replace(/\s+/g, '_')
+	const cleanFileName = `${cleanCode}_${cleanTerm}.pdf`
+
 	const { error } = await supabase.from('course_outlines').insert({
 		course_code_fk: courseCode,
 		user_id_fk: user.id,
 		file_url: fileUrl,
-		file_name: fileName,
+		file_name: cleanFileName,
 		term,
 		uploaded_by_name: profile?.first_name ?? null,
 		uploaded_by_program: profile?.program ?? null,

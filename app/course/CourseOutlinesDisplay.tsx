@@ -29,12 +29,16 @@ function formatDate(dateStr: string): string {
 	return date.toLocaleDateString('en-CA', { month: 'short', year: 'numeric' })
 }
 
+const TERM_START_MONTH: Record<string, number> = { Fall: 9, Spring: 5, Winter: 1 }
+
 function generateTermOptions(): string[] {
-	const seasons = ['Fall', 'Spring', 'Winter']
-	const year = new Date().getFullYear()
+	const now = new Date()
+	const currentYear = now.getFullYear()
+	const currentMonth = now.getMonth() + 1
 	const terms: string[] = []
-	for (let y = year + 1; y >= year - 2; y--) {
-		for (const season of seasons) {
+	for (let y = currentYear; y >= currentYear - 3; y--) {
+		for (const season of ['Fall', 'Spring', 'Winter']) {
+			if (y === currentYear && TERM_START_MONTH[season] > currentMonth) continue
 			terms.push(`${season} ${y}`)
 		}
 	}
@@ -55,12 +59,12 @@ function PdfIcon({ size = 20 }: { size?: number }) {
 	)
 }
 
-function DownloadIcon() {
+function ExternalLinkIcon() {
 	return (
 		<svg width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
-			<path d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4' />
-			<polyline points='7 10 12 15 17 10' />
-			<line x1='12' y1='15' x2='12' y2='3' />
+			<path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6' />
+			<polyline points='15 3 21 3 21 9' />
+			<line x1='10' y1='14' x2='21' y2='3' />
 		</svg>
 	)
 }
@@ -118,11 +122,12 @@ function PdfViewer({ outline, onClose }: { outline: Outline; onClose: () => void
 					{!isMock && (
 						<a
 							href={outline.file_url}
-							download
+							target='_blank'
+							rel='noopener noreferrer'
 							className='co-viewer-download'
 						>
-							<DownloadIcon />
-							Download
+							<ExternalLinkIcon />
+							<span className='co-viewer-download-label'>Open</span>
 						</a>
 					)}
 					<button type='button' onClick={onClose} className='rv-close'>
@@ -138,7 +143,7 @@ function PdfViewer({ outline, onClose }: { outline: Outline; onClose: () => void
 					</div>
 				) : (
 					<iframe
-						src={outline.file_url}
+						src={`${outline.file_url}#toolbar=0&navpanes=0`}
 						className='co-viewer-frame'
 						title={outline.file_name}
 					/>
@@ -334,7 +339,7 @@ export default function CourseOutlinesDisplay({
 	courseCode: string
 	user: User | null
 }) {
-	const terms = [...new Set(outlines.map(o => o.term))].sort(
+	const terms = Array.from(new Set(outlines.map(o => o.term))).sort(
 		(a, b) => termSortKey(b) - termSortKey(a)
 	)
 	const [activeTab, setActiveTab] = useState('All')
@@ -462,7 +467,7 @@ export default function CourseOutlinesDisplay({
 					<div className='co-carousel-wrap'>
 						{canScrollLeft && (
 							<button type='button' className='co-carousel-btn co-carousel-btn-left' onClick={() => scrollCarousel('left')} aria-label='Scroll left'>
-								<ChevronRight style={{ transform: 'rotate(180deg)' }} />
+								<span style={{ transform: 'rotate(180deg)', display: 'flex' }}><ChevronRight /></span>
 							</button>
 						)}
 						<div className='co-carousel' ref={carouselRef}>

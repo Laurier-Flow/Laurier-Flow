@@ -5725,9 +5725,14 @@
 }
 .co-viewer-body {
   flex: 1;
+  min-height: 0;
   overflow: hidden;
+  overflow-x: hidden;
+  position: relative;
 }
 .co-viewer-frame {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   border: none;
@@ -5756,6 +5761,19 @@
     top: 0;
     left: 0;
     transform: none;
+  }
+  .co-viewer-frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+  .co-viewer-download {
+    padding: 7px 10px;
+  }
+  .co-viewer-download-label {
+    display: none;
   }
 }
 
