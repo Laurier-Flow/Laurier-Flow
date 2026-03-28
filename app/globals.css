@@ -5227,12 +5227,35 @@
   border-color: rgba(176, 112, 48, 0.38);
 }
 
+/* Content container (logged-in state) */
+.co-content {
+  border-radius: 16px;
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(
+      135deg,
+      rgba(14, 8, 28, 0.62) 0%,
+      rgba(8, 6, 20, 0.58) 50%,
+      rgba(16, 8, 32, 0.62) 100%
+    );
+  background-size: 22px 22px, auto;
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+    0 8px 32px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+
 /* Term tabs */
 .co-tabs {
   display: flex;
   gap: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   margin-bottom: 0;
+  padding: 0 8px;
 }
 .co-tab {
   background: none;
@@ -5258,7 +5281,7 @@
 /* Carousel wrapper */
 .co-carousel-wrap {
   position: relative;
-  margin-top: 16px;
+  padding: 16px;
 }
 .co-carousel {
   display: flex;
@@ -5269,7 +5292,7 @@
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   padding-bottom: 4px;
-  padding-top: 8px;
+  padding-top: 4px;
 }
 .co-carousel::-webkit-scrollbar { display: none; }
 
@@ -5298,8 +5321,8 @@
   border-color: rgba(176, 112, 48, 0.3);
   color: #b07030;
 }
-.co-carousel-btn-left  { left: -16px; }
-.co-carousel-btn-right { right: -16px; }
+.co-carousel-btn-left  { left: 0; }
+.co-carousel-btn-right { right: 0; }
 
 /* Outline card (carousel tile) */
 .co-card {
@@ -5372,7 +5395,7 @@
   font-family: 'DM Sans', sans-serif;
   font-size: 14px;
   color: #3F3F5A;
-  padding: 28px 0;
+  padding: 28px 20px;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -5396,9 +5419,7 @@
 }
 
 /* Locked / guest state */
-.co-locked {
-  margin-top: 24px;
-}
+.co-locked {}
 .co-locked-overlay {
   position: relative;
   height: 200px;
@@ -5880,6 +5901,23 @@
   color: #6D28D9;
 }
 
+:root:not(.dark) .co-content {
+  background-image:
+    radial-gradient(circle, rgba(0, 0, 0, 0.055) 1px, transparent 1px),
+    linear-gradient(
+      135deg,
+      rgba(255, 253, 255, 0.72) 0%,
+      rgba(246, 242, 255, 0.68) 50%,
+      rgba(255, 252, 255, 0.72) 100%
+    );
+  background-size: 22px 22px, auto;
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border: 1px solid rgba(124, 58, 237, 0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 8px 32px rgba(0, 0, 0, 0.06);
+}
 :root:not(.dark) .co-locked-overlay {
   background-image:
     radial-gradient(circle, rgba(0, 0, 0, 0.055) 1px, transparent 1px),

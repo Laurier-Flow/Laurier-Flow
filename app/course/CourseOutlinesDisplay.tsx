@@ -440,7 +440,7 @@ export default function CourseOutlinesDisplay({
 					</div>
 				</div>
 			) : (
-				<>
+				<div className='co-content'>
 					{/* Term tabs */}
 					{terms.length > 0 && (
 						<div className='co-tabs'>
@@ -512,7 +512,7 @@ export default function CourseOutlinesDisplay({
 						)}
 					</div>
 				)}
-				</>
+				</div>
 			)}
 
 			{/* PDF viewer */}
