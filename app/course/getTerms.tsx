@@ -1,3 +1,10 @@
+export function getDefaultTab(): number {
+	const month = new Date().getMonth()
+	if (month < 4) return 3        // Jan–Mar  → Winter (tab 3)
+	if (month < 9) return 1        // Apr–Aug  → Spring (tab 1)
+	return 2                       // Sep–Dec  → Fall   (tab 2)
+}
+
 export function getTerms(pretty: boolean) {
     const currentDate = new Date()
     const currentMonth = currentDate.getMonth()

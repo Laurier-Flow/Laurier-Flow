@@ -1,9 +1,9 @@
 import ScheduleTable from '../course/ScheduleTab'
-import { getTerms } from '../course/getTerms'
+import { getTerms, getDefaultTab } from '../course/getTerms'
 import {
 	section,
 	sections,
-	getCourseSections
+	getCourseSections,
 } from '../course/CourseSchedule'
 import { SupabaseClient, User } from '@supabase/supabase-js'
 
@@ -68,6 +68,10 @@ async function InstructorSchedule({
 				nextSpringTermSections={nextSpringTermSections}
 				professor={true}
 				user={user}
+				defaultTab={getDefaultTab()}
+				filterCol='instructor_name_fk'
+				colValue={instructorName}
+				dataTerms={dataTerms}
 			/>
 		</div>
 	)

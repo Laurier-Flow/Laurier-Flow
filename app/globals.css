@@ -2357,6 +2357,21 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+.cp-sched-skeleton {
+  height: 14px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: cp-sched-shimmer 1.4s ease-in-out infinite;
+  min-width: 40px;
+}
+@keyframes cp-sched-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.cp-sched-skeleton-row td {
+  padding: 10px 14px;
+}
 .cp-sched-empty {
   font-family: 'DM Sans', sans-serif;
   font-size: 13px;
@@ -3106,6 +3121,73 @@
 /* ============================================================
    ABOUT PAGE — redesign
    ============================================================ */
+
+.err-wrap {
+  position: relative;
+  z-index: 10;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 24px;
+  max-width: 640px;
+  margin: 0 auto;
+  gap: 20px;
+}
+.err-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #b07030;
+  margin: 0;
+}
+.err-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 700;
+  color: #F0EFFB;
+  margin: 0;
+  line-height: 1.15;
+}
+.err-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  color: #8A8AAA;
+  line-height: 1.7;
+  margin: 0;
+}
+.err-desc strong {
+  color: #F0EFFB;
+  font-weight: 500;
+}
+.err-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 10px 22px;
+  background: rgba(176, 112, 48, 0.1);
+  border: 1px solid rgba(176, 112, 48, 0.25);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #b07030;
+  text-decoration: none;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+.err-btn:hover {
+  background: rgba(176, 112, 48, 0.18);
+  border-color: rgba(176, 112, 48, 0.4);
+}
+
+:root:not(.dark) .err-title { color: #1A1A2E; }
+:root:not(.dark) .err-desc  { color: #6A6A8A; }
+:root:not(.dark) .err-desc strong { color: #1A1A2E; }
 
 .ab-content {
   position: relative;
