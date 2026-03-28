@@ -153,7 +153,6 @@ function PdfViewer({ outline, onClose }: { outline: Outline; onClose: () => void
 						src={`${outline.file_url}#toolbar=0&navpanes=0`}
 						className='co-viewer-frame'
 						title={outline.file_name}
-						scrolling='yes'
 					/>
 				)}
 			</div>
@@ -484,7 +483,13 @@ export default function CourseOutlinesDisplay({
 								<div
 									key={outline.id}
 									className='co-card'
-									onClick={() => setViewingOutline(outline)}
+									onClick={() => {
+									if (window.innerWidth <= 640) {
+										window.open(outline.file_url, '_blank', 'noopener,noreferrer')
+									} else {
+										setViewingOutline(outline)
+									}
+								}}
 									role='button'
 									tabIndex={0}
 									onKeyDown={e => e.key === 'Enter' && setViewingOutline(outline)}
