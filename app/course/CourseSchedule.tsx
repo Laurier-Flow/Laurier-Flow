@@ -187,6 +187,7 @@ export async function fetchTermSections(
 	const cookieStore = cookies()
 	const supabase = createClient(cookieStore)
 	const user = userId ? { id: userId } as User : null
+	// @ts-ignore — supabase generic depth causes TS instantiation overflow
 	return fetchTermSectionsFromDB(term, filterCol, colValue, supabase, user)
 }
 
