@@ -5264,10 +5264,12 @@
   display: flex;
   gap: 10px;
   overflow-x: auto;
+  overflow-y: visible;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   padding-bottom: 4px;
+  padding-top: 8px;
 }
 .co-carousel::-webkit-scrollbar { display: none; }
 

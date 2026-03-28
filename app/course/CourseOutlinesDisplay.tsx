@@ -494,9 +494,7 @@ export default function CourseOutlinesDisplay({
 									</div>
 									<span className='co-card-name'>{outline.file_name}</span>
 									<span className='co-card-meta'>
-										{outline.uploaded_by_name ?? 'Anonymous'}
-										{outline.uploaded_by_program && ` · ${outline.uploaded_by_program}`}
-										{' · '}{formatDate(outline.created_at)}
+										{formatDate(outline.created_at)}
 									</span>
 								</div>
 							))}
