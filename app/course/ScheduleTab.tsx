@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { section } from './CourseSchedule'
+import { section, fetchTermSections } from './CourseSchedule'
 import DaysDisplay from './DaysDisplay'
 import React from 'react'
 import Link from 'next/link'
@@ -16,24 +16,24 @@ function ScheduleTab({
 	tabNumber,
 	termSections,
 	professor,
-	user
+	user,
+	isLoading,
 }: {
 	activeTab: number
 	tabNumber: number
 	termSections: section[]
 	professor: boolean
 	user: User | null
+	isLoading?: boolean
 }) {
 	const [currentPage, setCurrentPage] = useState(1)
-	const [termSectionsVisible, setTermSectionVisible] = useState(
-		termSections.slice(0, 11)
-	)
 
+	// Reset to page 1 and update visible sections whenever termSections changes
 	useEffect(() => {
-		setTermSectionVisible(
-			termSections.slice((currentPage - 1) * 10, (currentPage - 1) * 10 + 10)
-		)
-	}, [currentPage])
+		setCurrentPage(1)
+	}, [termSections])
+
+	const termSectionsVisible = termSections.slice((currentPage - 1) * 10, (currentPage - 1) * 10 + 10)
 
 	const {
 		showLoginPopup,
@@ -93,7 +93,15 @@ function ScheduleTab({
 							</tr>
 						</thead>
 						<tbody>
-							{professor && !user ? (
+							{isLoading ? (
+								Array.from({ length: 5 }).map((_, i) => (
+									<tr key={i} className='cp-sched-skeleton-row'>
+										{Array.from({ length: 9 }).map((_, j) => (
+											<td key={j}><div className='cp-sched-skeleton' /></td>
+										))}
+									</tr>
+								))
+							) : professor && !user ? (
 								<tr>
 									<td>
 										<button
@@ -234,7 +242,11 @@ export default function ScheduleTable({
 	winterTermSections,
 	nextSpringTermSections,
 	professor,
-	user
+	user,
+	defaultTab = 1,
+	filterCol,
+	colValue,
+	dataTerms,
 }: {
 	springTerm: string
 	fallTerm: string
@@ -246,8 +258,41 @@ export default function ScheduleTable({
 	nextSpringTermSections: section[]
 	professor: boolean
 	user: User | null
+	defaultTab?: number
+	filterCol?: string
+	colValue?: string
+	dataTerms?: { springTerm: string; fallTerm: string; winterTerm: string; nextSpringTerm: string }
 }) {
-	const [activeTab, setActiveTab] = useState(1)
+	const [activeTab, setActiveTab] = useState(defaultTab)
+	const [sections, setSections] = useState({
+		1: springTermSections,
+		2: fallTermSections,
+		3: winterTermSections,
+		4: nextSpringTermSections,
+	})
+	const [loading, setLoading] = useState<number | null>(null)
+	// Track which tabs have been fetched (including those that returned empty)
+	const [fetched, setFetched] = useState<Set<number>>(() => new Set([defaultTab]))
+
+	const termDataMap: Record<number, string> = {
+		1: dataTerms?.springTerm ?? '',
+		2: dataTerms?.fallTerm ?? '',
+		3: dataTerms?.winterTerm ?? '',
+		4: dataTerms?.nextSpringTerm ?? '',
+	}
+
+	const handleTabClick = async (tabNum: number) => {
+		setActiveTab(tabNum)
+		if (fetched.has(tabNum) || !filterCol || !colValue || !dataTerms) return
+		setLoading(tabNum)
+		try {
+			const data = await fetchTermSections(termDataMap[tabNum], filterCol, colValue, user?.id ?? null)
+			setSections(prev => ({ ...prev, [tabNum]: data }))
+			setFetched(prev => new Set(prev).add(tabNum))
+		} finally {
+			setLoading(null)
+		}
+	}
 
 	return (
 		<>
@@ -261,7 +306,7 @@ export default function ScheduleTable({
 					<button
 						key={tab.num}
 						suppressHydrationWarning
-						onClick={() => setActiveTab(tab.num)}
+						onClick={() => handleTabClick(tab.num)}
 						type='button'
 						className={`cp-schedule-tab ${activeTab === tab.num ? 'cp-schedule-tab-active' : ''}`}
 					>
@@ -271,32 +316,36 @@ export default function ScheduleTable({
 			</div>
 
 			<ScheduleTab
-				termSections={springTermSections}
+				termSections={sections[1]}
 				activeTab={activeTab}
 				tabNumber={1}
 				professor={professor}
 				user={user}
+				isLoading={loading === 1}
 			/>
 			<ScheduleTab
-				termSections={fallTermSections}
+				termSections={sections[2]}
 				activeTab={activeTab}
 				tabNumber={2}
 				professor={professor}
 				user={user}
+				isLoading={loading === 2}
 			/>
 			<ScheduleTab
-				termSections={winterTermSections}
+				termSections={sections[3]}
 				activeTab={activeTab}
 				tabNumber={3}
 				professor={professor}
 				user={user}
+				isLoading={loading === 3}
 			/>
 			<ScheduleTab
-				termSections={nextSpringTermSections}
+				termSections={sections[4]}
 				activeTab={activeTab}
 				tabNumber={4}
 				professor={professor}
 				user={user}
+				isLoading={loading === 4}
 			/>
 		</>
 	)
