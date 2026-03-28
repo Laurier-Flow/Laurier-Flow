@@ -30,13 +30,11 @@ function ReviewSection({
 
 			<div className='cp-reviews-list' style={{ marginTop: '20px' }}>
 				{courseFilter === 'All Courses'
-					? Object.entries(instructorReviews).map(([course, reviews]) => (
-							<div key={course}>
-								{reviews?.map((review: instructorReview, index: any) => (
-									<InstructorReview key={review.id || index} review={review} index={index} />
-								))}
-							</div>
-						))
+					? Object.entries(instructorReviews).flatMap(([course, reviews]) =>
+							reviews?.map((review: instructorReview, index: any) => (
+								<InstructorReview key={review.id || `${course}-${index}`} review={review} index={index} />
+							))
+						)
 					: instructorReviews[courseFilter]?.map(
 							(review: instructorReview, index: any) => (
 								<InstructorReview key={review.id || index} review={review} index={index} />

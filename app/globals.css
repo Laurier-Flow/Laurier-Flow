@@ -3043,7 +3043,7 @@
     border-radius: 12px;
   }
   .cp-reviews-list {
-    gap: 12px;
+    gap: 20px;
   }
   .cp-review-card {
     border-radius: 14px;
@@ -3486,7 +3486,7 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 12px;
   padding: 0;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   overflow: hidden;
   transition: border-color 200ms ease;
 }
@@ -4126,7 +4126,7 @@
     gap: 12px;
   }
   .pf-schedule-table {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 
@@ -6724,7 +6724,7 @@
     font-size: clamp(22px, 6vw, 28px);
   }
   .cp-course-desc {
-    font-size: 13px;
+    font-size: 15px;
     margin-top: 12px;
   }
   .cp-stats {
@@ -6747,23 +6747,23 @@
     margin: 20px 0;
   }
   .cp-section-label {
-    font-size: 11px;
+    font-size: 12px;
     margin-bottom: 14px;
   }
   .cp-section-title {
-    font-size: 18px;
+    font-size: 20px;
     margin-bottom: 16px;
   }
   .cp-schedule-tab {
-    font-size: 12px;
+    font-size: 14px;
     padding: 8px 12px;
   }
   .cp-sched-table th {
-    font-size: 11px;
+    font-size: 12px;
     padding: 8px 8px 6px;
   }
   .cp-sched-table td {
-    font-size: 12px;
+    font-size: 14px;
     padding: 8px;
   }
   .cp-review-body {
@@ -6771,15 +6771,15 @@
     gap: 12px;
   }
   .cp-review-text {
-    font-size: 13px;
-    line-height: 1.55;
+    font-size: 14px;
+    line-height: 1.6;
   }
   .cp-review-star {
     width: 14px;
     height: 14px;
   }
   .cp-review-rating-label {
-    font-size: 11px;
+    font-size: 12px;
   }
   .cp-review-thumb {
     width: 24px;
@@ -6793,25 +6793,25 @@
     padding: 8px 16px;
   }
   .cp-review-meta {
-    font-size: 12px;
+    font-size: 13px;
   }
   .cp-add-review-btn {
     height: 44px;
-    font-size: 13px;
+    font-size: 14px;
     border-radius: 10px;
   }
   .cp-add-review-title {
-    font-size: 16px;
+    font-size: 18px;
   }
   .cp-req-block {
     margin-bottom: 24px;
   }
   .cp-req-title {
-    font-size: 11px;
+    font-size: 12px;
     margin-bottom: 8px;
   }
   .cp-req-content {
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.6;
   }
   .cp-page-btn {
@@ -6821,7 +6821,7 @@
     border-radius: 6px;
   }
   .cp-alert {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   /* Explore page */
@@ -6882,7 +6882,7 @@
     padding: 16px;
   }
   .pf-schedule-table {
-    font-size: 12px;
+    font-size: 14px;
   }
   .pf-schedule-term {
     padding: 16px;
