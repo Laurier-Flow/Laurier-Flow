@@ -5764,12 +5764,15 @@
     left: 0;
     transform: none;
   }
-  .co-viewer-frame {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+  .co-viewer-body {
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+  }
+  .co-viewer-frame {
+    position: relative;
+    width: 100%;
+    height: calc(100dvh - 52px);
+    min-height: 0;
   }
   .co-viewer-download {
     padding: 7px 10px;

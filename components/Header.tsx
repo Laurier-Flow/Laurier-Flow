@@ -24,27 +24,15 @@ import { LogIn } from 'lucide-react'
 export const useManageBodyScroll = (condition: boolean) => {
 	useEffect(() => {
 		if (condition) {
-			const scrollY = window.scrollY
-			document.body.style.position = 'fixed'
-			document.body.style.top = `-${scrollY}px`
-			document.body.style.left = '0'
-			document.body.style.right = '0'
+			document.documentElement.style.overflow = 'hidden'
+			document.body.style.overflow = 'hidden'
 		} else {
-			const scrollY = document.body.style.top
-			document.body.style.position = ''
-			document.body.style.top = ''
-			document.body.style.left = ''
-			document.body.style.right = ''
-			if (scrollY) window.scrollTo(0, -parseInt(scrollY, 10))
+			document.documentElement.style.overflow = ''
+			document.body.style.overflow = ''
 		}
-
 		return () => {
-			const scrollY = document.body.style.top
-			document.body.style.position = ''
-			document.body.style.top = ''
-			document.body.style.left = ''
-			document.body.style.right = ''
-			if (scrollY) window.scrollTo(0, -parseInt(scrollY, 10))
+			document.documentElement.style.overflow = ''
+			document.body.style.overflow = ''
 		}
 	}, [condition])
 }

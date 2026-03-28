@@ -153,6 +153,7 @@ function PdfViewer({ outline, onClose }: { outline: Outline; onClose: () => void
 						src={`${outline.file_url}#toolbar=0&navpanes=0`}
 						className='co-viewer-frame'
 						title={outline.file_name}
+						scrolling='yes'
 					/>
 				)}
 			</div>
