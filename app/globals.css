@@ -2365,6 +2365,10 @@
   animation: cp-sched-shimmer 1.4s ease-in-out infinite;
   min-width: 40px;
 }
+:root:not(.dark) .cp-sched-skeleton {
+  background: linear-gradient(90deg, rgba(0,0,0,0.06) 25%, rgba(0,0,0,0.11) 50%, rgba(0,0,0,0.06) 75%);
+  background-size: 200% 100%;
+}
 @keyframes cp-sched-shimmer {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
